@@ -526,7 +526,6 @@
 		"vsce": "^1.91.0"
 	},
 	"dependencies": {
-		"acorn": "^8.5.0",
 		"vscode-languageclient": "^8.1.0",
 		"vscode-languageserver": "^8.1.0",
 		"vscode-languageserver-textdocument": "^1.0.8",
