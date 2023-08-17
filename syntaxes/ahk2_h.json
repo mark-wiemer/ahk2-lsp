@@ -1,105 +1,105 @@
 {
-	"directives": [
-		{
-			"body": "#DefineDefault${1|Array,Map,Object|}Value ",
-			"description": "Defines the default value that will be used when an attribute or item is not found in Object/Array/Map.",
-			"prefix": "#DefineDefault"
-		},
-		{
-			"body": "#DllImport ${1:Function_Name}, ${2:DllFile\\Function}, ${3:DynaCallParameterDefinition [, DefaultArg1, ...]}",
-			"description": "Create script functions for dll or exe functions.",
-			"prefix": "#DllImport"
-		},
-		{
-			"body": "#WindowClassGui ",
-			"description": "Change the name of the Gui window class from AutoHotkey GUI to another name.",
-			"prefix": "#WindowClassGui"
-		},
-		{
-			"body": "#WindowClassMain ",
-			"description": "Change the name of the main window class from AutoHotkey to another name.",
-			"prefix": "#WindowClassMain"
-		},
-		{
-			"body": "#UseStdLib",
-			"description": "Automatically load a functions from standard library. The search order is UserLib -> Resource LIB -> WinApi.",
-			"prefix": "#UseStdLib"
-		},
-		{
-			"body": "#MapCaseSense ${1|On,Off,Locale|}",
-			"description": "Set the default case-sensitive Settings for Map.",
-			"prefix": "#MapCaseSense"
-		},
-		{
-			"body": "#TargetControlError",
-			"description": "Don't throw error when target control is not found.",
-			"prefix": "#TargetControlError"
-		},
-		{
-			"body": "#TargetWindowError",
-			"description": "Don't throw error when target window  is not found.",
-			"prefix": "#TargetWindowError"
-		},
-		{
-			"body": "#InitExec ${1:Expression}",
-			"description": "The initialization expression is executed in load order before the script begins.",
-			"prefix": "#InitExec"
-		}
-	],
-	"keywords": [
-		{
-			"body": "macro",
-			"description": "A function definition can be prefixed with 'macro ' to create a macro function. All undeclared variables within a macro function except parameters and local variables come from the scope of the caller.",
-			"prefix": "macro"
-		}
-	],
-	"variables": [
-		{
-			"body": "A_AhkDir",
-			"description": "The dir of current exe.",
-			"prefix": "A_AhkDir"
-		},
-		{
-			"body": "A_DllDir",
-			"description": "the dir of current module (dll or exe)",
-			"prefix": "A_DllDir"
-		},
-		{
-			"body": "A_DllPath",
-			"description": "The path of current module (dll or exe).",
-			"prefix": "A_DllPath"
-		},
-		{
-			"body": "A_GlobalStruct",
-			"prefix": "A_GlobalStruct"
-		},
-		{
-			"body": "A_IsDll",
-			"prefix": "A_IsDll"
-		},
-		{
-			"body": "A_MainThreadID",
-			"prefix": "A_MainThreadID"
-		},
-		{
-			"body": "A_MemoryModule",
-			"prefix": "A_MemoryModule"
-		},
-		{
-			"body": "A_ModuleHandle",
-			"prefix": "A_ModuleHandle"
-		},
-		{
-			"body": "A_ScriptStruct",
-			"prefix": "A_ScriptStruct"
-		},
-		{
-			"body": "A_ThreadID",
-			"prefix": "A_ThreadID"
-		},
-		{
-			"body": "A_ZipCompressionLevel",
-			"prefix": "A_ZipCompressionLevel"
-		}
-	]
+    "directives": [
+        {
+            "body": "#DefineDefault${1|Array,Map,Object|}Value ",
+            "description": "Defines the default value that will be used when an attribute or item is not found in Object/Array/Map.",
+            "prefix": "#DefineDefault"
+        },
+        {
+            "body": "#DllImport ${1:Function_Name}, ${2:DllFile\\Function}, ${3:DynaCallParameterDefinition [, DefaultArg1, ...]}",
+            "description": "Create script functions for dll or exe functions.",
+            "prefix": "#DllImport"
+        },
+        {
+            "body": "#WindowClassGui ",
+            "description": "Change the name of the Gui window class from AutoHotkey GUI to another name.",
+            "prefix": "#WindowClassGui"
+        },
+        {
+            "body": "#WindowClassMain ",
+            "description": "Change the name of the main window class from AutoHotkey to another name.",
+            "prefix": "#WindowClassMain"
+        },
+        {
+            "body": "#UseStdLib",
+            "description": "Automatically load a functions from standard library. The search order is UserLib -> Resource LIB -> WinApi.",
+            "prefix": "#UseStdLib"
+        },
+        {
+            "body": "#MapCaseSense ${1|On,Off,Locale|}",
+            "description": "Set the default case-sensitive Settings for Map.",
+            "prefix": "#MapCaseSense"
+        },
+        {
+            "body": "#TargetControlError",
+            "description": "Don't throw error when target control is not found.",
+            "prefix": "#TargetControlError"
+        },
+        {
+            "body": "#TargetWindowError",
+            "description": "Don't throw error when target window  is not found.",
+            "prefix": "#TargetWindowError"
+        },
+        {
+            "body": "#InitExec ${1:Expression}",
+            "description": "The initialization expression is executed in load order before the script begins.",
+            "prefix": "#InitExec"
+        }
+    ],
+    "keywords": [
+        {
+            "body": "macro",
+            "description": "A function definition can be prefixed with 'macro ' to create a macro function. All undeclared variables within a macro function except parameters and local variables come from the scope of the caller.",
+            "prefix": "macro"
+        }
+    ],
+    "variables": [
+        {
+            "body": "A_AhkDir",
+            "description": "The dir of current exe.",
+            "prefix": "A_AhkDir"
+        },
+        {
+            "body": "A_DllDir",
+            "description": "the dir of current module (dll or exe)",
+            "prefix": "A_DllDir"
+        },
+        {
+            "body": "A_DllPath",
+            "description": "The path of current module (dll or exe).",
+            "prefix": "A_DllPath"
+        },
+        {
+            "body": "A_GlobalStruct",
+            "prefix": "A_GlobalStruct"
+        },
+        {
+            "body": "A_IsDll",
+            "prefix": "A_IsDll"
+        },
+        {
+            "body": "A_MainThreadID",
+            "prefix": "A_MainThreadID"
+        },
+        {
+            "body": "A_MemoryModule",
+            "prefix": "A_MemoryModule"
+        },
+        {
+            "body": "A_ModuleHandle",
+            "prefix": "A_ModuleHandle"
+        },
+        {
+            "body": "A_ScriptStruct",
+            "prefix": "A_ScriptStruct"
+        },
+        {
+            "body": "A_ThreadID",
+            "prefix": "A_ThreadID"
+        },
+        {
+            "body": "A_ZipCompressionLevel",
+            "prefix": "A_ZipCompressionLevel"
+        }
+    ]
 }

@@ -1,4 +1,5 @@
 ; Provide some functions that are inconvenient to realize through nodejs.
+#Requires AutoHotkey v2
 
 main()
 main() {
