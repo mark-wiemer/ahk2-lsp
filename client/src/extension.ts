@@ -42,8 +42,8 @@ import {
 let client: LanguageClient,
     outputchannel: OutputChannel,
     ahkStatusBarItem: StatusBarItem;
-let ahkprocesses = new Map<number, child_process.ChildProcess>();
-let ahkconfig = workspace.getConfiguration('AutoHotkey2');
+const ahkprocesses = new Map<number, child_process.ChildProcess>();
+const ahkconfig = workspace.getConfiguration('AutoHotkey2');
 let ahkpath_cur: string = ahkconfig.InterpreterPath,
     server_is_ready = false,
     zhcn = false;
@@ -56,16 +56,17 @@ export async function activate(context: ExtensionContext) {
     // The server is implemented in node
     let serverModule: string,
         serverPath = process.env.VSCODE_AHK_SERVER_PATH;
-    if (serverPath)
+    if (serverPath) {
         serverModule = context.asAbsolutePath(`server/${serverPath}/server.js`);
-    else
+    } else {
         serverModule = context.asAbsolutePath(
             'server/' + __dirname.replace(/^.*[\\/]/, '') + '/server.js',
         );
+    }
 
     // If the extension is launched in debug mode then the debug server options are used
     // Otherwise the run options are used
-    let serverOptions: ServerOptions = {
+    const serverOptions: ServerOptions = {
         run: { module: serverModule, transport: TransportKind.ipc },
         debug: {
             module: serverModule,
@@ -78,27 +79,32 @@ export async function activate(context: ExtensionContext) {
         'ahk2.executeCommands': async (
             params: { command: string; args?: string[]; wait?: boolean }[],
         ) => {
-            let result: any[] = [];
-            for (const cmd of params)
+            const result: any[] = [];
+            for (const cmd of params) {
                 result.push(
                     cmd.wait
                         ? await commands.executeCommand(cmd.command, cmd.args)
                         : commands.executeCommand(cmd.command, cmd.args),
                 );
+            }
             return result;
         },
         'ahk2.getActiveTextEditorUriAndPosition': (params: any) => {
             const editor = window.activeTextEditor;
-            if (!editor) return;
+            if (!editor) {
+                return;
+            }
             const uri = editor.document.uri.toString(),
                 position = editor.selection.end;
             return { uri, position };
         },
         'ahk2.insertSnippet': async (params: [string, Range?]) => {
-            let editor = window.activeTextEditor;
-            if (!editor) return;
+            const editor = window.activeTextEditor;
+            if (!editor) {
+                return;
+            }
             if (params[1]) {
-                let { start, end } = params[1];
+                const { start, end } = params[1];
                 await editor.insertSnippet(
                     new SnippetString(params[0]),
                     new Range(
@@ -108,15 +114,17 @@ export async function activate(context: ExtensionContext) {
                         end.character,
                     ),
                 );
-            } else editor.insertSnippet(new SnippetString(params[0]));
+            } else {
+                editor.insertSnippet(new SnippetString(params[0]));
+            }
         },
         'ahk2.setTextDocumentLanguage': async (params: [string, string?]) => {
-            let lang = params[1] || 'ahk';
+            const lang = params[1] || 'ahk';
             if (!langs.includes(lang)) {
                 window.showErrorMessage(`Unknown language id: ${lang}`);
                 return;
             }
-            let uri = params[0],
+            const uri = params[0],
                 it = workspace.textDocuments.find(
                     (it) => it.uri.toString() === uri,
                 );
@@ -129,7 +137,7 @@ export async function activate(context: ExtensionContext) {
     };
 
     // Options to control the language client
-    let clientOptions: LanguageClientOptions = {
+    const clientOptions: LanguageClientOptions = {
         documentSelector: [{ language: 'ahk2' }],
         synchronize: {
             // Notify the server about file changes to '.clientrc files contained in the workspace
@@ -145,10 +153,11 @@ export async function activate(context: ExtensionContext) {
             ...ahkconfig,
         },
     };
-    if (ahkconfig.FormatOptions?.one_true_brace !== undefined)
+    if (ahkconfig.FormatOptions?.one_true_brace !== undefined) {
         window.showWarningMessage(
             'configuration "AutoHotkey2.FormatOptions.one_true_brace" is deprecated!\nplease use "AutoHotkey2.FormatOptions.brace_style"',
         );
+    }
 
     // Create the language client and start the client.
     client = new LanguageClient(
@@ -166,8 +175,9 @@ export async function activate(context: ExtensionContext) {
             client.onRequest(...handler),
         );
         onDidChangegetInterpreter();
-        if (window.activeTextEditor?.document.languageId === 'ahk2')
+        if (window.activeTextEditor?.document.languageId === 'ahk2') {
             ahkStatusBarItem.show();
+        }
         server_is_ready = true;
     });
 
@@ -182,8 +192,9 @@ export async function activate(context: ExtensionContext) {
                 ext.extensionKind === 1 &&
                 /ahk|autohotkey/i.test(ext.id) &&
                 (type = ext.packageJSON?.contributes?.debuggers?.[0]?.type)
-            )
+            ) {
                 debugexts[type] = ext.id;
+            }
         }
         extlist = Object.values(debugexts);
         languages.getLanguages().then((all) => (langs = all));
@@ -219,15 +230,18 @@ export async function activate(context: ExtensionContext) {
         ),
         commands.registerCommand('ahk2.switch', () => {
             const doc = window.activeTextEditor?.document;
-            if (doc)
+            if (doc) {
                 languages.setTextDocumentLanguage(
                     doc,
                     doc.languageId === 'ahk2' ? 'ahk' : 'ahk2',
                 );
+            }
         }),
         commands.registerCommand('ahk2.export.symbols', () => {
             const doc = window.activeTextEditor?.document;
-            if (doc?.languageId !== 'ahk2') return;
+            if (doc?.languageId !== 'ahk2') {
+                return;
+            }
             client
                 .sendRequest('ahk2.exportSymbols', doc.uri.toString())
                 .then((result) =>
@@ -245,7 +259,7 @@ export async function activate(context: ExtensionContext) {
                     .sendRequest('ahk2.getContent', uri.toString())
                     .then((content) => {
                         setTimeout(() => {
-                            let it = workspace.textDocuments.find(
+                            const it = workspace.textDocuments.find(
                                 (it) =>
                                     it.uri.scheme === 'ahkres' &&
                                     it.uri.path === uri.path,
@@ -279,7 +293,7 @@ export function deactivate() {
 }
 
 function decode(buf: Buffer) {
-    for (let td of textdecoders) {
+    for (const td of textdecoders) {
         try {
             return td.decode(buf);
         } catch {}
@@ -293,12 +307,15 @@ async function runCurrentScriptFile(selection = false): Promise<void> {
             ahkpath_cur ||
             (workspace.getConfiguration('AutoHotkey2')
                 .InterpreterPath as string);
-    if (!editor) return;
-    if (executePath && !executePath.includes(':'))
+    if (!editor) {
+        return;
+    }
+    if (executePath && !executePath.includes(':')) {
         executePath = resolve(
             workspace.getWorkspaceFolder(editor.document.uri)?.uri.fsPath ?? '',
             executePath,
         );
+    }
     if (!executePath || !existsSync(executePath)) {
         executePath ||= 'AutoHotkey.exe';
         window.showErrorMessage(
@@ -311,12 +328,17 @@ async function runCurrentScriptFile(selection = false): Promise<void> {
         command = `"${executePath}" /ErrorStdOut=utf-8 `;
     let startTime: Date;
     outputchannel.show(true);
-    if (!ahkprocesses.size) outputchannel.clear();
-    if (selection || editor.document.isUntitled)
+    if (!ahkprocesses.size) {
+        outputchannel.clear();
+    }
+    if (selection || editor.document.isUntitled) {
         selecttext = editor.document.getText(editor.selection);
+    }
     executePath.replace(/^(.+[\\/])AutoHotkeyUX\.exe$/i, (...m) => {
-        let lc = m[1] + 'launcher.ahk';
-        if (existsSync(lc)) command = `"${executePath}" "${lc}" `;
+        const lc = m[1] + 'launcher.ahk';
+        if (existsSync(lc)) {
+            command = `"${executePath}" "${lc}" `;
+        }
         return '';
     });
     let process: child_process.ChildProcess;
@@ -370,17 +392,23 @@ async function runCurrentScriptFile(selection = false): Promise<void> {
                 } seconds`,
             );
             ahkprocesses.delete(process.pid);
-            if (!ahkprocesses.size)
+            if (!ahkprocesses.size) {
                 commands.executeCommand('setContext', 'ahk2:isRunning', false);
+            }
         });
-    } else outputchannel.appendLine(`[Fail] ${command}`);
+    } else {
+        outputchannel.appendLine(`[Fail] ${command}`);
+    }
 }
 
 async function stopRunningScript() {
-    if (!ahkprocesses.size) return;
-    if (ahkprocesses.size === 1) ahkprocesses.forEach((t) => kill(t.pid));
-    else {
-        let pick = window.createQuickPick(),
+    if (!ahkprocesses.size) {
+        return;
+    }
+    if (ahkprocesses.size === 1) {
+        ahkprocesses.forEach((t) => kill(t.pid));
+    } else {
+        const pick = window.createQuickPick(),
             items: QuickPickItem[] = [];
         pick.title = 'Running Scripts';
         ahkprocesses.forEach((t) =>
@@ -402,13 +430,15 @@ async function stopRunningScript() {
 }
 
 async function compileScript() {
-    let editor = window.activeTextEditor;
-    if (!editor) return;
+    const editor = window.activeTextEditor;
+    if (!editor) {
+        return;
+    }
     let cmd = '',
         cmdop = workspace.getConfiguration('AutoHotkey2').CompilerCMD as string;
-    let ws =
+    const ws =
         workspace.getWorkspaceFolder(editor.document.uri)?.uri.fsPath ?? '';
-    let compilePath = findfile(
+    const compilePath = findfile(
         ['Compiler\\Ahk2Exe.exe', '..\\Compiler\\Ahk2Exe.exe'],
         ws,
     );
@@ -440,7 +470,9 @@ async function compileScript() {
     const currentPath = editor.document.uri.fsPath;
     const exePath = currentPath.replace(/\.\w+$/, '.exe');
     try {
-        if (existsSync(exePath)) unlinkSync(exePath);
+        if (existsSync(exePath)) {
+            unlinkSync(exePath);
+        }
     } catch (e: any) {
         window.showErrorMessage(e.message);
         return;
@@ -448,41 +480,52 @@ async function compileScript() {
     cmdop = cmdop.replace(/(['"]?)\$\{execPath\}\1/gi, `"${executePath}"`);
     if (cmdop.match(/\bahk2exe\w*\.exe/i)) {
         cmd = cmdop + ' /in ' + currentPath;
-        if (!cmd.toLowerCase().includes(' /out '))
+        if (!cmd.toLowerCase().includes(' /out ')) {
             cmd += '/out "' + exePath + '"';
+        }
     } else {
         cmd = `"${compilePath}" ${cmdop} /in "${currentPath}" `;
-        if (!cmdop.toLowerCase().includes(' /out '))
+        if (!cmdop.toLowerCase().includes(' /out ')) {
             cmd += '/out "' + exePath + '"';
+        }
     }
-    let process = child_process.exec(cmd, { cwd: resolve(currentPath, '..') });
+    const process = child_process.exec(cmd, {
+        cwd: resolve(currentPath, '..'),
+    });
     if (process.pid) {
-        if ((cmd += ' ').toLowerCase().includes(' /gui ')) return;
+        if ((cmd += ' ').toLowerCase().includes(' /gui ')) {
+            return;
+        }
         outputchannel.show(true);
         outputchannel.clear();
         process.on('exit', () => {
-            if (existsSync(exePath))
+            if (existsSync(exePath)) {
                 window.showInformationMessage(
                     zhcn ? '编译成功!' : 'Compiled successfully!',
                 );
-            else
+            } else {
                 window.showErrorMessage(
                     zhcn ? '编译失败!' : 'Compiled failed!',
                 );
+            }
         });
         process.stderr?.on('data', (error) => outputchannel.appendLine(error));
         process.stdout?.on('data', (msg) => outputchannel.appendLine(msg));
-    } else window.showErrorMessage(zhcn ? '编译失败!' : 'Compilation failed!');
+    } else {
+        window.showErrorMessage(zhcn ? '编译失败!' : 'Compilation failed!');
+    }
 }
 
 async function quickHelp() {
     const editor = window.activeTextEditor;
-    if (!editor) return;
+    if (!editor) {
+        return;
+    }
     const document = editor.document,
         position = editor.selection.active;
     const range = document.getWordRangeAtPosition(position),
         line = position.line;
-    let helpPath = findfile(
+    const helpPath = findfile(
         ['AutoHotkey.chm'],
         workspace.getWorkspaceFolder(editor.document.uri)?.uri.fsPath ?? '',
     );
@@ -498,8 +541,9 @@ async function quickHelp() {
                     range.start.character,
                 ),
             ) === '#'
-        )
+        ) {
             word = '#' + word;
+        }
     }
     if (!helpPath) {
         window.showErrorMessage(
@@ -510,7 +554,7 @@ async function quickHelp() {
         return;
     }
     if (ahkpath_cur && existsSync(ahkpath_cur)) {
-        let script = `
+        const script = `
 #NoTrayIcon
 #DllLoad oleacc.dll
 chm_hwnd := 0, chm_path := '${helpPath}', DetectHiddenWindows(true), !(WinGetExStyle(top := WinExist('A')) & 8) && (top := 0)
@@ -545,14 +589,15 @@ if ${!!word} && !DllCall('oleacc\\AccessibleObjectFromWindow', 'ptr', ctl, 'uint
 	)')
 }`;
         if (ahkStatusBarItem.text.endsWith('[UIAccess]')) {
-            let file = resolve(__dirname, 'temp.ahk');
+            const file = resolve(__dirname, 'temp.ahk');
             writeFileSync(file, script, { encoding: 'utf-8' });
             child_process.execSync(`"${ahkpath_cur}" /ErrorStdOut ${file}`);
             unlinkSync(file);
-        } else
+        } else {
             child_process.execSync(`"${ahkpath_cur}" /ErrorStdOut *`, {
                 input: script,
             });
+        }
     }
 }
 
@@ -564,13 +609,16 @@ async function begindebug(
 ) {
     let editor = window.activeTextEditor,
         executePath = ahkpath_cur;
-    if (!editor) return;
+    if (!editor) {
+        return;
+    }
     let extname: string | undefined;
-    if (executePath && !executePath.includes(':'))
+    if (executePath && !executePath.includes(':')) {
         executePath = resolve(
             workspace.getWorkspaceFolder(editor.document.uri)?.uri.fsPath ?? '',
             executePath,
         );
+    }
     if (params || attach) {
         if (
             !extlist.includes(
@@ -594,22 +642,24 @@ async function begindebug(
             'mark-wiemer.vscode-autohotkey-plus-plus',
             'cweijan.vscode-autohotkey-plus',
         ]);
-        if (extname)
+        if (extname) {
             commands.executeCommand(
                 'workbench.extensions.installExtension',
                 extname,
             );
+        }
         return;
-    } else if (extlist.length === 1) extname = extlist[0];
-    else {
-        let def = workspace.getConfiguration('AutoHotkey2')
+    } else if (extlist.length === 1) {
+        extname = extlist[0];
+    } else {
+        const def = workspace.getConfiguration('AutoHotkey2')
             .DefaultDebugger as string;
         extname = extlist.includes(def)
             ? def
             : await window.showQuickPick(extlist);
     }
     if (extname) {
-        let config: DebugConfiguration = {
+        const config: DebugConfiguration = {
             type: '',
             request: 'launch',
             name: 'AutoHotkey2 Debug',
@@ -622,21 +672,25 @@ async function begindebug(
             useDebugDirective: true,
             usePerfTips: true,
         };
-        for (const t in debugexts)
+        for (const t in debugexts) {
             if (debugexts[t] === extname) {
                 config.type = t;
-                if (extname === 'zero-plusplus.vscode-autohotkey-debug')
-                    if (ahkStatusBarItem.text.endsWith('[UIAccess]'))
+                if (extname === 'zero-plusplus.vscode-autohotkey-debug') {
+                    if (ahkStatusBarItem.text.endsWith('[UIAccess]')) {
                         config.useUIAVersion = true;
+                    }
+                }
                 if (params) {
                     let input = await window.showInputBox({
                         prompt: zhcn
                             ? '输入需要传递的命令行参数'
                             : 'Enter the command line parameters that need to be passed',
                     });
-                    if (input === undefined) return;
+                    if (input === undefined) {
+                        return;
+                    }
                     if ((input = input.trim())) {
-                        let args: string[] = [];
+                        const args: string[] = [];
                         input.replace(
                             /('|")(.*?(?<!\\))\1(?=(\s|$))|(\S+)/g,
                             (...m) => {
@@ -653,6 +707,7 @@ async function begindebug(
                 }
                 break;
             }
+        }
         debug.startDebugging(
             workspace.getWorkspaceFolder(editor.document.uri),
             config,
@@ -694,29 +749,36 @@ async function setInterpreter() {
             detail: 'Browse your file system to find a AutoHotkey2 interpreter.',
         };
     }
-    if (ahkpath)
+    if (ahkpath) {
         await addpath(
             resolve(ahkpath, '..'),
             _.includes('autohotkey') ? 20 : 5,
         );
-    if (!_.includes('c:\\program files\\autohotkey\\'))
+    }
+    if (!_.includes('c:\\program files\\autohotkey\\')) {
         await addpath('C:\\Program Files\\AutoHotkey\\', 20);
+    }
     if (
         (_ = ahkpath_cur.toLowerCase()) !== ahkpath.toLowerCase() &&
         !ahkpath_cur.toLowerCase().includes('c:\\program files\\autohotkey\\')
-    )
+    ) {
         await addpath(
             resolve(ahkpath_cur, '..'),
             _.includes('autohotkey') ? 20 : 5,
         );
+    }
     index = list
         .map((it) => it.detail?.toLowerCase())
         .indexOf((ahkpath_cur || ahkpath).toLowerCase());
-    if (index !== -1) active = list[index];
+    if (index !== -1) {
+        active = list[index];
+    }
 
     (pick.matchOnDetail = true), (pick.items = list);
     pick.title = zhcn ? '选择解释器' : 'Select Interpreter';
-    if (active) pick.activeItems = [active];
+    if (active) {
+        pick.activeItems = [active];
+    }
     pick.placeholder = (zhcn ? '当前: ' : 'Current: ') + ahkpath_cur;
     pick.show();
     pick.onDidAccept(async (e) => {
@@ -731,60 +793,75 @@ async function setInterpreter() {
             return;
         } else if (pick.selectedItems[0] === it) {
             pick.ignoreFocusOut = true;
-            let path = await window.showOpenDialog({
+            const path = await window.showOpenDialog({
                 defaultUri: ahkpath ? Uri.file(ahkpath) : undefined,
                 filters: { Executables: ['exe'] },
                 openLabel: zhcn ? '选择解释器' : 'Select Interpreter',
             });
-            if (path) sel.detail = path[0].fsPath;
+            if (path) {
+                sel.detail = path[0].fsPath;
+            }
         } else {
             if ((it = pick.selectedItems[0])) {
-                if ((!active || it !== active) && it.detail) sel = it;
-            } else if (pick.value.match(/\.exe/i) && existsSync(pick.value))
+                if ((!active || it !== active) && it.detail) {
+                    sel = it;
+                }
+            } else if (pick.value.match(/\.exe/i) && existsSync(pick.value)) {
                 sel.detail = pick.value;
+            }
         }
         pick.dispose();
         if (sel.detail) {
-            if (!sel.label) sel.label = (await getAHKversion([sel.detail]))[0];
+            if (!sel.label) {
+                sel.label = (await getAHKversion([sel.detail]))[0];
+            }
             ahkStatusBarItem.text = sel.label;
             ahkStatusBarItem.tooltip = sel.detail;
             ahkpath_cur = sel.detail;
-            if (server_is_ready)
+            if (server_is_ready) {
                 commands.executeCommand(
                     'ahk2.resetinterpreterpath',
                     ahkpath_cur,
                 );
+            }
             ahkconfig.update('InterpreterPath', ahkpath_cur, from);
         }
     });
     pick.onDidHide((e) => pick.dispose());
 
     async function addpath(dirpath: string, max: number) {
-        let paths: string[] = [];
-        if (!existsSync(dirpath)) return;
+        const paths: string[] = [];
+        if (!existsSync(dirpath)) {
+            return;
+        }
         for (let file of readdirSync(dirpath)) {
-            let path = resolve(dirpath, file);
+            const path = resolve(dirpath, file);
             try {
                 if (statSync(path).isDirectory()) {
                     for (file of readdirSync(path)) {
-                        let path2 = resolve(path, file);
+                        const path2 = resolve(path, file);
                         if (
                             file.toLowerCase().endsWith('.exe') &&
                             !statSync(path2).isDirectory()
-                        )
+                        ) {
                             paths.push(path2);
+                        }
                     }
-                } else if (file.toLowerCase().endsWith('.exe'))
+                } else if (file.toLowerCase().endsWith('.exe')) {
                     paths.push(path);
-                if (paths.length >= max) break;
+                }
+                if (paths.length >= max) {
+                    break;
+                }
             } catch {}
         }
         (await getAHKversion(paths)).forEach((label, i) => {
             if (
                 label.match(/\bautohotkey.*?2\./i) &&
                 !label.endsWith('[UIAccess]')
-            )
+            ) {
                 list.push({ label, detail: paths[i] });
+            }
         });
     }
 }
@@ -794,39 +871,52 @@ function getAHKversion(paths: string[]): Thenable<string[]> {
 }
 
 function getInterpreterPath() {
-    let t = ahkconfig.inspect('InterpreterPath');
+    const t = ahkconfig.inspect('InterpreterPath');
     let path = '';
-    if (t)
-        if ((path = t.workspaceFolderValue as string))
+    if (t) {
+        if ((path = t.workspaceFolderValue as string)) {
             return { path, from: ConfigurationTarget.WorkspaceFolder };
-        else if ((path = t.workspaceValue as string))
+        } else if ((path = t.workspaceValue as string)) {
             return { path, from: ConfigurationTarget.Workspace };
-        else if ((path = t.globalValue as string))
+        } else if ((path = t.globalValue as string)) {
             return { path, from: ConfigurationTarget.Global };
-        else path = (t.defaultValue as string) ?? '';
+        } else {
+            path = (t.defaultValue as string) ?? '';
+        }
+    }
     return { path };
 }
 
 function findfile(files: string[], workspace: string) {
     let paths: string[] = [],
         s: string;
-    let t = ahkconfig.inspect('InterpreterPath');
+    const t = ahkconfig.inspect('InterpreterPath');
     if ((add(ahkpath_cur), t)) {
         add(t.workspaceFolderValue as string);
         add(t.workspaceValue as string);
         add(t.globalValue as string);
         add(t.defaultValue as string);
     }
-    for (const path of paths)
-        for (const file of files)
-            if (existsSync((s = resolve(path, '..', file)))) return s;
+    for (const path of paths) {
+        for (const file of files) {
+            if (existsSync((s = resolve(path, '..', file)))) {
+                return s;
+            }
+        }
+    }
     return '';
 
     function add(path: string) {
-        if (!path) return;
-        if (!path.includes(':')) path = resolve(workspace, path);
+        if (!path) {
+            return;
+        }
+        if (!path.includes(':')) {
+            path = resolve(workspace, path);
+        }
         path = path.toLowerCase();
-        if (!paths.includes(path)) paths.push(path);
+        if (!paths.includes(path)) {
+            paths.push(path);
+        }
     }
 }
 
@@ -850,7 +940,7 @@ async function onDidChangegetInterpreter() {
 async function updateVersionInfo() {
     const editor = window.activeTextEditor;
     if (server_is_ready && editor) {
-        let info: { content: string; uri: string; range: Range } | null =
+        const info: { content: string; uri: string; range: Range } | null =
             await client.sendRequest(
                 'ahk2.getVersionInfo',
                 editor.document.uri.toString(),
@@ -873,7 +963,7 @@ async function updateVersionInfo() {
                 new Range(0, 0, 0, 0),
             );
         } else {
-            let d = new Date();
+            const d = new Date();
             let content = info.content,
                 ver;
             content = content.replace(
@@ -892,13 +982,14 @@ async function updateVersionInfo() {
                         /(?<=^[\s*]*@version[:\s]\s*)(\S*)/im,
                     )?.[1],
                 }))
-            )
+            ) {
                 content = content.replace(
                     /(?<=^\s*[;*]?\s*@version[:\s]\s*)(\S*)/im,
                     ver,
                 );
+            }
             if (content !== info.content) {
-                let ed = new WorkspaceEdit();
+                const ed = new WorkspaceEdit();
                 ed.replace(Uri.parse(info.uri), info.range, content);
                 workspace.applyEdit(ed);
             }

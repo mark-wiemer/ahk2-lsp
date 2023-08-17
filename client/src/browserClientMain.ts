@@ -29,27 +29,32 @@ export function activate(context: ExtensionContext) {
         'ahk2.executeCommands': async (
             params: { command: string; args?: string[]; wait?: boolean }[],
         ) => {
-            let result: any[] = [];
-            for (const cmd of params)
+            const result: any[] = [];
+            for (const cmd of params) {
                 result.push(
                     cmd.wait
                         ? await commands.executeCommand(cmd.command, cmd.args)
                         : commands.executeCommand(cmd.command, cmd.args),
                 );
+            }
             return result;
         },
         'ahk2.getActiveTextEditorUriAndPosition': (params: any) => {
             const editor = window.activeTextEditor;
-            if (!editor) return;
+            if (!editor) {
+                return;
+            }
             const uri = editor.document.uri.toString(),
                 position = editor.selection.end;
             return { uri, position };
         },
         'ahk2.insertSnippet': async (params: [string, Range?]) => {
-            let editor = window.activeTextEditor;
-            if (!editor) return;
+            const editor = window.activeTextEditor;
+            if (!editor) {
+                return;
+            }
             if (params[1]) {
-                let { start, end } = params[1];
+                const { start, end } = params[1];
                 await editor.insertSnippet(
                     new SnippetString(params[0]),
                     new Range(
@@ -59,33 +64,35 @@ export function activate(context: ExtensionContext) {
                         end.character,
                     ),
                 );
-            } else editor.insertSnippet(new SnippetString(params[0]));
+            } else {
+                editor.insertSnippet(new SnippetString(params[0]));
+            }
         },
         'ahk2.setTextDocumentLanguage': async (params: [string, string?]) => {
-            let lang = params[1] || 'ahk';
+            const lang = params[1] || 'ahk';
             if (!(await languages.getLanguages()).includes(lang)) {
                 window.showErrorMessage(`Unknown language id: ${lang}`);
                 return;
             }
-            let uri = params[0],
+            const uri = params[0],
                 it = workspace.textDocuments.find(
                     (it) => it.uri.toString() === uri,
                 );
             it && languages.setTextDocumentLanguage(it, lang);
         },
         'ahk2.getWorkspaceFiles': async (params: string[]) => {
-            let all = !params.length;
+            const all = !params.length;
             if (workspace.workspaceFolders) {
-                if (all)
+                if (all) {
                     return (
                         await workspace.findFiles('**/*.{ahk,ah2,ahk2}')
                     ).forEach((it) => it.toString());
-                else {
-                    let files: string[] = [];
-                    for (let folder of workspace.workspaceFolders)
+                } else {
+                    const files: string[] = [];
+                    for (const folder of workspace.workspaceFolders) {
                         if (
                             params.includes(folder.uri.toString().toLowerCase())
-                        )
+                        ) {
                             files.push(
                                 ...(
                                     await workspace.findFiles(
@@ -96,6 +103,8 @@ export function activate(context: ExtensionContext) {
                                     )
                                 ).map((it) => it.toString()),
                             );
+                        }
+                    }
                     return files;
                 }
             }
@@ -125,7 +134,7 @@ export function activate(context: ExtensionContext) {
         commands.registerCommand('ahk2.updateversioninfo', async () => {
             const editor = window.activeTextEditor;
             if (editor) {
-                let info: {
+                const info: {
                     content: string;
                     uri: string;
                     range: Range;
@@ -151,7 +160,7 @@ export function activate(context: ExtensionContext) {
                         new Range(0, 0, 0, 0),
                     );
                 } else {
-                    let d = new Date();
+                    const d = new Date();
                     let content = info.content,
                         ver;
                     content = content.replace(
@@ -172,13 +181,14 @@ export function activate(context: ExtensionContext) {
                                 /(?<=^[\s*]*@version[:\s]\s*)(\S*)/im,
                             )?.[1],
                         }))
-                    )
+                    ) {
                         content = content.replace(
                             /(?<=^\s*[;*]?\s*@version[:\s]\s*)(\S*)/im,
                             ver,
                         );
+                    }
                     if (content !== info.content) {
-                        let ed = new WorkspaceEdit();
+                        const ed = new WorkspaceEdit();
                         ed.replace(Uri.parse(info.uri), info.range, content);
                         workspace.applyEdit(ed);
                     }
@@ -187,11 +197,12 @@ export function activate(context: ExtensionContext) {
         }),
         commands.registerCommand('ahk2.switch', () => {
             const doc = window.activeTextEditor?.document;
-            if (doc)
+            if (doc) {
                 languages.setTextDocumentLanguage(
                     doc,
                     doc.languageId === 'ahk2' ? 'ahk' : 'ahk2',
                 );
+            }
         }),
         workspace.onDidCloseTextDocument((e) => {
             client.sendNotification(
