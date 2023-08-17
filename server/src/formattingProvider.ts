@@ -11,26 +11,26 @@ import { chinese_punctuations, extsettings, lexers, Token } from './common';
 export async function documentFormatting(
     params: DocumentFormattingParams,
 ): Promise<TextEdit[]> {
-    let doc = lexers[params.textDocument.uri.toLowerCase()],
+    const doc = lexers[params.textDocument.uri.toLowerCase()],
         range = Range.create(0, 0, doc.document.lineCount, 0);
-    let opts = Object.assign({}, extsettings.FormatOptions);
+    const opts = Object.assign({}, extsettings.FormatOptions);
     opts.indent_string ??= params.options.insertSpaces
         ? ' '.repeat(params.options.tabSize)
         : '\t';
-    let newText = doc.beautify(opts);
+    const newText = doc.beautify(opts);
     return [{ range, newText }];
 }
 
 export async function rangeFormatting(
     params: DocumentRangeFormattingParams,
 ): Promise<TextEdit[] | undefined> {
-    let doc = lexers[params.textDocument.uri.toLowerCase()],
+    const doc = lexers[params.textDocument.uri.toLowerCase()],
         range = params.range;
-    let opts = Object.assign({}, extsettings.FormatOptions);
+    const opts = Object.assign({}, extsettings.FormatOptions);
     opts.indent_string = params.options.insertSpaces
         ? ' '.repeat(params.options.tabSize)
         : '\t';
-    let newText = doc.beautify(opts, range).trim();
+    const newText = doc.beautify(opts, range).trim();
     return [{ range, newText }];
 }
 
@@ -49,8 +49,9 @@ export async function typeFormatting(
         start: { line: 0, character: 0 },
         end: { line: 0, character: 1 },
     });
-    if (s === '\t' || (!params.options.insertSpaces && s !== ' '))
+    if (s === '\t' || (!params.options.insertSpaces && s !== ' ')) {
         opts.indent_string = '\t';
+    }
     if (ch === '\n') {
         let { line, character } = position,
             linetexts = doc.document
@@ -62,7 +63,9 @@ export async function typeFormatting(
             s = linetexts[0].trimRight(),
             indent_string: string;
 
-        if (!linetexts[1].trim()) character = linetexts[1].length;
+        if (!linetexts[1].trim()) {
+            character = linetexts[1].length;
+        }
 
         if (s.endsWith('{')) {
             if (
@@ -72,7 +75,7 @@ export async function typeFormatting(
                 }))
             ) {
                 indent_string = (result[0].range as any).indent_string ?? '';
-                if (linetexts[1].substring(0, character) !== indent_string)
+                if (linetexts[1].substring(0, character) !== indent_string) {
                     result.push({
                         newText: indent_string,
                         range: {
@@ -80,6 +83,7 @@ export async function typeFormatting(
                             end: { line, character },
                         },
                     });
+                }
 
                 if (
                     (s = (linetexts[2] ??= '').trimLeft()).startsWith('}') &&
@@ -89,7 +93,7 @@ export async function typeFormatting(
                             '',
                         )) + '}',
                     )
-                )
+                ) {
                     result.push({
                         newText: indent_string,
                         range: {
@@ -100,16 +104,17 @@ export async function typeFormatting(
                             },
                         },
                     });
+                }
             }
         } else if ((pp = doc.linepos[line - 1]) !== undefined) {
-            let range = {
+            const range = {
                 start: doc.document.positionAt(pp),
                 end: { line: line - 1, character: s.length },
             };
-            let newText = doc.beautify(opts, range).trim();
+            const newText = doc.beautify(opts, range).trim();
             result = [{ range, newText }];
             indent_string = (range as any).indent_string ?? '';
-            if (linetexts[1].substring(0, character) !== indent_string)
+            if (linetexts[1].substring(0, character) !== indent_string) {
                 result.push({
                     newText: indent_string,
                     range: {
@@ -117,6 +122,7 @@ export async function typeFormatting(
                         end: { line, character },
                     },
                 });
+            }
         } else if (!s) {
             if (
                 linetexts[0] !==
@@ -124,13 +130,21 @@ export async function typeFormatting(
             ) {
                 if (!linetexts[0]) {
                     tk = doc.find_token(doc.document.offsetAt(position));
-                    if (tk.type === 'TK_STRING' || tk.type.endsWith('COMMENT'))
+                    if (
+                        tk.type === 'TK_STRING' ||
+                        tk.type.endsWith('COMMENT')
+                    ) {
                         return undefined;
-                    let b = ['TK_START_EXPR', 'TK_START_BLOCK', ''];
-                    while ((tk = tk.previous_token!)) {
-                        if (b.includes(tk.type)) break;
                     }
-                    if ((b.pop(), b.includes(tk?.type))) return undefined;
+                    const b = ['TK_START_EXPR', 'TK_START_BLOCK', ''];
+                    while ((tk = tk.previous_token!)) {
+                        if (b.includes(tk.type)) {
+                            break;
+                        }
+                    }
+                    if ((b.pop(), b.includes(tk?.type))) {
+                        return undefined;
+                    }
                 }
                 result = [
                     {
@@ -144,9 +158,10 @@ export async function typeFormatting(
             }
         }
         return result;
-    } else if (ch === '}') return format_end_with_brace(position);
-    else if ((s = chinese_punctuations[ch])) {
-        let p = { line: position.line, character: position.character - 1 };
+    } else if (ch === '}') {
+        return format_end_with_brace(position);
+    } else if ((s = chinese_punctuations[ch])) {
+        const p = { line: position.line, character: position.character - 1 };
         tk = doc.find_token(doc.document.offsetAt(p));
         if (tk.type === 'TK_WORD') {
             if (tk.length > 1) {
@@ -170,10 +185,11 @@ export async function typeFormatting(
             ];
         pp = tk?.previous_pair_pos;
         if (pp !== undefined) {
-            while ((tk = doc.tokens[pp])?.previous_pair_pos !== undefined)
+            while ((tk = doc.tokens[pp])?.previous_pair_pos !== undefined) {
                 pp = tk.previous_pair_pos;
-            let range = { start: doc.document.positionAt(pp), end: pos };
-            let newText = doc.beautify(opts, range).trim();
+            }
+            const range = { start: doc.document.positionAt(pp), end: pos };
+            const newText = doc.beautify(opts, range).trim();
             return [{ range, newText }];
         }
     }

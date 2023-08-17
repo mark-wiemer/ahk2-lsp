@@ -19,8 +19,10 @@ export async function hoverProvider(
     params: HoverParams,
     token: CancellationToken,
 ): Promise<Maybe<Hover>> {
-    if (token.isCancellationRequested) return;
-    let uri = params.textDocument.uri.toLowerCase(),
+    if (token.isCancellationRequested) {
+        return;
+    }
+    const uri = params.textDocument.uri.toLowerCase(),
         doc = lexers[uri];
     let context = doc?.buildContext(params.position),
         t: any,
@@ -42,8 +44,9 @@ export async function hoverProvider(
             uri: string = '';
         if (!word || context.kind === SymbolKind.Null) {
             if (context.token) {
-                if ((t = hoverCache[context.token.content.toLowerCase()]))
+                if ((t = hoverCache[context.token.content.toLowerCase()])) {
                     return t[1];
+                }
             }
             return undefined;
         }
@@ -58,7 +61,7 @@ export async function hoverProvider(
             word.includes('.') &&
             (kind == SymbolKind.Property || kind === SymbolKind.Method)
         ) {
-            let ts: any = {};
+            const ts: any = {};
             (nodes = <any>[]),
                 reset_detect_cache(),
                 detectExpType(
@@ -70,51 +73,65 @@ export async function hoverProvider(
                     context.range.end,
                     ts,
                 );
-            if (word && ts['#any'] === undefined)
-                for (const tp in ts)
+            if (word && ts['#any'] === undefined) {
+                for (const tp in ts) {
                     searchNode(
                         doc,
                         tp + word,
                         context.range.end,
                         kind,
                     )?.forEach((it) => {
-                        if (!nodes?.map((i) => i.node).includes(it.node))
+                        if (!nodes?.map((i) => i.node).includes(it.node)) {
                             nodes?.push(it);
+                        }
                     });
-            if (!nodes?.length) nodes = undefined;
-        } else if (nodes === null) return undefined;
+                }
+            }
+            if (!nodes?.length) {
+                nodes = undefined;
+            }
+        } else if (nodes === null) {
+            return undefined;
+        }
         if (!nodes) {
             if (kind === SymbolKind.Method || kind === SymbolKind.Property) {
-            } else if (kind !== SymbolKind.Function && (t = hoverCache[word]))
+            } else if (kind !== SymbolKind.Function && (t = hoverCache[word])) {
                 return t[1];
+            }
         }
         if (nodes) {
             if (nodes.length > 1) {
                 nodes.forEach((it) => {
-                    if ((<any>it.node).full)
+                    if ((<any>it.node).full) {
                         hover.push({
                             kind: 'ahk2',
                             value: (<any>it.node).full,
                         });
+                    }
                 });
             } else {
                 let { node, scope } = nodes[0],
                     fn = node as FuncNode;
-                if (node.kind === SymbolKind.Class && !fn.full?.startsWith('('))
+                if (
+                    node.kind === SymbolKind.Class &&
+                    !fn.full?.startsWith('(')
+                ) {
                     hover.push({
                         kind: 'ahk2',
                         value: 'class ' + (fn.full || node.name),
                     });
-                else if (scope && node.kind === SymbolKind.TypeParameter) {
-                    let p = (scope as any).parent;
+                } else if (scope && node.kind === SymbolKind.TypeParameter) {
+                    const p = (scope as any).parent;
                     if (
                         p?.kind === SymbolKind.Property &&
                         p.parent?.kind === SymbolKind.Class
-                    )
+                    ) {
                         scope = p as DocumentSymbol;
+                    }
                     formatMarkdowndetail(scope);
-                } else if (fn.full)
+                } else if (fn.full) {
                     hover.push({ kind: 'ahk2', value: fn.full });
+                }
 
                 if (node.detail) {
                     let md = formatMarkdowndetail(node);
@@ -123,14 +140,16 @@ export async function hoverProvider(
                         if (md.startsWith('\n*@var* ')) {
                             md = md.replace(' — ', '\n___\n');
                             re = /^\n\*@var\*\s/;
-                        } else if (md.startsWith('\n*@type* '))
+                        } else if (md.startsWith('\n*@type* ')) {
                             md = md
                                 .replace(' — ', '\n___\n')
                                 .replace(
                                     /^\n\*@type\*[ \t]*/,
                                     `\`${node.name}\`: `,
                                 );
-                        else md = `\`${node.name}\`\n___\n${md}`;
+                        } else {
+                            md = `\`${node.name}\`\n___\n${md}`;
+                        }
                         md = md.replace(
                             re,
                             !scope
@@ -146,7 +165,7 @@ export async function hoverProvider(
                     });
                 }
             }
-            if (hover.length)
+            if (hover.length) {
                 return {
                     contents: {
                         kind: 'markdown',
@@ -154,11 +173,14 @@ export async function hoverProvider(
                             .map((it) => {
                                 if (it.kind === 'ahk2') {
                                     return '```ahk2\n' + it.value + '\n```';
-                                } else return it.value;
+                                } else {
+                                    return it.value;
+                                }
                             })
                             .join('\n\n'),
                     },
                 };
+            }
         }
     }
 }

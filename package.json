@@ -520,7 +520,7 @@
         "format_fix": "npm run format_inner -- --write .",
         "format_inner": "prettier",
         "eslint": "npm run eslint_inner -- src && echo No ESLint problems",
-        "eslint_fix": "npm run eslint_inner -- --fix client",
+        "eslint_fix": "npm run eslint_inner -- --fix client server",
         "eslint_inner": "eslint --ext ts --max-warnings=0"
     },
     "devDependencies": {

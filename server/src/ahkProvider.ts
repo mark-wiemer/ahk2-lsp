@@ -12,8 +12,10 @@ let ahk_server: MessageConnection | undefined | null;
 
 async function get_ahkProvider_port(): Promise<number> {
     return new Promise(async (resolve, reject) => {
-        let executePath = ahkpath_cur || extsettings.InterpreterPath;
-        if (!existsSync(executePath)) return resolve(0);
+        const executePath = ahkpath_cur || extsettings.InterpreterPath;
+        if (!existsSync(executePath)) {
+            return resolve(0);
+        }
         let server,
             port = 1200;
         while (true) {
@@ -24,14 +26,18 @@ async function get_ahkProvider_port(): Promise<number> {
                 port++;
             }
         }
-        let process = spawn(executePath, [
+        const process = spawn(executePath, [
             `${rootdir}/server/dist/ahkProvider.ahk`,
             port.toString(),
         ]);
-        if (!process || !process.pid) return resolve(0);
+        if (!process || !process.pid) {
+            return resolve(0);
+        }
         let resolve2: any = (r?: MessageConnection) => {
             resolve2 = undefined;
-            if (!r) return resolve(0);
+            if (!r) {
+                return resolve(0);
+            }
             r.onNotification(
                 'initialized',
                 (port) => (r.dispose(), resolve(port)),
@@ -47,10 +53,16 @@ async function get_ahkProvider_port(): Promise<number> {
 }
 
 export async function get_ahkProvider(): Promise<MessageConnection | null> {
-    if (ahk_server !== undefined) return ahk_server;
+    if (ahk_server !== undefined) {
+        return ahk_server;
+    }
     let port = 0;
-    if (type() === 'Windows_NT') port = await get_ahkProvider_port();
-    if (!port) return (ahk_server = null);
+    if (type() === 'Windows_NT') {
+        port = await get_ahkProvider_port();
+    }
+    if (!port) {
+        return (ahk_server = null);
+    }
     return new Promise((resolve, reject) => {
         let init = false;
         ahk_server = createMessageConnection(
@@ -63,7 +75,9 @@ export async function get_ahkProvider(): Promise<MessageConnection | null> {
         ahk_server.onClose(() => (ahk_server = undefined));
         ahk_server.listen();
         setTimeout(() => {
-            if (!init) ahk_server?.dispose(), resolve((ahk_server = null));
+            if (!init) {
+                ahk_server?.dispose(), resolve((ahk_server = null));
+            }
         }, 500);
     });
 }

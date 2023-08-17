@@ -17,7 +17,9 @@ import {
 import { connection, extsettings, lexers, restorePath } from './common';
 
 function checkCommand(cmd: string) {
-    if (extsettings.commands?.includes(cmd)) return true;
+    if (extsettings.commands?.includes(cmd)) {
+        return true;
+    }
     connection.console.warn(`Command '${cmd}' is not implemented!`);
     return false;
 }
@@ -25,23 +27,29 @@ function checkCommand(cmd: string) {
 export async function executeCommands(
     cmds: { command: string; args?: any[]; wait?: boolean }[],
 ) {
-    if (!checkCommand('ahk2.executeCommands')) return;
+    if (!checkCommand('ahk2.executeCommands')) {
+        return;
+    }
     return connection.sendRequest('ahk2.executeCommands', cmds);
 }
 
 export function insertSnippet(value: string, range?: Range) {
-    if (!checkCommand('ahk2.insertSnippet')) return;
+    if (!checkCommand('ahk2.insertSnippet')) {
+        return;
+    }
     connection.sendRequest('ahk2.insertSnippet', [value, range]);
 }
 
 export function setTextDocumentLanguage(uri: string, lang?: string) {
-    if (!checkCommand('ahk2.setTextDocumentLanguage')) return;
+    if (!checkCommand('ahk2.setTextDocumentLanguage')) {
+        return;
+    }
     return connection.sendRequest('ahk2.setTextDocumentLanguage', [uri, lang]);
 }
 
 export function generate_fn_comment(doc: Lexer, fn: FuncNode) {
-    let comments = fn.detail?.replace(/\$/g, '\\$').split('\n');
-    let returns: string[] = [],
+    const comments = fn.detail?.replace(/\$/g, '\\$').split('\n');
+    const returns: string[] = [],
         details: string[] = [],
         result = ['/**'];
     let lastarr: string[] | undefined, m: RegExpMatchArray | null;
@@ -56,39 +64,48 @@ export function generate_fn_comment(doc: Lexer, fn: FuncNode) {
             (m = line.match(
                 /^@(param|arg)\s+(({[^}]*}\s)?\s*(\[.*?\]|\S+).*)$/i,
             ))
-        )
+        ) {
             (lastarr = params[
                 m[4].replace(/^\[?((\w|[^\x00-\x7f])+).*$/, '$1').toUpperCase()
             ] ??=
                 []).push('@param ' + m[2].trim());
-        else if ((m = line.match(/^@(returns?)([\s:]\s*(.*))?$/i)))
+        } else if ((m = line.match(/^@(returns?)([\s:]\s*(.*))?$/i))) {
             (lastarr = returns), returns.push(`@${m[1].toLowerCase()} ${m[3]}`);
-        else if (lastarr && !line.startsWith('@')) lastarr.push(line);
-        else (lastarr = undefined), details.push(line);
+        } else if (lastarr && !line.startsWith('@')) {
+            lastarr.push(line);
+        } else {
+            (lastarr = undefined), details.push(line);
+        }
     });
-    if (details.join('').trim()) details.forEach((s) => result.push(' * ' + s));
-    else result.push(' * $0'), (z = false);
+    if (details.join('').trim()) {
+        details.forEach((s) => result.push(' * ' + s));
+    } else {
+        result.push(' * $0'), (z = false);
+    }
     fn.params.forEach((it) => {
         if ((lastarr = params[it.name.toUpperCase()])) {
             lastarr.forEach((s) => result.push(' * ' + s));
         } else if (it.name) {
             let rets: string[] = [],
                 o: any = {};
-            for (const ret in it.returntypes)
+            for (const ret in it.returntypes) {
                 reset_detect_cache(),
                     detectExp(
                         doc,
                         ret,
                         Position.is((p = it.returntypes[ret])) ? p : pp,
                     ).forEach((tp) => (o[trim(tp)] = true));
+            }
             rets = o['#any'] ? [] : Object.keys(o);
-            if (rets.length)
+            if (rets.length) {
                 result.push(
                     ` * @param $\{${++i}:{${rets.join('|')}\\}} ${
                         it.name
                     } $${++i}`,
                 );
-            else result.push(` * @param ${it.name} $${++i}`);
+            } else {
+                result.push(` * @param ${it.name} $${++i}`);
+            }
         }
     });
     if (returns.length) {
@@ -96,20 +113,24 @@ export function generate_fn_comment(doc: Lexer, fn: FuncNode) {
     } else {
         let rets: string[] = [],
             o: any = {};
-        for (const ret in fn.returntypes)
+        for (const ret in fn.returntypes) {
             reset_detect_cache(),
                 detectExp(
                     doc,
                     ret,
                     Position.is((p = fn.returntypes[ret])) ? p : pp,
                 ).forEach((tp) => (o[trim(tp)] = true));
+        }
         rets = o['#any'] ? ['any'] : Object.keys(o);
-        if (rets.length)
+        if (rets.length) {
             result.push(` * @returns $\{${++i}:{${rets.join('|')}\\}} $${++i}`);
+        }
     }
     result.push(' */');
     let text = result.join('\n');
-    if (z) text = text.replace(new RegExp(`\\$${i}\\b`), '$0');
+    if (z) {
+        text = text.replace(new RegExp(`\\$${i}\\b`), '$0');
+    }
     return text;
     function trim(tp: string) {
         tp = tp
@@ -124,8 +145,9 @@ export async function generateComment(args: any[]) {
     if (
         !checkCommand('ahk2.getActiveTextEditorUriAndPosition') ||
         !checkCommand('ahk2.insertSnippet')
-    )
+    ) {
         return;
+    }
     let { uri, position } = (await connection.sendRequest(
         'ahk2.getActiveTextEditorUriAndPosition',
     )) as { uri: string; position: Position };
@@ -150,14 +172,18 @@ export async function generateComment(args: any[]) {
         let tk: Token, range: Range;
         if (scope.detail === undefined) {
             (text += '\n'), (tk = doc.tokens[doc.document.offsetAt(pos)]);
-            if (tk.topofline === 2) tk = tk.previous_token!;
+            if (tk.topofline === 2) {
+                tk = tk.previous_token!;
+            }
             pos = doc.document.positionAt(tk.offset);
             range = { start: pos, end: pos };
         } else {
             tk = doc.find_token(
                 doc.document.offsetAt({ line: pos.line - 1, character: 0 }),
             );
-            if (!tk.type.endsWith('COMMENT')) return;
+            if (!tk.type.endsWith('COMMENT')) {
+                return;
+            }
             range = {
                 start: doc.document.positionAt(tk.offset),
                 end: doc.document.positionAt(tk.offset + tk.length),
@@ -171,10 +197,16 @@ export function exportSymbols(uri: string) {
     let doc = lexers[uri.toLowerCase()],
         cache: any = {},
         result: any = {};
-    if (!doc) return;
-    if (!doc.relevance) doc.update_relevance();
-    for (let uri of [doc.uri, ...Object.keys(doc.relevance!)]) {
-        if (!(doc = lexers[uri])) continue;
+    if (!doc) {
+        return;
+    }
+    if (!doc.relevance) {
+        doc.update_relevance();
+    }
+    for (const uri of [doc.uri, ...Object.keys(doc.relevance!)]) {
+        if (!(doc = lexers[uri])) {
+            continue;
+        }
         let includes;
         includes = Object.values(doc.include).map((p) => restorePath(p));
         !includes.length && (includes = undefined);
@@ -187,7 +219,9 @@ export function exportSymbols(uri: string) {
     function dump(nodes: DocumentSymbol[], result: any) {
         let kind: SymbolKind, fn: FuncNode, cl: ClassNode, t: any;
         for (let it of nodes) {
-            if (!it.selectionRange.end.character) continue;
+            if (!it.selectionRange.end.character) {
+                continue;
+            }
             switch ((kind = it.kind)) {
                 case SymbolKind.Class:
                     cl = it as ClassNode;
@@ -217,7 +251,9 @@ export function exportSymbols(uri: string) {
                         readonly: (fn.params && !(it as any).set) || undefined,
                         comment: it.detail,
                     });
-                    if (!(it = (it as any).call)) break;
+                    if (!(it = (it as any).call)) {
+                        break;
+                    }
                 case SymbolKind.Function:
                 case SymbolKind.Method:
                     fn = it as FuncNode;
@@ -250,7 +286,9 @@ export function exportSymbols(uri: string) {
         }
         function _extends(cl: ClassNode) {
             let s;
-            if (!(s = cl.extends)) return;
+            if (!(s = cl.extends)) {
+                return;
+            }
             return (cache[`${cl.extendsuri},${s}`] ??=
                 find_class(doc, s, cl.extendsuri)?.full || s);
         }

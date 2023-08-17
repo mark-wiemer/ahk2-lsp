@@ -20,12 +20,17 @@ export async function colorPresentation(
             params.range,
         ),
         hex = '';
-    if (!text || token.isCancellationRequested) return;
-    for (const i of [color.alpha, color.red, color.green, color.blue])
+    if (!text || token.isCancellationRequested) {
+        return;
+    }
+    for (const i of [color.alpha, color.red, color.green, color.blue]) {
         hex += ('00' + Math.round(i * 255).toString(16)).slice(-2);
-    if ((m = text.match(/^(0x)?([\da-f]{6}([\da-f]{2})?)/i)))
+    }
+    if ((m = text.match(/^(0x)?([\da-f]{6}([\da-f]{2})?)/i))) {
         textEdit.newText = (m[1] || '') + hex.slice(-m[2].length);
-    else textEdit.newText = hex.substring(2);
+    } else {
+        textEdit.newText = hex.substring(2);
+    }
     label += textEdit.newText;
     return [{ label, textEdit }];
 }
@@ -34,6 +39,7 @@ export async function colorProvider(
     params: DocumentColorParams,
     token: CancellationToken,
 ): Promise<Maybe<ColorInformation[]>> {
-    if (!token.isCancellationRequested)
+    if (!token.isCancellationRequested) {
         return lexers[params.textDocument.uri.toLowerCase()]?.colors();
+    }
 }

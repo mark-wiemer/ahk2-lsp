@@ -61,14 +61,14 @@ const connection = createConnection(messageReader, messageWriter);
 set_Connection(connection);
 set_ahk_h(true);
 
-let documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
+const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 let hasConfigurationCapability: boolean = false,
     hasWorkspaceFolderCapability: boolean = false,
     hasDiagnosticRelatedInformationCapability: boolean = false;
 let uri_switch_to_ahk2 = '';
 
 connection.onInitialize((params: InitializeParams) => {
-    let capabilities = params.capabilities;
+    const capabilities = params.capabilities;
     set_Workspacefolder(
         params.workspaceFolders?.map((it) => it.uri.toLowerCase() + '/'),
     );
@@ -157,7 +157,7 @@ connection.onInitialize((params: InitializeParams) => {
         };
     }
 
-    let configs: AHKLSSettings = params.initializationOptions;
+    const configs: AHKLSSettings = params.initializationOptions;
     set_locale(params.locale);
     set_dirname((configs as any).extensionUri);
     loadlocalize();
@@ -180,7 +180,7 @@ connection.onInitialized(async () => {
     if (hasWorkspaceFolderCapability) {
         connection.workspace.onDidChangeWorkspaceFolders(
             (event: WorkspaceFoldersChangeEvent) => {
-                let del =
+                const del =
                     event.removed.map((it) => it.uri.toLowerCase() + '/') || [];
                 set_Workspacefolder(
                     workspaceFolders.filter((it) => !del.includes(it)),
@@ -195,8 +195,9 @@ connection.onInitialized(async () => {
 
 connection.onDidChangeConfiguration(async (change) => {
     let newset: AHKLSSettings | undefined = change?.settings;
-    if (hasConfigurationCapability && !newset)
+    if (hasConfigurationCapability && !newset) {
         newset = await connection.workspace.getConfiguration('AutoHotkey2');
+    }
     if (!newset) {
         connection.window.showWarningMessage(
             'Failed to obtain the configuration',
@@ -207,13 +208,18 @@ connection.onDidChangeConfiguration(async (change) => {
 });
 
 documents.onDidOpen(async (e) => {
-    let to_ahk2 = uri_switch_to_ahk2 === e.document.uri;
+    const to_ahk2 = uri_switch_to_ahk2 === e.document.uri;
     let uri = e.document.uri.toLowerCase(),
         doc = lexers[uri];
-    if (doc) doc.document = e.document;
-    else lexers[uri] = doc = new Lexer(e.document);
+    if (doc) {
+        doc.document = e.document;
+    } else {
+        lexers[uri] = doc = new Lexer(e.document);
+    }
     doc.actived = true;
-    if (to_ahk2) doc.actionwhenv1 = 'Continue';
+    if (to_ahk2) {
+        doc.actionwhenv1 = 'Continue';
+    }
 });
 
 // Only keep settings for open documents
@@ -256,9 +262,9 @@ connection.onRequest(
     (uri: string) => lexers[uri.toLowerCase()]?.document.getText(),
 );
 connection.onRequest('ahk2.getVersionInfo', (uri: string) => {
-    let doc = lexers[uri.toLowerCase()];
+    const doc = lexers[uri.toLowerCase()];
     if (doc) {
-        let tk = doc.get_token(0);
+        const tk = doc.get_token(0);
         if (
             (tk.type === 'TK_BLOCK_COMMENT' || tk.type === '') &&
             tk.content.match(/^\s*[;*]?\s*@(date|version)\b/im)
@@ -278,15 +284,18 @@ connection.onRequest('ahk2.getVersionInfo', (uri: string) => {
 connection.onNotification(
     'onDidCloseTextDocument',
     (params: { uri: string; id: string }) => {
-        if (params.id === 'ahk2') lexers[params.uri.toLowerCase()]?.close(true);
-        else uri_switch_to_ahk2 = params.uri;
+        if (params.id === 'ahk2') {
+            lexers[params.uri.toLowerCase()]?.close(true);
+        } else {
+            uri_switch_to_ahk2 = params.uri;
+        }
     },
 );
 documents.listen(connection);
 connection.listen();
 
 async function executeCommandProvider(params: ExecuteCommandParams) {
-    let args = params.arguments || [];
+    const args = params.arguments || [];
     switch (params.command) {
         case 'ahk2.generate.comment':
             generateComment(args);

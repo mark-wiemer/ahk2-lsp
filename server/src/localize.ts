@@ -280,10 +280,12 @@ export namespace response {
 
 export function loadlocalize() {
     if (inBrowser) {
-        let data = getwebfile(`${rootdir}/package.nls.<>.json`);
-        if (data) loadedCollection = JSON.parse(data.text);
+        const data = getwebfile(`${rootdir}/package.nls.<>.json`);
+        if (data) {
+            loadedCollection = JSON.parse(data.text);
+        }
     } else {
-        let s = getlocalefile(
+        const s = getlocalefile(
             `${rootdir}/package.nls.<>.json`,
             'utf8',
         ) as string;
@@ -293,8 +295,11 @@ export function loadlocalize() {
 
 function localize(key: string, defValue: string): (...args: any[]) => string {
     return (...args: string[]) => {
-        if (args.length) return format(getString(key, defValue), ...args);
-        else return getString(key, defValue);
+        if (args.length) {
+            return format(getString(key, defValue), ...args);
+        } else {
+            return getString(key, defValue);
+        }
     };
 }
 
@@ -304,8 +309,10 @@ function getString(key: string, defValue: string): string {
 
 function format(message: string, ...args: string[]): string {
     return message.replace(/\{(\d+)\}/g, (...m) => {
-        let i = parseInt(m[1]);
-        if (i < args.length) return args[i];
+        const i = parseInt(m[1]);
+        if (i < args.length) {
+            return args[i];
+        }
         return ' ';
     });
 }

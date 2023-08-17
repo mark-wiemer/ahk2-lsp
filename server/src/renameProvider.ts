@@ -15,14 +15,17 @@ export async function prepareRename(
     params: PrepareRenameParams,
     token: CancellationToken,
 ): Promise<Maybe<{ range: Range; placeholder: string } | ResponseError>> {
-    let doc = lexers[params.textDocument.uri.toLowerCase()];
-    if (!doc || token.isCancellationRequested) return;
-    let context = doc.buildContext(params.position);
-    if ((renameranges = getAllReferences(doc, context, false)))
+    const doc = lexers[params.textDocument.uri.toLowerCase()];
+    if (!doc || token.isCancellationRequested) {
+        return;
+    }
+    const context = doc.buildContext(params.position);
+    if ((renameranges = getAllReferences(doc, context, false))) {
         return {
             range: context.range,
             placeholder: context.text.split('.').pop() || '',
         };
+    }
     return new ResponseError(
         0,
         renameranges === null
@@ -35,13 +38,16 @@ export async function renameProvider(
     params: RenameParams,
     token: CancellationToken,
 ): Promise<Maybe<WorkspaceEdit>> {
-    if (token.isCancellationRequested) return;
-    let result: any = { changes: {} },
+    if (token.isCancellationRequested) {
+        return;
+    }
+    const result: any = { changes: {} },
         newText = params.newName;
-    for (const uri in renameranges)
+    for (const uri in renameranges) {
         result.changes[uri] = renameranges[uri].map((range) => ({
             range,
             newText,
         }));
+    }
     return result;
 }

@@ -48,10 +48,10 @@ export class PEFile {
     private imageData: Buffer;
     private directoryEntry: { addr: number; size: number; data?: any }[] = [];
     constructor(path: string) {
-        let sizeOfSectionHdr = 40;
-        let buf = Buffer.alloc(8),
+        const sizeOfSectionHdr = 40;
+        const buf = Buffer.alloc(8),
             fd = openSync(path, 'r');
-        let ntHeadersOffset = readUInt(60);
+        const ntHeadersOffset = readUInt(60);
         if (readUShort() !== 0x5a4d) {
             closeSync(fd);
             throw Error('no MS-DOS stub');
@@ -60,16 +60,16 @@ export class PEFile {
             closeSync(fd);
             throw Error('no PE file');
         }
-        let sizeOfOptionalHeader = readUShort(ntHeadersOffset + 20);
-        let optionalHeaderOffset = ntHeadersOffset + 24,
+        const sizeOfOptionalHeader = readUShort(ntHeadersOffset + 20);
+        const optionalHeaderOffset = ntHeadersOffset + 24,
             sectionsOffset = optionalHeaderOffset + sizeOfOptionalHeader;
         this.isBit64 = readShort(optionalHeaderOffset) === 0x20b;
-        let numberOfRvaAndSize = readUInt(
+        const numberOfRvaAndSize = readUInt(
             optionalHeaderOffset + (this.isBit64 ? 108 : 92),
         );
-        let numberOfSections = readUShort(ntHeadersOffset + 6);
-        let sizeOfImage = readUInt(optionalHeaderOffset + 56);
-        let dataDirectoryOffset =
+        const numberOfSections = readUShort(ntHeadersOffset + 6);
+        const sizeOfImage = readUInt(optionalHeaderOffset + 56);
+        const dataDirectoryOffset =
             optionalHeaderOffset + (this.isBit64 ? 112 : 96);
         let offset = 0,
             rawBytes = Buffer.alloc(sizeOfSectionHdr * numberOfSections);
@@ -82,7 +82,7 @@ export class PEFile {
         );
         this.imageData = Buffer.alloc(sizeOfImage);
         for (let i = 0; i < numberOfSections; i++) {
-            let virtualAddress = rawBytes.readUInt32LE(offset + 12),
+            const virtualAddress = rawBytes.readUInt32LE(offset + 12),
                 sizeOfRawData = rawBytes.readUInt32LE(offset + 16),
                 pointerToRawData = rawBytes.readUInt32LE(offset + 20);
             readSync(
@@ -135,15 +135,19 @@ export class PEFile {
                 this.directoryEntry[
                     DIRECTORY_ENTRY.IMAGE_DIRECTORY_ENTRY_EXPORT
                 ];
-        if (!resinfo?.addr) return;
-        if (resinfo.data) return resinfo.data;
+        if (!resinfo?.addr) {
+            return;
+        }
+        if (resinfo.data) {
+            return resinfo.data;
+        }
         const baseRva = resinfo.addr,
             endOfSection = baseRva + resinfo.size;
-        let modNamePtr = imageData.readUInt32LE(baseRva + 0x0c);
-        let OrdinalBase = imageData.readUInt32LE(baseRva + 0x10);
-        let funcCount = imageData.readUInt32LE(baseRva + 0x14);
+        const modNamePtr = imageData.readUInt32LE(baseRva + 0x0c);
+        const OrdinalBase = imageData.readUInt32LE(baseRva + 0x10);
+        const funcCount = imageData.readUInt32LE(baseRva + 0x14);
         let nameCount = imageData.readUInt32LE(baseRva + 0x18);
-        let funcTblPtr = imageData.readUInt32LE(baseRva + 0x1c);
+        const funcTblPtr = imageData.readUInt32LE(baseRva + 0x1c);
         let nameTblPtr = imageData.readUInt32LE(baseRva + 0x20);
         let ordTblPtr = imageData.readUInt32LE(baseRva + 0x24);
         const Exports = {
@@ -153,11 +157,11 @@ export class PEFile {
             },
             ordinalList: { [ord: number]: boolean } = {};
         for (let i = 0; i < nameCount; i++) {
-            let nameOffset = imageData.readUInt32LE(nameTblPtr),
+            const nameOffset = imageData.readUInt32LE(nameTblPtr),
                 ordinal = imageData.readUInt16LE(ordTblPtr),
                 fnOffset = imageData.readUInt32LE(funcTblPtr + ordinal * 4);
             (nameTblPtr += 4), (ordTblPtr += 2), (ordinalList[ordinal] = true);
-            let EntryPoint =
+            const EntryPoint =
                 fnOffset > baseRva && fnOffset < endOfSection
                     ? this.getAscii(fnOffset)
                     : '0x' + (fnOffset + 0x100000000).toString(16).substring(1);
@@ -168,9 +172,11 @@ export class PEFile {
             });
         }
         for (let ordinal = 0; nameCount < funcCount; ordinal++, nameCount++) {
-            while (ordinalList[ordinal]) ordinal++;
-            let fnOffset = imageData.readUInt32LE(funcTblPtr + ordinal * 4);
-            let EntryPoint =
+            while (ordinalList[ordinal]) {
+                ordinal++;
+            }
+            const fnOffset = imageData.readUInt32LE(funcTblPtr + ordinal * 4);
+            const EntryPoint =
                 fnOffset > baseRva && fnOffset < endOfSection
                     ? this.getAscii(fnOffset)
                     : '0x' + (fnOffset + 0x100000000).toString(16).substring(1);
@@ -189,8 +195,12 @@ export class PEFile {
                 this.directoryEntry[
                     DIRECTORY_ENTRY.IMAGE_DIRECTORY_ENTRY_IMPORT
                 ];
-        if (!resinfo?.addr) return;
-        if (resinfo.data) return resinfo.data;
+        if (!resinfo?.addr) {
+            return;
+        }
+        if (resinfo.data) {
+            return resinfo.data;
+        }
         const baseRva = resinfo.addr;
         let nameOffset = imageData.readInt32LE(baseRva + 0x0c),
             firstThunk = imageData.readInt32LE(baseRva + 0x10);
@@ -199,26 +209,32 @@ export class PEFile {
             readPtr,
             ffff: any,
             IMAGE_ORDINAL_FLAG: any;
-        if (this.isBit64)
+        if (this.isBit64) {
             (ptrsize = 8),
                 (ffff = BigInt(0xffff)),
                 (IMAGE_ORDINAL_FLAG = BigInt('0x8000000000000000')),
                 (readPtr = imageData.readBigUInt64LE.bind(imageData));
-        else
+        } else {
             (ffff = 0xffff),
                 (IMAGE_ORDINAL_FLAG = 0x80000000),
                 (readPtr = imageData.readUInt32LE.bind(imageData));
+        }
         const Imports: { [dll: string]: string[] } = {};
         while (firstThunk) {
             let dllname = this.getAscii(nameOffset),
                 arr = (Imports[dllname] = [] as string[]),
                 ordinal: any;
-            for (let i = 0; (ordinal = readPtr(firstThunk + i * ptrsize)); i++)
+            for (
+                let i = 0;
+                (ordinal = readPtr(firstThunk + i * ptrsize));
+                i++
+            ) {
                 arr.push(
                     ordinal & IMAGE_ORDINAL_FLAG
                         ? `Ordinal#${ordinal & ffff}`
                         : this.getAscii(Number(ordinal) + 2),
                 );
+            }
             offset += 20;
             nameOffset = imageData.readUInt32LE(offset + 0x0c);
             firstThunk = imageData.readUInt32LE(offset + 0x10);
@@ -231,9 +247,12 @@ export class PEFile {
                 this.directoryEntry[
                     DIRECTORY_ENTRY.IMAGE_DIRECTORY_ENTRY_RESOURCE
                 ];
-        if (!resinfo?.addr) return;
-        if (types.length === 1 && this.resource[types[0]])
+        if (!resinfo?.addr) {
+            return;
+        }
+        if (types.length === 1 && this.resource[types[0]]) {
             return this.resource[types[0]];
+        }
         const baseRva = resinfo.addr,
             dirs = [baseRva],
             resources: any = {};
@@ -260,8 +279,10 @@ export class PEFile {
                     resourceDir.NumberOfNamedEntries;
             rva += 16;
             for (let i = 0; i < numberOfEntries; i++, rva += 8) {
-                let name = imageData.readUInt32LE(rva);
-                if (level === 0 && !resources[name & 0x0000ffff]) continue;
+                const name = imageData.readUInt32LE(rva);
+                if (level === 0 && !resources[name & 0x0000ffff]) {
+                    continue;
+                }
                 let offsetToData = imageData.readUInt32LE(rva + 4),
                     entry = {
                         name,
@@ -283,15 +304,21 @@ export class PEFile {
                     entryName = imageData
                         .slice(offset + 2, length * 2 + offset + 2)
                         .toString('utf16le');
-                } else entryId = name;
+                } else {
+                    entryId = name;
+                }
                 if (entry.dataIsDirectory) {
-                    if (dirs.includes(baseRva + entry.offsetToDirectory)) break;
+                    if (dirs.includes(baseRva + entry.offsetToDirectory)) {
+                        break;
+                    }
                     dirs.push(baseRva + entry.offsetToDirectory);
-                    let entryDirectory = parseResourcesDirectory(
+                    const entryDirectory = parseResourcesDirectory(
                         baseRva + entry.offsetToDirectory,
                         level + 1,
                     );
-                    if (entryDirectory === undefined) break;
+                    if (entryDirectory === undefined) {
+                        break;
+                    }
                     dirEntries.push({
                         struct: entry,
                         id: entryId,
@@ -299,14 +326,14 @@ export class PEFile {
                         directory: entryDirectory,
                     });
                 } else {
-                    let rva = baseRva + entry.offsetToDirectory;
-                    let struct = {
+                    const rva = baseRva + entry.offsetToDirectory;
+                    const struct = {
                         offsetToData: imageData.readUInt32LE(rva),
                         size: imageData.readUInt32LE(rva + 4),
                         codePage: imageData.readUInt32LE(rva + 8),
                         reserved: imageData.readUInt32LE(rva + 12),
                     };
-                    let entryData = {
+                    const entryData = {
                         struct: struct,
                         lang: entry.name & 0x3ff,
                         subLang: entry.name >> 10,
@@ -326,11 +353,12 @@ export class PEFile {
                                 ?.entries ?? [];
                         for (const versionEntry of versionEntries) {
                             const rtVersionStruct = versionEntry.data?.struct;
-                            if (rtVersionStruct)
+                            if (rtVersionStruct) {
                                 parseVersionInformation(
                                     resources[16],
                                     rtVersionStruct,
                                 );
+                            }
                         }
                     } else if (entry.id === RESOURCE_TYPE.MANIFEST) {
                         const manifestEntries =
@@ -338,23 +366,27 @@ export class PEFile {
                                 ?.entries ?? [];
                         for (const manifestEntrie of manifestEntries) {
                             const manifestStruct = manifestEntrie.data?.struct;
-                            if (manifestStruct?.size)
+                            if (manifestStruct?.size) {
                                 resources[24].push(
                                     parseUTF8String(manifestStruct),
                                 );
+                            }
                         }
                     } else if (entry.id === RESOURCE_TYPE.RCDATA) {
-                        if (resources[10] instanceof Array) resources[10] = {};
-                        let resource = resources[10];
+                        if (resources[10] instanceof Array) {
+                            resources[10] = {};
+                        }
+                        const resource = resources[10];
                         lastEntry.directory?.entries.forEach((entrie: any) => {
                             const name = entrie.name ?? `#${entrie.id}`;
                             const rcdata =
                                 entrie.directory?.entries?.pop()?.data?.struct;
-                            if (rcdata)
+                            if (rcdata) {
                                 resource[name.toLowerCase()] = imageData.slice(
                                     rcdata.offsetToData,
                                     rcdata.offsetToData + rcdata.size,
                                 );
+                            }
                         });
                     }
                 }
@@ -369,7 +401,7 @@ export class PEFile {
                 startOffset,
                 startOffset + versionStruct.size,
             );
-            let versionInfo = getString(offset);
+            const versionInfo = getString(offset);
             offset = alignDword(2 + nullindex, startOffset);
             const fixedFileInfo = {
                 Signature: rawData.readUInt32LE(offset),
@@ -399,7 +431,7 @@ export class PEFile {
             resource.push(fileInfo);
             offset = alignDword(offset + 52, startOffset);
 
-            let stringFileInfo = getString(offset);
+            const stringFileInfo = getString(offset);
             if (
                 stringFileInfo.Key === 'StringFileInfo' &&
                 [0, 1].includes(stringFileInfo.Type) &&
@@ -413,17 +445,18 @@ export class PEFile {
                     offset = alignDword(2 + nullindex, startOffset);
 
                     while (offset < stringTableOffset + stringTable.Length) {
-                        let entryOffset = offset;
-                        let key = getString(offset);
+                        const entryOffset = offset;
+                        const key = getString(offset);
                         offset = alignDword(2 + nullindex, startOffset);
-                        let value = getString(offset, false);
-                        if (key.Length === 0)
+                        const value = getString(offset, false);
+                        if (key.Length === 0) {
                             offset = stringTableOffset + stringTable.Length;
-                        else
+                        } else {
                             offset = alignDword(
                                 entryOffset + key.Length,
                                 startOffset,
                             );
+                        }
                         entries[key.Key] = value.Key;
                     }
                     offset = alignDword(
@@ -433,20 +466,22 @@ export class PEFile {
                     if (
                         offset === stringTableOffset ||
                         offset >= stringFileInfo.Length
-                    )
+                    ) {
                         break;
+                    }
                     stringTableOffset = offset;
                 }
             }
             function getString(offset: number, hasinfo = true) {
                 let info: any = {};
-                if (hasinfo)
+                if (hasinfo) {
                     (info = {
                         Length: rawData.readUInt16LE(offset),
                         ValueLength: rawData.readUInt16LE(offset + 2),
                         Type: rawData.readUInt16LE(offset + 4),
                     }),
                         (offset += 6);
+                }
                 nullindex =
                     ((rawData.indexOf(Buffer.alloc(2), offset) + 1) >> 1) * 2;
                 return {
@@ -481,11 +516,16 @@ export function searchAndOpenPEFile(
         file = '',
         dirs: string[] | undefined,
         exts: string[] = [''];
-    while (true)
+    while (true) {
         try {
             pe = new PEFile(path);
-            if (file && typeof isBit64 === 'boolean' && pe.isBit64 !== isBit64)
+            if (
+                file &&
+                typeof isBit64 === 'boolean' &&
+                pe.isBit64 !== isBit64
+            ) {
                 throw Error();
+            }
             return pe;
         } catch (e) {
             if (e instanceof Error || (e as any).errno === -4058) {
@@ -493,16 +533,20 @@ export function searchAndOpenPEFile(
                     if (
                         path.includes(':') ||
                         !(dirs = process.env.Path?.split(';'))
-                    )
+                    ) {
                         return undefined;
-                    if (isBit64 === false)
+                    }
+                    if (isBit64 === false) {
                         dirs.unshift('C:\\Windows\\SysWOW64\\');
+                    }
                     file = path;
-                    if (!file.toLowerCase().endsWith('.dll')) exts.push('.dll');
+                    if (!file.toLowerCase().endsWith('.dll')) {
+                        exts.push('.dll');
+                    }
                 }
                 let t: string | undefined;
                 outloop: while (undefined !== (t = dirs.pop())) {
-                    for (let ext of exts)
+                    for (const ext of exts) {
                         if (
                             t &&
                             existsSync(
@@ -513,10 +557,15 @@ export function searchAndOpenPEFile(
                                     file +
                                     ext),
                             )
-                        )
+                        ) {
                             break outloop;
+                        }
+                    }
                 }
-                if (!t) return undefined;
+                if (!t) {
+                    return undefined;
+                }
             }
         }
+    }
 }
