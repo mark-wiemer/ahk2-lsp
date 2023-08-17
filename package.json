@@ -518,13 +518,19 @@
         "chrome": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ./test-data",
         "format": "npm run format_inner -- --check .",
         "format_fix": "npm run format_inner -- --write .",
-        "format_inner": "prettier"
+        "format_inner": "prettier",
+        "eslint": "npm run eslint_inner -- src && echo No ESLint problems",
+        "eslint_fix": "npm run eslint_inner -- --fix client",
+        "eslint_inner": "eslint --ext ts --max-warnings=0"
     },
     "devDependencies": {
         "@types/mocha": "^8.2.2",
         "@types/vscode": "^1.60.0",
-        "@typescript-eslint/parser": "^4.23.0",
+        "@typescript-eslint/eslint-plugin": "^5.37.0",
+        "@typescript-eslint/parser": "^5.37.0",
         "@vscode/test-web": "^0.0.12",
+        "esbuild-plugin-eslint": "^0.1.1",
+        "eslint": "^8.23.1",
         "mocha": "^8.3.2",
         "path-browserify": "^1.0.1",
         "prettier": "^3.0.2",
