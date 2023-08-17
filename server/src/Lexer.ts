@@ -2709,7 +2709,9 @@ export class Lexer {
                             (tk.symbol = tn), nexttoken();
                             const ht = lk;
                             let v: Variable;
-                            const vars = new Map<string, any>([['#parent', tn]]);
+                            const vars = new Map<string, any>([
+                                ['#parent', tn],
+                            ]);
                             (tn.funccall = []),
                                 (tn.declaration = {}),
                                 result.push(tn);
