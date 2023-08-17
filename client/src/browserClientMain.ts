@@ -78,7 +78,9 @@ export function activate(context: ExtensionContext) {
                 it = workspace.textDocuments.find(
                     (it) => it.uri.toString() === uri,
                 );
-            it && languages.setTextDocumentLanguage(it, lang);
+            if (it) {
+                languages.setTextDocumentLanguage(it, lang);
+            }
         },
         'ahk2.getWorkspaceFiles': async (params: string[]) => {
             const all = !params.length;

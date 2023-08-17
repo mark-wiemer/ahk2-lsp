@@ -488,11 +488,13 @@ export class Lexer {
             const p = parser_pos;
             let t: Token, b: Token;
             if (offset !== undefined) {
-                (parser_pos = offset), (b = lst);
+                parser_pos = offset;
+                b = lst;
                 do {
                     t = get_next_token();
                 } while (ignorecomment && t.type.endsWith('COMMENT'));
-                (parser_pos = p), (lst = b);
+                parser_pos = p;
+                lst = b;
             } else {
                 do {
                     t = get_next_token();
@@ -573,7 +575,7 @@ export class Lexer {
         };
 
         this.beautify = function (options?: FormatOptions, range?: Range) {
-            let sweet_code: string, end_pos: number;
+            let end_pos: number;
             if (!_this.isparsed) {
                 _this.parseScript();
             }
@@ -596,22 +598,24 @@ export class Lexer {
                 options,
             );
 
-            (last_type = last_last_text = last_text = ''),
-                (begin_line = true),
-                (lst = EMPTY_TOKEN);
-            (last_LF = -1), (end_pos = input_length), (ck = _this.get_token(0));
+            last_type = last_last_text = last_text = '';
+            begin_line = true;
+            lst = EMPTY_TOKEN;
+            last_LF = -1;
+            end_pos = input_length;
+            ck = _this.get_token(0);
             preindent_string = input.substring(
                 input.lastIndexOf('\n', (parser_pos = ck.offset)) + 1,
                 parser_pos,
             );
-            (is_conditional = output_space_before_token = false),
-                (format_mode = true);
-            (indent_string = opt.indent_string ?? '\t'),
-                (space_in_other = opt.space_in_other ?? true);
-            (output_lines = [create_output_line()]),
-                (flag_store = []),
-                (flags = null),
-                set_mode(MODE.BlockStatement);
+            is_conditional = output_space_before_token = false;
+            format_mode = true;
+            indent_string = opt.indent_string ?? '\t';
+            space_in_other = opt.space_in_other ?? true;
+            output_lines = [create_output_line()];
+            flag_store = [];
+            flags = null;
+            set_mode(MODE.BlockStatement);
 
             if (opt.symbol_with_same_case) {
                 symbolProvider({ textDocument: _this.document });
@@ -764,7 +768,7 @@ export class Lexer {
                 }
             }
 
-            sweet_code = output_lines
+            const sweet_code = output_lines
                 .map((line) => line.text.join(''))
                 .join('\n');
             (output_lines = []), (format_mode = false);
@@ -821,20 +825,20 @@ export class Lexer {
                 }
                 const [start, end] = param.range_offset;
                 delete param.range_offset;
-                (last_type = last_last_text = last_text = ''),
-                    (output_lines = [create_output_line()]);
-                (output_space_before_token = false),
-                    (flag_store = []),
-                    (flags = null),
-                    set_mode(MODE.Expression);
+                last_type = last_last_text = last_text = '';
+                output_lines = [create_output_line()];
+                output_space_before_token = false;
+                flag_store = [];
+                flags = null;
+                set_mode(MODE.Expression);
                 for (
                     ck = tokens[tokens[start].next_token_offset];
                     ck && ck.offset < end;
                     ck = tokens[ck.next_token_offset]
                 ) {
-                    (token_type = ck.type),
-                        (token_text = ck.content),
-                        (token_text_low = token_text.toLowerCase());
+                    token_type = ck.type;
+                    token_text = ck.content;
+                    token_text_low = token_text.toLowerCase();
                     handlers[token_type]();
                     last_last_text = flags.last_text;
                     last_type = token_type;
@@ -851,24 +855,23 @@ export class Lexer {
         if (d || document.uri.match(/\.d\.(ahk2?|ah2)(?=(\?|$))/i)) {
             (this.d = d || 1), (allow_$ ||= true);
             this.parseScript = function (): void {
-                (input = this.document.getText()),
-                    (input_length = input.length),
-                    (includedir = this.scriptpath);
-                (lst = EMPTY_TOKEN),
-                    (begin_line = true),
-                    (parser_pos = 0),
-                    (last_LF = -1),
-                    (currsymbol = last_comment_fr = undefined);
+                input = this.document.getText();
+                input_length = input.length;
+                includedir = this.scriptpath;
+                lst = EMPTY_TOKEN;
+                begin_line = true;
+                parser_pos = 0;
+                last_LF = -1;
+                currsymbol = last_comment_fr = undefined;
                 let _low = '';
                 let i = 0;
                 let j = 0;
                 let l = 0;
                 let isstatic = false;
                 let tk: Token, lk: Token;
-                this.clear(),
-                    (this.reflat = true),
-                    (customblocks = { region: [], bracket: [] }),
-                    (this.maybev1 = undefined);
+                this.clear(), (this.reflat = true);
+                customblocks = { region: [], bracket: [] };
+                this.maybev1 = undefined;
                 let blocks = 0;
                 let rg: Range;
                 let tokens: Token[] = [];
@@ -884,14 +887,14 @@ export class Lexer {
                         this.children,
                     ) as ClassNode,
                 ];
-                (includetable = this.include),
-                    (p[0].declaration = p[0].staticdeclaration =
-                        this.declaration),
-                    (comments = {});
+                includetable = this.include;
+                p[0].declaration = p[0].staticdeclaration = this.declaration;
+                comments = {};
                 while (get_next_token().length) {
                     continue;
                 }
-                (tokens = Object.values(this.tokens)), (l = tokens.length);
+                tokens = Object.values(this.tokens);
+                l = tokens.length;
                 while (i < l) {
                     switch ((tk = tokens[i]).type) {
                         case 'TK_WORD':
@@ -908,17 +911,17 @@ export class Lexer {
                                         (rg = make_range(tk.offset, tk.length)),
                                     );
                                     const fn = tn as FuncNode;
-                                    (tk.symbol = tk.definition = tn),
-                                        (tk.semantic = {
-                                            type: SemanticTokenTypes.property,
-                                            modifier:
-                                                (1 <<
-                                                    SemanticTokenModifiers.definition) |
-                                                (isstatic
-                                                    ? 1 <<
-                                                      SemanticTokenModifiers.static
-                                                    : 0),
-                                        }),
+                                    tk.symbol = tk.definition = tn;
+                                    (tk.semantic = {
+                                        type: SemanticTokenTypes.property,
+                                        modifier:
+                                            (1 <<
+                                                SemanticTokenModifiers.definition) |
+                                            (isstatic
+                                                ? 1 <<
+                                                  SemanticTokenModifiers.static
+                                                : 0),
+                                    }),
                                         (fn.parent = p[blocks]);
                                     p[blocks].children?.push(tn),
                                         (tn.static = isstatic),

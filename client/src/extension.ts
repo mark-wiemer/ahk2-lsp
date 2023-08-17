@@ -128,7 +128,9 @@ export async function activate(context: ExtensionContext) {
                 it = workspace.textDocuments.find(
                     (it) => it.uri.toString() === uri,
                 );
-            it && languages.setTextDocumentLanguage(it, lang);
+            if (it) {
+                languages.setTextDocumentLanguage(it, lang);
+            }
         },
         'ahk2.updateStatusBar': async (params: [string]) => {
             ahkpath_cur = params[0];
@@ -264,9 +266,9 @@ export async function activate(context: ExtensionContext) {
                                     it.uri.scheme === 'ahkres' &&
                                     it.uri.path === uri.path,
                             );
-                            it &&
-                                it.languageId !== 'ahk2' &&
+                            if (it && it.languageId !== 'ahk2') {
                                 languages.setTextDocumentLanguage(it, 'ahk2');
+                            }
                         }, 100);
                         return content as string;
                     });
@@ -345,25 +347,28 @@ async function runCurrentScriptFile(selection = false): Promise<void> {
         if (ahkStatusBarItem.text.endsWith('[UIAccess]')) {
             path = resolve(__dirname, 'temp.ahk');
             writeFileSync(path, selecttext);
-            (command += `"${path}"`), (startTime = new Date());
+            command += `"${path}"`;
+            startTime = new Date();
             process = child_process.spawn(command, {
                 cwd: `${resolve(editor.document.fileName, '..')}`,
                 shell: true,
             });
             unlinkSync(path);
         } else {
-            (command += path), (startTime = new Date());
+            command += path;
+            startTime = new Date();
             process = child_process.spawn(command, {
                 cwd: `${resolve(editor.document.fileName, '..')}`,
                 shell: true,
             });
-            process.stdin?.write(selecttext), process.stdin?.end();
+            process.stdin?.write(selecttext);
+            process.stdin?.end();
         }
     } else {
         commands.executeCommand('workbench.action.files.save');
-        (path = editor.document.fileName),
-            (command += `"${path}"`),
-            (startTime = new Date());
+        path = editor.document.fileName;
+        command += `"${path}"`;
+        startTime = new Date();
         process = child_process.spawn(command, {
             cwd: resolve(path, '..'),
             shell: true,
@@ -413,7 +418,8 @@ async function stopRunningScript() {
         ahkprocesses.forEach((t) =>
             items.push({ label: `pid: ${t.pid}`, detail: (t as any).path }),
         );
-        (pick.items = items), (pick.canSelectMany = true);
+        pick.items = items;
+        pick.canSelectMany = true;
         pick.onDidAccept((e) => {
             pick.selectedItems.forEach((item) =>
                 kill(parseInt(item.label.slice(5))),
@@ -719,8 +725,10 @@ async function sleep(ms: number) {
 }
 
 async function setInterpreter() {
-    let index = -1,
-        { path: ahkpath, from } = getInterpreterPath();
+    let index = -1;
+    const interpreterPath = getInterpreterPath();
+    let ahkpath = interpreterPath.path;
+    const from = interpreterPath.from;
     const list: QuickPickItem[] = [];
     let it: QuickPickItem;
     let _ = (ahkpath = ahkpath_cur || ahkpath).toLowerCase();
@@ -773,7 +781,8 @@ async function setInterpreter() {
         active = list[index];
     }
 
-    (pick.matchOnDetail = true), (pick.items = list);
+    pick.matchOnDetail = true;
+    pick.items = list;
     pick.title = zhcn ? '选择解释器' : 'Select Interpreter';
     if (active) {
         pick.activeItems = [active];
@@ -782,10 +791,10 @@ async function setInterpreter() {
     pick.show();
     pick.onDidAccept(async (e) => {
         if (pick.selectedItems[0] === list[0]) {
-            (pick.title = undefined),
-                (pick.activeItems = []),
-                (pick.value = ''),
-                (pick.items = [it]);
+            pick.title = undefined;
+            pick.activeItems = [];
+            pick.value = '';
+            pick.items = [it];
             pick.placeholder = zhcn
                 ? '请输入 AutoHotkey2 解释器的路径。'
                 : 'Enter path to a AutoHotkey2 interpreter.';
@@ -932,7 +941,8 @@ async function onDidChangegetInterpreter() {
         ahkStatusBarItem.text = zhcn
             ? '选择AutoHotkey2解释器'
             : 'Select AutoHotkey2 Interpreter';
-        (ahkStatusBarItem.tooltip = undefined), (path = '');
+        ahkStatusBarItem.tooltip = undefined;
+        path = '';
     }
 }
 

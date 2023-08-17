@@ -76,7 +76,8 @@ export async function get_ahkProvider(): Promise<MessageConnection | null> {
         ahk_server.listen();
         setTimeout(() => {
             if (!init) {
-                ahk_server?.dispose(), resolve((ahk_server = null));
+                ahk_server?.dispose();
+                resolve((ahk_server = null));
             }
         }, 500);
     });

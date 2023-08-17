@@ -30,7 +30,8 @@ export async function signatureProvider(
     }
     const uri = params.textDocument.uri.toLowerCase();
     const doc = lexers[uri];
-    let nodes: any, context: any;
+    const nodes = [];
+    let context: any;
     const signinfo: SignatureHelp = {
         activeSignature: 0,
         signatures: [],
@@ -40,7 +41,8 @@ export async function signatureProvider(
     if (!res || res.index < 0) {
         return undefined;
     }
-    let { name, pos, index, kind } = res;
+    const { pos, index, kind } = res;
+    let { name } = res;
     const ts: any = {};
     let iscall = true;
     let prop = '';
@@ -51,38 +53,15 @@ export async function signatureProvider(
             return;
         }
         if (kind === SymbolKind.Property) {
-            (prop ||= '__item'), (iscall = false);
+            prop ||= '__item';
+            iscall = false;
         }
         detectExpType(doc, t, context.range.end, ts);
-        // name = name.toLowerCase();
-        // if (kind === SymbolKind.Method && ((name === 'call' && ts['@func.call']) || (name === 'bind' && ts['@func.bind']))) {
-        // 	let tt: any = {};
-        // 	detectExpType(doc, t.replace(new RegExp(`\.${res.name}$`, 'i'), ''), pos, tt);
-        // 	if (Object.keys(tt).length) {
-        // 		if (res.name === 'bind') {
-        // 			let t = ts['func.bind'].node = Object.assign({}, ts['func.bind'].node) as FuncNode;
-        // 			let f = t;
-        // 			for (let n in tt) {
-        // 				if (!(f = tt[n]?.node) && n.startsWith('$'))
-        // 					f = searchNode(doc, n, pos, SymbolKind.Variable)?.pop()?.node as FuncNode;
-        // 				if (!f) return undefined;
-        // 				break;
-        // 			}
-        // 			t.params = f.params;
-        // 			t.detail = t.detail && f.detail ? t.detail + '\n___\n' + f.detail : (t.detail ?? '') + (f.detail ?? '');
-        // 			let rp = f.full.lastIndexOf(')'), lp = f.full.indexOf('(', 1);
-        // 			lp === -1 && f.full.startsWith('(') && lp++;
-        // 			t.full = t.full.replace(/Bind\([^)]*\)/i, `Bind(${f.full.slice(lp + 1, rp)})`);
-        // 			if (f.kind === SymbolKind.Method)
-        // 				kind = SymbolKind.Function;
-        // 		} else ts = tt;
-        // 	}
-        // }
     } else {
-        detectExpType(doc, name, pos, ts), (prop = 'call');
+        detectExpType(doc, name, pos, ts);
+        prop = 'call';
     }
     const st = new Set<any>();
-    nodes = [];
     for (const tp in ts) {
         const t = ts[tp];
         let n: any;
@@ -121,7 +100,8 @@ export async function signatureProvider(
                     if (!(it = ahkvars['FUNC'] as any)) {
                         break;
                     }
-                    (uri = (it as any).uri), (isstatic = false);
+                    uri = (it as any).uri;
+                    isstatic = false;
                     add_cls();
                     break;
                 case SymbolKind.Function:
@@ -136,7 +116,8 @@ export async function signatureProvider(
                     if (!(it = ahkvars['FUNC'] as any)) {
                         break;
                     }
-                    (uri = (it as any).uri), (isstatic = false);
+                    uri = (it as any).uri;
+                    isstatic = false;
                 case SymbolKind.Class:
                     add_cls();
                     break;
@@ -165,8 +146,12 @@ export async function signatureProvider(
                     if (fn) {
                         if (prop === 'bind') {
                             const arr: string[] = [];
-                            fn.detail && arr.push(fn.detail);
-                            n.detail && arr.push(n.detail);
+                            if (fn.detail) {
+                                arr.push(fn.detail);
+                            }
+                            if (n.detail) {
+                                arr.push(n.detail);
+                            }
                             fn = Object.assign({}, fn);
                             fn.detail = arr.join('\n___\n');
                             fn.name = n.name;
@@ -179,7 +164,9 @@ export async function signatureProvider(
                         n = get_class_call(n as any);
                     }
                 }
-                n && nodes.push({ node: n, needthis });
+                if (n) {
+                    nodes.push({ node: n, needthis });
+                }
             }
         }
     }
@@ -217,11 +204,11 @@ export async function signatureProvider(
                     .replace(/(['\w]*\|['\w]*)(\|['\w]*)+/, '$1|...'),
             }));
             if (needthis) {
-                (label = label.replace(
+                label = label.replace(
                     /((\w|[^\x00-\x7f])+)\(/,
                     '$1(@this' + (params.length ? ', ' : ''),
-                )),
-                    parameters.unshift({ label: '@this' });
+                );
+                parameters.unshift({ label: '@this' });
             }
             paramindex = index - needthis;
             signinfo.signatures.push({
@@ -244,7 +231,8 @@ export async function signatureProvider(
                     undefined,
                     -1,
                 );
-                let { label, documentation } = signinfo.signatures[0];
+                let { label } = signinfo.signatures[0];
+                const { documentation } = signinfo.signatures[0];
                 const n = node;
                 const fn = label.substring(0, label.indexOf('(', 1));
                 lex.parseScript();
@@ -259,15 +247,15 @@ export async function signatureProvider(
                                 ),
                         }));
                         if (needthis) {
-                            (label =
+                            label =
                                 fn +
                                 node.full
                                     .replace(/^[^(]+/, '')
                                     .replace(
                                         '(',
                                         '(@this' + (params.length ? ', ' : ''),
-                                    )),
-                                parameters.unshift({ label: '@this' });
+                                    );
+                            parameters.unshift({ label: '@this' });
                         } else {
                             label = fn + node.full.replace(/^[^(]+/, '');
                         }

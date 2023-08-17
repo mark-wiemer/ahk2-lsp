@@ -7,6 +7,7 @@
     },
     "plugins": ["@typescript-eslint"],
     "rules": {
+        "no-unused-expressions": "error",
         "@typescript-eslint/naming-convention": "off",
         "@typescript-eslint/semi": "warn",
         "curly": "warn",
