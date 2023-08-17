@@ -71,8 +71,8 @@ export class PEFile {
         const sizeOfImage = readUInt(optionalHeaderOffset + 56);
         const dataDirectoryOffset =
             optionalHeaderOffset + (this.isBit64 ? 112 : 96);
-        let offset = 0,
-            rawBytes = Buffer.alloc(sizeOfSectionHdr * numberOfSections);
+        let offset = 0;
+        const rawBytes = Buffer.alloc(sizeOfSectionHdr * numberOfSections);
         readSync(
             fd,
             rawBytes,
@@ -202,13 +202,11 @@ export class PEFile {
             return resinfo.data;
         }
         const baseRva = resinfo.addr;
-        let nameOffset = imageData.readInt32LE(baseRva + 0x0c),
-            firstThunk = imageData.readInt32LE(baseRva + 0x10);
-        let ptrsize = 4,
-            offset = baseRva,
-            readPtr,
-            ffff: any,
-            IMAGE_ORDINAL_FLAG: any;
+        let nameOffset = imageData.readInt32LE(baseRva + 0x0c);
+        let firstThunk = imageData.readInt32LE(baseRva + 0x10);
+        let ptrsize = 4;
+        let offset = baseRva;
+        let readPtr, ffff: any, IMAGE_ORDINAL_FLAG: any;
         if (this.isBit64) {
             (ptrsize = 8),
                 (ffff = BigInt(0xffff)),
@@ -221,9 +219,9 @@ export class PEFile {
         }
         const Imports: { [dll: string]: string[] } = {};
         while (firstThunk) {
-            let dllname = this.getAscii(nameOffset),
-                arr = (Imports[dllname] = [] as string[]),
-                ordinal: any;
+            const dllname = this.getAscii(nameOffset);
+            const arr = (Imports[dllname] = [] as string[]);
+            let ordinal: any;
             for (
                 let i = 0;
                 (ordinal = readPtr(firstThunk + i * ptrsize));
@@ -283,8 +281,8 @@ export class PEFile {
                 if (level === 0 && !resources[name & 0x0000ffff]) {
                     continue;
                 }
-                let offsetToData = imageData.readUInt32LE(rva + 4),
-                    entry = {
+                const offsetToData = imageData.readUInt32LE(rva + 4);
+                let entry = {
                         name,
                         id: name & 0x0000ffff,
                         pad: name & 0xffff0000,
@@ -394,9 +392,9 @@ export class PEFile {
             return { struct: resourceDir, entries: dirEntries };
         }
         function parseVersionInformation(resource: any, versionStruct: any) {
-            let nullindex = 0,
-                offset = 0,
-                startOffset = versionStruct.offsetToData;
+            let nullindex = 0;
+            let offset = 0;
+            const startOffset = versionStruct.offsetToData;
             const rawData = imageData.slice(
                 startOffset,
                 startOffset + versionStruct.size,
@@ -512,10 +510,10 @@ export function searchAndOpenPEFile(
     path: string,
     isBit64?: boolean,
 ): PEFile | undefined {
-    let pe: PEFile,
-        file = '',
-        dirs: string[] | undefined,
-        exts: string[] = [''];
+    let pe: PEFile;
+    let file = '';
+    let dirs: string[] | undefined;
+    const exts: string[] = [''];
     while (true) {
         try {
             pe = new PEFile(path);

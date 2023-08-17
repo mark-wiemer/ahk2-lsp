@@ -161,8 +161,8 @@ export function activate(context: ExtensionContext) {
                     );
                 } else {
                     const d = new Date();
-                    let content = info.content,
-                        ver;
+                    let content = info.content;
+                    let ver;
                     content = content.replace(
                         /(?<=^\s*[;*]?\s*@date[:\s]\s*)(\d+\/\d+\/\d+)/im,
                         d.getFullYear() +

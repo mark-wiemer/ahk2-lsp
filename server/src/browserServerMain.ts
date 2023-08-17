@@ -209,8 +209,8 @@ connection.onDidChangeConfiguration(async (change) => {
 
 documents.onDidOpen(async (e) => {
     const to_ahk2 = uri_switch_to_ahk2 === e.document.uri;
-    let uri = e.document.uri.toLowerCase(),
-        doc = lexers[uri];
+    const uri = e.document.uri.toLowerCase();
+    let doc = lexers[uri];
     if (doc) {
         doc.document = e.document;
     } else {

@@ -18,22 +18,22 @@ export async function defintionProvider(
     if (token.isCancellationRequested) {
         return;
     }
-    let uri = params.textDocument.uri.toLowerCase(),
-        doc = lexers[uri],
-        context = doc?.buildContext(params.position),
-        m: any;
-    let nodes: [{ node: DocumentSymbol; uri: string }] | undefined | null,
-        locas: LocationLink[] = [];
+    const uri = params.textDocument.uri.toLowerCase();
+    const doc = lexers[uri];
+    const context = doc?.buildContext(params.position);
+    let m: any;
+    let nodes: [{ node: DocumentSymbol; uri: string }] | undefined | null;
+    const locas: LocationLink[] = [];
     if (!context?.token) {
         return;
     }
-    let word = '',
-        kind: SymbolKind;
+    let word = '';
+    let kind: SymbolKind;
     if (!context.token.type) {
         const tk = context.token.previous_token;
         if (tk?.content.match(/^#include/i)) {
-            let line = params.position.line,
-                character = context.linetext.indexOf('#');
+            const line = params.position.line;
+            let character = context.linetext.indexOf('#');
             const d = tk.data,
                 p = d?.data as string[];
             if (p) {

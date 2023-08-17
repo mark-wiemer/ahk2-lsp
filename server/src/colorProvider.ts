@@ -12,10 +12,10 @@ export async function colorPresentation(
     params: ColorPresentationParams,
     token: CancellationToken,
 ): Promise<Maybe<ColorPresentation[]>> {
-    let label = 'RGB: ',
-        textEdit: TextEdit = { range: params.range, newText: '' },
-        color = params.color,
-        m: any;
+    let label = 'RGB: ';
+    const textEdit: TextEdit = { range: params.range, newText: '' };
+    const color = params.color;
+    let m: any;
     let text = lexers[params.textDocument.uri.toLowerCase()]?.document.getText(
             params.range,
         ),

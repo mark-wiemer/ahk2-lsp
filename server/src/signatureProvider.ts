@@ -28,10 +28,9 @@ export async function signatureProvider(
     if (token.isCancellationRequested) {
         return undefined;
     }
-    let uri = params.textDocument.uri.toLowerCase(),
-        doc = lexers[uri],
-        nodes: any,
-        context: any;
+    const uri = params.textDocument.uri.toLowerCase();
+    const doc = lexers[uri];
+    let nodes: any, context: any;
     const signinfo: SignatureHelp = {
         activeSignature: 0,
         signatures: [],
@@ -41,10 +40,10 @@ export async function signatureProvider(
     if (!res || res.index < 0) {
         return undefined;
     }
-    let { name, pos, index, kind } = res,
-        ts: any = {},
-        iscall = true,
-        prop = '';
+    let { name, pos, index, kind } = res;
+    const ts: any = {};
+    let iscall = true;
+    let prop = '';
     if ((reset_detect_cache(), kind !== SymbolKind.Function)) {
         let t = (context = doc.buildContext(pos)).text.toLowerCase();
         t = t.replace(/\.([^.()]+)$/, (_, m) => ((prop = m.toLowerCase()), ''));
@@ -85,8 +84,8 @@ export async function signatureProvider(
     const st = new Set<any>();
     nodes = [];
     for (const tp in ts) {
-        let t = ts[tp],
-            n: any;
+        const t = ts[tp];
+        let n: any;
         if (t) {
             add(t.node, t.uri, !/[#@]/.test(tp));
         } else if (tp.includes('=>')) {
@@ -98,8 +97,8 @@ export async function signatureProvider(
             }
         }
         function add(it: FuncNode, uri: string, isstatic = false) {
-            let fn: FuncNode | undefined,
-                needthis = false;
+            let fn: FuncNode | undefined;
+            let needthis = false;
             if (st.has(it)) {
                 return;
             }
@@ -208,16 +207,15 @@ export async function signatureProvider(
         const node = it.node as FuncNode,
             overloads: string[] = [],
             needthis = it.needthis ?? 0;
-        let params: Variable[] | undefined,
-            name: string | undefined,
-            paramindex: number;
+        let params: Variable[] | undefined;
+        let name: string | undefined, paramindex: number;
         if ((params = node.params)) {
-            let label = node.full,
-                parameters = params.map((param) => ({
-                    label: param.name
-                        .trim()
-                        .replace(/(['\w]*\|['\w]*)(\|['\w]*)+/, '$1|...'),
-                }));
+            let label = node.full;
+            let parameters = params.map((param) => ({
+                label: param.name
+                    .trim()
+                    .replace(/(['\w]*\|['\w]*)(\|['\w]*)+/, '$1|...'),
+            }));
             if (needthis) {
                 (label = label.replace(
                     /((\w|[^\x00-\x7f])+)\(/,
@@ -246,8 +244,8 @@ export async function signatureProvider(
                     undefined,
                     -1,
                 );
-                let { label, documentation } = signinfo.signatures[0],
-                    n = node;
+                let { label, documentation } = signinfo.signatures[0];
+                const n = node;
                 const fn = label.substring(0, label.indexOf('(', 1));
                 lex.parseScript();
                 lex.children.forEach((node: any) => {

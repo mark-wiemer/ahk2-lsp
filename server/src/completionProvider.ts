@@ -57,14 +57,12 @@ export async function completionProvider(
     if (!doc || _token.isCancellationRequested) {
         return;
     }
-    let items: CompletionItem[] = [],
-        vars: { [key: string]: any } = {},
-        cpitem = items.pop()!;
-    let l: string,
-        path: string,
-        pt: Token | undefined,
-        scope: DocumentSymbol | undefined,
-        temp: any;
+    let items: CompletionItem[] = [];
+    const vars: { [key: string]: any } = {};
+    let cpitem = items.pop()!;
+    let l: string;
+    let path: string;
+    let pt: Token | undefined, scope: DocumentSymbol | undefined, temp: any;
     const { triggerKind, triggerCharacter } = params.context ?? {};
 
     // /**|
@@ -134,8 +132,8 @@ export async function completionProvider(
     );
     const list = doc.relevance ?? {},
         { line, character } = position;
-    let isexpr = false,
-        expg = make_search_re(word);
+    let isexpr = false;
+    let expg = make_search_re(word);
 
     if (!token?.type || token.type === 'TK_EOF') {
         if ((pt = token?.previous_token)?.type === 'TK_SHARP') {
@@ -150,10 +148,10 @@ export async function completionProvider(
                     }
                     const l = doc.document.offsetAt(position) - token!.offset;
                     let pre = (text = token!.content).slice(0, l);
-                    let paths: string[],
-                        c = pre[0],
-                        inlib = false,
-                        suf = '';
+                    let paths: string[];
+                    let c = pre[0];
+                    let inlib = false;
+                    let suf = '';
                     if ('\'"'.includes(c)) {
                         pre = pre.slice(1);
                     } else {
@@ -213,8 +211,8 @@ export async function completionProvider(
                     } else if (c.startsWith('>')) {
                         (paths = doc.libdirs), (inlib = true);
                     } else {
-                        let t = doc.scriptpath,
-                            l = position.line;
+                        let t = doc.scriptpath;
+                        const l = position.line;
                         for (const [k, v] of doc.includedir) {
                             if (k < l) {
                                 t = v;
@@ -351,11 +349,11 @@ export async function completionProvider(
             'TK_STRING',
             'TK_WORD',
         ];
-        let maxn = token.type === 'TK_STRING' ? 0 : 3,
-            i = 0,
-            t;
-        let ci = pt.callinfo,
-            tokens = doc.tokens;
+        const maxn = token.type === 'TK_STRING' ? 0 : 3;
+        let i = 0;
+        let t;
+        let ci = pt.callinfo;
+        const tokens = doc.tokens;
         while (
             (pt = (t = tokens[pt.previous_pair_pos!]) ?? pt.previous_token)
         ) {
@@ -827,8 +825,8 @@ export async function completionProvider(
                                 break;
                             case 'objbindmethod':
                                 if (res.index === 1) {
-                                    let exp = ci.paraminfo?.data?.[0],
-                                        unknown = true;
+                                    const exp = ci.paraminfo?.data?.[0];
+                                    let unknown = true;
                                     [
                                         'NEW',
                                         'DELETE',
@@ -1115,9 +1113,9 @@ export async function completionProvider(
         if (!text.includes('.')) {
             return;
         }
-        let unknown = true,
-            isstatic = true,
-            tps = new Set<DocumentSymbol>();
+        let unknown = true;
+        let isstatic = true;
+        const tps = new Set<DocumentSymbol>();
         const props: any = {},
             ts: any = {},
             p = text.replace(/\.(\w|[^\x00-\x7f])*$/, '').toLowerCase();
@@ -1390,13 +1388,12 @@ export async function completionProvider(
 
     // auto-include
     if (extsettings.AutoLibInclude) {
-        let exportnum = 0,
-            line = -1,
-            libdirs = doc.libdirs,
-            first_is_comment: boolean | undefined,
-            cm: Token;
-        let dir = inWorkspaceFolders(doc.uri),
-            caches: { [path: string]: TextEdit[] } = {};
+        let exportnum = 0;
+        let line = -1;
+        const libdirs = doc.libdirs;
+        let first_is_comment: boolean | undefined, cm: Token;
+        let dir = inWorkspaceFolders(doc.uri);
+        const caches: { [path: string]: TextEdit[] } = {};
         dir = dir ? URI.parse(dir).fsPath : doc.scriptdir.toLowerCase();
         doc.includedir.forEach((v, k) => (line = k));
         for (const u in libfuncs) {
@@ -1425,11 +1422,11 @@ export async function completionProvider(
             }
         }
         function autoinclude(path: string) {
-            let lp = (path = path.replace(/(\s);/g, '$1`;')).toLowerCase(),
-                i = 0,
-                l = -1;
-            let curdir = doc.scriptpath,
-                texts: string[] = [];
+            const lp = (path = path.replace(/(\s);/g, '$1`;')).toLowerCase();
+            let i = 0;
+            let l = -1;
+            let curdir = doc.scriptpath;
+            const texts: string[] = [];
             for (const p of libdirs) {
                 if ((++i, lp.startsWith(p.toLowerCase()))) {
                     const n = basename(path);
@@ -1464,9 +1461,9 @@ export async function completionProvider(
             if (curdir.charAt(0) === lp.charAt(0)) {
                 texts.push(`#Include ${relative(curdir, path)}`);
             }
-            let pos = { line: doc.document.lineCount, character: 0 },
-                text = `#Include ${path}`,
-                t;
+            let pos = { line: doc.document.lineCount, character: 0 };
+            let text = `#Include ${path}`;
+            let t;
             texts.forEach((t) => t.length < text.length && (text = t)),
                 (text = '\n' + text);
             if (l !== -1) {
@@ -1514,8 +1511,8 @@ export async function completionProvider(
     return items.concat(Object.values(vars));
 
     function is_symbol_comment(tk: Token) {
-        let nk = doc.tokens[tk.next_token_offset],
-            t;
+        const nk = doc.tokens[tk.next_token_offset];
+        let t;
         if (
             nk &&
             ((t = nk.symbol)?.detail !== undefined ||

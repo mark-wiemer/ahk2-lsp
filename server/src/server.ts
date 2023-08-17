@@ -280,8 +280,8 @@ connection.onDidChangeConfiguration(async (change: any) => {
 
 documents.onDidOpen(async (e) => {
     const to_ahk2 = uri_switch_to_ahk2 === e.document.uri;
-    let uri = e.document.uri.toLowerCase(),
-        doc = lexers[uri];
+    const uri = e.document.uri.toLowerCase();
+    let doc = lexers[uri];
     if (doc) {
         doc.document = e.document;
     } else {
@@ -389,8 +389,8 @@ async function executeCommandProvider(
 }
 
 async function validateTextDocument(textDocument: TextDocument): Promise<void> {
-    let uri = textDocument.uri,
-        doc: Lexer;
+    let uri = textDocument.uri;
+    let doc: Lexer;
     if ((doc = lexers[(uri = uri.toLowerCase())])) {
         doc.initlibdirs();
         if (doc.diagnostics.length) {
@@ -429,8 +429,8 @@ function initpathenv(samefolder = false) {
         if (!(data = data.trim())) {
             const path = ahkpath_cur || extsettings.InterpreterPath;
             if (getAHKversion([path])[0].endsWith('[UIAccess]')) {
-                let ret = false,
-                    n = path.replace(/_uia\.exe$/i, '.exe');
+                let ret = false;
+                const n = path.replace(/_uia\.exe$/i, '.exe');
                 fail = 2;
                 if (
                     path !== n &&
@@ -536,9 +536,8 @@ function initpathenv(samefolder = false) {
 async function parseuserlibs() {
     for (const dir of libdirs) {
         for (const path of getallahkfiles(dir)) {
-            let uri = URI.file(path).toString().toLowerCase(),
-                d: Lexer,
-                t: TextDocument | undefined;
+            const uri = URI.file(path).toString().toLowerCase();
+            let d: Lexer, t: TextDocument | undefined;
             if (!libfuncs[uri]) {
                 if (!(d = lexers[uri])) {
                     if (!(t = openFile(path))) {
@@ -612,17 +611,16 @@ async function parseproject(uri: string) {
         });
     }
     setTimeout(async () => {
-        let searchdir = '',
-            workspace = false;
+        let searchdir = '';
+        let workspace = false;
         if ((searchdir = inWorkspaceFolders(uri))) {
             (searchdir = URI.parse(searchdir).fsPath), (workspace = true);
         } else {
             searchdir = doc.scriptdir + '\\lib';
         }
         for (const path of getallahkfiles(searchdir)) {
-            let u = URI.file(path).toString().toLowerCase(),
-                d: Lexer,
-                t: TextDocument | undefined;
+            const u = URI.file(path).toString().toLowerCase();
+            let d: Lexer, t: TextDocument | undefined;
             if (u !== uri && !libfuncs[u]) {
                 if (!(d = lexers[u])) {
                     if (!(t = openFile(path))) {
@@ -697,8 +695,8 @@ let curPERCDATA:
     | { exe: string; data: Map<number | string, Buffer> }
     | undefined = undefined;
 function getRCDATA(name: string | undefined) {
-    let exe = ahkpath_cur || extsettings.InterpreterPath,
-        path = `${exe}:${name}`;
+    let exe = ahkpath_cur || extsettings.InterpreterPath;
+    const path = `${exe}:${name}`;
     const uri = URI.from({ scheme: 'ahkres', path }).toString().toLowerCase();
     if (lexers[uri]) {
         return { uri, path };

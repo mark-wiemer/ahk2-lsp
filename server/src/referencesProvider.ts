@@ -40,8 +40,8 @@ export function getAllReferences(
     if (!context.text) {
         return undefined;
     }
-    let name: string = context.text.toUpperCase(),
-        references: { [uri: string]: Range[] } = {};
+    let name: string = context.text.toUpperCase();
+    const references: { [uri: string]: Range[] } = {};
     const nodes = searchNode(doc, name, context.range.end, context.kind);
     if (!nodes || nodes.length > 1) {
         return undefined;
@@ -156,10 +156,10 @@ export function getAllReferences(
                     }
                     name = `${m[1]}.${m[2]}`.toUpperCase();
                 }
-                let c = name.split('.'),
-                    l = c.length,
-                    i = 0,
-                    refs: { [uri: string]: Range[] } = {};
+                const c = name.split('.');
+                const l = c.length;
+                let i = 0;
+                let refs: { [uri: string]: Range[] } = {};
                 for (const uri of new Set([
                     doc.uri,
                     ...Object.keys(doc.relevance ?? {}),
@@ -232,8 +232,8 @@ export function getAllReferences(
                     }
                     refs = {};
                 }
-                let cls = (node as FuncNode).parent,
-                    arr = (references[lexers[uri].document.uri] ??= []);
+                let cls = (node as FuncNode).parent;
+                const arr = (references[lexers[uri].document.uri] ??= []);
                 while (cls && cls.kind !== SymbolKind.Class) {
                     cls = (cls as FuncNode).parent;
                 }
@@ -271,9 +271,9 @@ function findAllFromDoc(
     const ranges: Range[] = [];
     if (kind === SymbolKind.Method || kind === SymbolKind.Property) {
     } else {
-        let node = (scope ?? doc) as FuncNode,
-            gg = !scope,
-            assume: boolean | undefined = gg;
+        const node = (scope ?? doc) as FuncNode;
+        const gg = !scope;
+        let assume: boolean | undefined = gg;
         let not_static = !(<any>node)?.local?.[name]?.static;
         // symbolProvider({ textDocument: { uri: doc.uri } });
         if (not_static && scope && node.declaration?.[name]?.static === null) {
@@ -344,8 +344,8 @@ function findAllVar(
 ) {
     const fn_is_static = node.kind === SymbolKind.Function && node.static,
         f = fn_is_static || node.closure;
-    let t: Variable,
-        assume = assume_glo;
+    let t: Variable;
+    let assume = assume_glo;
     if (fn_is_static && not_static && !global) {
         return;
     }

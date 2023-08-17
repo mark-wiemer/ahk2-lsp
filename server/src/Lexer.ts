@@ -226,9 +226,9 @@ export namespace FuncNode {
         children?: DocumentSymbol[],
         isstatic?: boolean,
     ): FuncNode {
-        let full = '',
-            hasref = false,
-            variadic = false;
+        let full = '';
+        let hasref = false;
+        let variadic = false;
         (<any>params).format?.(params);
         for (const param of params) {
             full +=
@@ -411,49 +411,42 @@ export class Lexer {
     public actionwhenv1?: ActionType;
     private anonymous: DocumentSymbol[] = [];
     constructor(document: TextDocument, scriptdir?: string, d = 0) {
-        let input: string,
-            output_lines: { text: string[]; indent: number }[],
-            flags: any,
-            opt: FormatOptions,
-            previous_flags: any,
-            flag_store: any[],
-            includetable: { [uri: string]: string };
-        let token_text: string,
-            token_text_low: string,
-            token_type: string,
-            last_type: string,
-            last_text: string,
-            last_last_text: string,
-            indent_string: string,
-            includedir: string,
-            dlldir: string;
-        let parser_pos: number,
-            customblocks: { region: number[]; bracket: number[] },
-            _this = this,
-            h = isahk2_h,
-            sharp_offsets: number[] = [];
-        let input_wanted_newline: boolean,
-            output_space_before_token: boolean | undefined,
-            is_conditional: boolean,
-            keep_object_line: boolean,
-            begin_line: boolean;
-        let continuation_sections_mode: boolean,
-            space_in_other: boolean,
-            requirev2 = false,
-            currsymbol: DocumentSymbol | undefined;
-        let input_length: number,
-            n_newlines: number,
-            last_LF: number,
-            preindent_string: string,
-            lst: Token,
-            ck: Token;
-        let comments: { [line: number]: Token } = {},
-            block_mode = true,
-            format_mode = false,
-            string_mode = false;
-        let uri = URI.parse(document.uri),
-            allow_$ = true,
-            last_comment_fr: FoldingRange | undefined;
+        let input: string;
+        let output_lines: { text: string[]; indent: number }[];
+        let flags: any;
+        let opt: FormatOptions;
+        let previous_flags: any;
+        let flag_store: any[], includetable: { [uri: string]: string };
+        let token_text: string;
+        let token_text_low: string;
+        let token_type: string;
+        let last_type: string;
+        let last_text: string;
+        let last_last_text: string;
+        let indent_string: string, includedir: string, dlldir: string;
+        let parser_pos: number;
+        let customblocks: { region: number[]; bracket: number[] };
+        const _this = this;
+        let h = isahk2_h;
+        const sharp_offsets: number[] = [];
+        let input_wanted_newline: boolean;
+        let output_space_before_token: boolean | undefined;
+        let is_conditional: boolean;
+        let keep_object_line: boolean, begin_line: boolean;
+        let continuation_sections_mode: boolean;
+        let space_in_other: boolean;
+        let requirev2 = false;
+        let currsymbol: DocumentSymbol | undefined;
+        let input_length: number;
+        let n_newlines: number;
+        let last_LF: number, preindent_string: string, lst: Token, ck: Token;
+        let comments: { [line: number]: Token } = {};
+        let block_mode = true;
+        let format_mode = false;
+        let string_mode = false;
+        const uri = URI.parse(document.uri);
+        let allow_$ = true;
+        let last_comment_fr: FoldingRange | undefined;
         const handlers: { [index: string]: () => void } = {
             TK_START_EXPR: handle_start_expr,
             TK_END_EXPR: handle_end_expr,
@@ -492,9 +485,8 @@ export class Lexer {
             offset?: number,
             ignorecomment = false,
         ): Token {
-            let p = parser_pos,
-                t: Token,
-                b: Token;
+            const p = parser_pos;
+            let t: Token, b: Token;
             if (offset !== undefined) {
                 (parser_pos = offset), (b = lst);
                 do {
@@ -510,10 +502,10 @@ export class Lexer {
         };
 
         this.find_token = function (offset: number, ignore = false): Token {
-            let i = offset,
-                c = input.charAt(offset),
-                tks = _this.tokens,
-                tk: Token | undefined;
+            let i = offset;
+            let c = input.charAt(offset);
+            const tks = _this.tokens;
+            let tk: Token | undefined;
             const eof = Object.assign({}, tks[-1], { type: '', content: '' });
             if (!c) {
                 return eof;
@@ -651,8 +643,8 @@ export class Lexer {
 
                 if (ck.offset >= end_pos) {
                     if (range) {
-                        let pt = ck.previous_token,
-                            end = parser_pos;
+                        let pt = ck.previous_token;
+                        let end = parser_pos;
                         if (
                             last_type === 'TK_RESERVED' &&
                             ['try', 'else', 'finally'].includes(last_text)
@@ -867,22 +859,21 @@ export class Lexer {
                     (parser_pos = 0),
                     (last_LF = -1),
                     (currsymbol = last_comment_fr = undefined);
-                let _low = '',
-                    i = 0,
-                    j = 0,
-                    l = 0,
-                    isstatic = false,
-                    tk: Token,
-                    lk: Token;
+                let _low = '';
+                let i = 0;
+                let j = 0;
+                let l = 0;
+                let isstatic = false;
+                let tk: Token, lk: Token;
                 this.clear(),
                     (this.reflat = true),
                     (customblocks = { region: [], bracket: [] }),
                     (this.maybev1 = undefined);
-                let blocks = 0,
-                    rg: Range,
-                    tokens: Token[] = [],
-                    cls: string[] = [],
-                    _cm: Token;
+                let blocks = 0;
+                let rg: Range;
+                let tokens: Token[] = [];
+                const cls: string[] = [];
+                let _cm: Token;
                 const p = [
                     DocumentSymbol.create(
                         '',
@@ -1120,9 +1111,9 @@ export class Lexer {
                                         }
                                     }
                                 } else if (tokens[j].content === '(') {
-                                    let params: Variable[] = [],
-                                        byref = false,
-                                        defVal = 0;
+                                    const params: Variable[] = [];
+                                    let byref = false;
+                                    let defVal = 0;
                                     while ((lk = tokens[++j]).content !== ')') {
                                         let tn: Variable;
                                         switch (lk.type) {
@@ -1223,9 +1214,9 @@ export class Lexer {
                                                 break;
                                         }
                                     }
-                                    let rets: string[] | undefined,
-                                        r = '',
-                                        lt = '';
+                                    let rets: string[] | undefined;
+                                    let r = '';
+                                    let lt = '';
                                     lk = tokens[j];
                                     if (
                                         j < l - 2 &&
@@ -1351,8 +1342,8 @@ export class Lexer {
                             ) {
                                 (isstatic = true), i++;
                             } else if (i < l - 4 && _low === 'class') {
-                                let extends_ = '',
-                                    m: any;
+                                let extends_ = '';
+                                let m: any;
                                 const cl = DocumentSymbol.create(
                                     (tk = tokens[++i]).content,
                                     undefined,
@@ -1456,8 +1447,10 @@ export class Lexer {
                     return;
                 }
                 if (this.d & 2) {
-                    let overwrite = this.uri.endsWith('/ahk2_h.d.ahk') ? 1 : 0,
-                        t: any;
+                    const overwrite = this.uri.endsWith('/ahk2_h.d.ahk')
+                        ? 1
+                        : 0;
+                    let t: any;
                     this.children.forEach((it) => {
                         switch (it.kind) {
                             case SymbolKind.Function:
@@ -1666,20 +1659,18 @@ export class Lexer {
             const result: DocumentSymbol[] = [],
                 document = _this.document,
                 tokens = _this.tokens;
-            let _parent = scopevar.get('#parent') || _this,
-                tk = _this.tokens[parser_pos - 1] ?? EMPTY_TOKEN,
-                lk = tk.previous_token ?? EMPTY_TOKEN;
-            let blocks = 0,
-                next = true,
-                _low = '',
-                case_pos: number[] = [],
-                _cm: Token | undefined,
-                line_begin_pos: number | undefined;
-            let blockpos: number[] = [],
-                tn: DocumentSymbol | undefined,
-                m: RegExpMatchArray | string | null,
-                o: any,
-                last_hotif: number | undefined;
+            let _parent = scopevar.get('#parent') || _this;
+            let tk = _this.tokens[parser_pos - 1] ?? EMPTY_TOKEN;
+            let lk = tk.previous_token ?? EMPTY_TOKEN;
+            let blocks = 0;
+            let next = true;
+            let _low = '';
+            const case_pos: number[] = [];
+            let _cm: Token | undefined, line_begin_pos: number | undefined;
+            const blockpos: number[] = [];
+            let tn: DocumentSymbol | undefined;
+            let m: RegExpMatchArray | string | null;
+            let o: any, last_hotif: number | undefined;
             const baksym = currsymbol;
             if (((block_mode = true), mode !== 0)) {
                 blockpos.push(parser_pos - 1), delete tk.data;
@@ -1702,14 +1693,14 @@ export class Lexer {
                 if (input.charAt(tk.offset + tk.length) !== '(') {
                     return false;
                 }
-                let _lk = lk,
-                    _tk = tk,
-                    _lst = lst,
-                    _ppos = parser_pos,
-                    c = '';
-                let n = 0,
-                    tp = tk.topofline > 0,
-                    e = '';
+                const _lk = lk;
+                const _tk = tk;
+                const _lst = lst;
+                const _ppos = parser_pos;
+                let c = '';
+                let n = 0;
+                const tp = tk.topofline > 0;
+                let e = '';
                 block_mode = false;
                 while (nexttoken()) {
                     if ((c = tk.content) === '(') {
@@ -1822,19 +1813,19 @@ export class Lexer {
                                 }
 
                                 if (isfuncdef) {
-                                    let tn: FuncNode | undefined,
-                                        cm: Token | undefined,
-                                        name_l: string,
-                                        fc = lk,
-                                        rl = result.length;
+                                    let tn: FuncNode | undefined;
+                                    let cm: Token | undefined;
+                                    let name_l: string;
+                                    const fc = lk;
+                                    const rl = result.length;
                                     const se: SemanticToken = (lk.semantic = {
                                         type:
                                             mode === 2
                                                 ? SemanticTokenTypes.method
                                                 : SemanticTokenTypes.function,
                                     });
-                                    let par = parse_params(undefined, true),
-                                        isstatic = fc.topofline === 2;
+                                    let par = parse_params(undefined, true);
+                                    const isstatic = fc.topofline === 2;
                                     const oo = isstatic
                                         ? fc.previous_token?.offset!
                                         : fc.offset;
@@ -1976,10 +1967,10 @@ export class Lexer {
                                             '[' ||
                                         tk.content.match(/^(=>|\{)$/)
                                     ) {
-                                        let fc = lk,
-                                            rl = result.length,
-                                            par: any = [],
-                                            rg: Range;
+                                        const fc = lk;
+                                        const rl = result.length;
+                                        let par: any = [];
+                                        let rg: Range;
                                         line_begin_pos = undefined;
                                         if (tk.content === '[') {
                                             par =
@@ -2084,11 +2075,11 @@ export class Lexer {
                                             };
                                         }
                                         if (tk.content === '{') {
-                                            let nk: Token,
-                                                sk: Token,
-                                                tn: FuncNode | undefined,
-                                                mmm = mode,
-                                                brace = tk.offset;
+                                            let nk: Token;
+                                            let sk: Token;
+                                            let tn: FuncNode | undefined;
+                                            const mmm = mode;
+                                            const brace = tk.offset;
                                             tk.previous_pair_pos = oo;
                                             nexttoken(),
                                                 (next = false),
@@ -2131,11 +2122,11 @@ export class Lexer {
                                                     // nk = tk, sk = _this.get_token(parser_pos, true), parser_pos = sk.offset + sk.length;
                                                     nexttoken(), (nk = lk);
                                                     if (tk.content === '=>') {
-                                                        let o: any = {},
-                                                            sub: DocumentSymbol[],
-                                                            fcs =
-                                                                _parent.funccall
-                                                                    .length;
+                                                        const o: any = {};
+                                                        let sub: DocumentSymbol[];
+                                                        const fcs =
+                                                            _parent.funccall
+                                                                .length;
                                                         tn = FuncNode.create(
                                                             lk.content.toLowerCase(),
                                                             SymbolKind.Function,
@@ -2377,10 +2368,10 @@ export class Lexer {
                                                 (mode = mmm);
                                             _this.addSymbolFolding(prop, brace);
                                         } else if (tk.content === '=>') {
-                                            let off = parser_pos,
-                                                o: any = {},
-                                                tn: FuncNode,
-                                                fcs = _parent.funccall.length;
+                                            const off = parser_pos;
+                                            const o: any = {};
+                                            let tn: FuncNode;
+                                            const fcs = _parent.funccall.length;
                                             (mode = 3),
                                                 (tn = FuncNode.create(
                                                     'get',
@@ -2716,9 +2707,9 @@ export class Lexer {
                                 tn.detail = trim_comment(_cm.content);
                             }
                             (tk.symbol = tn), nexttoken();
-                            let ht = lk,
-                                v: Variable,
-                                vars = new Map<string, any>([['#parent', tn]]);
+                            const ht = lk;
+                            let v: Variable;
+                            const vars = new Map<string, any>([['#parent', tn]]);
                             (tn.funccall = []),
                                 (tn.declaration = {}),
                                 result.push(tn);
@@ -2842,11 +2833,11 @@ export class Lexer {
             }
 
             function parse_reserved() {
-                let _low = tk.content.toLowerCase(),
-                    beginpos = tk.offset,
-                    bak = lk,
-                    t = parser_pos,
-                    nk: Token | undefined;
+                let _low = tk.content.toLowerCase();
+                const beginpos = tk.offset;
+                const bak = lk;
+                const t = parser_pos;
+                let nk: Token | undefined;
                 if (((block_mode = false), mode === 2)) {
                     nk = get_next_token();
                     (next = false), (parser_pos = t), (tk.type = 'TK_WORD');
@@ -2885,10 +2876,10 @@ export class Lexer {
                             (next = false), (tk.type = 'TK_WORD');
                             break;
                         }
-                        let cl: Token,
-                            ex: string = '',
-                            sv = new Map(),
-                            rg: Range;
+                        let cl: Token;
+                        let ex: string = '';
+                        const sv = new Map();
+                        let rg: Range;
                         nexttoken();
                         if (!tk.topofline && tk.type === 'TK_RESERVED') {
                             tk.type = 'TK_WORD';
@@ -3099,8 +3090,8 @@ export class Lexer {
                             ) {
                                 tk.topofline = 2;
                             } else {
-                                let sta: any[],
-                                    rl = result.length,
+                                let sta: any[];
+                                const rl = result.length,
                                     _ = _parent;
                                 if (mode === 2) {
                                     (tk.topofline = 2),
@@ -3176,10 +3167,10 @@ export class Lexer {
                         if (tk.type === 'TK_COMMA') {
                             stop_parse(lk);
                         }
-                        let min = 0,
-                            max = 1,
-                            act = 'loop',
-                            sub;
+                        let min = 0;
+                        let max = 1;
+                        let act = 'loop';
+                        let sub;
                         if (tk.type === 'TK_EQUALS') {
                             (parser_pos = lk.offset + lk.length),
                                 (lk.type = 'TK_WORD'),
@@ -3641,9 +3632,9 @@ export class Lexer {
             }
 
             function parse_catch() {
-                let p: Token | undefined,
-                    nk: Token,
-                    bp = tk.offset;
+                let p: Token | undefined;
+                let nk: Token;
+                const bp = tk.offset;
                 line_begin_pos = bp;
                 (lk = nk = tk), (p = get_token_ignore_comment());
                 if (p.topofline || p.content !== '(') {
@@ -3900,9 +3891,9 @@ export class Lexer {
             }
 
             function parse_funccall(type: SymbolKind, nextc: string) {
-                let tn: CallInfo,
-                    sub: DocumentSymbol[],
-                    fc = lk;
+                let tn: CallInfo;
+                let sub: DocumentSymbol[];
+                const fc = lk;
                 const pi: ParamInfo = {
                     offset: fc.offset,
                     miss: [],
@@ -4044,12 +4035,12 @@ export class Lexer {
                 max = 1,
                 pi?: ParamInfo,
             ): DocumentSymbol[] {
-                let b: number,
-                    res: DocumentSymbol[] = [],
-                    hascomma = 0,
-                    t = 0,
-                    nk: Token | undefined,
-                    tps: string[] = [];
+                let b: number;
+                const res: DocumentSymbol[] = [];
+                let hascomma = 0;
+                let t = 0;
+                let nk: Token | undefined;
+                const tps: string[] = [];
                 const info = pi ?? {
                     offset: 0,
                     count: 0,
@@ -4123,9 +4114,8 @@ export class Lexer {
                     types[tps.pop() ?? '#void'] = 0;
                 }
                 if (act === '=' || act === '=>') {
-                    let expr = tps[0],
-                        q: number,
-                        m;
+                    let expr = tps[0];
+                    let q: number, m;
                     if (act === '=>' && (m = expr.match(/^\s\$(\d+)$/))) {
                         expr =
                             Object.keys(
@@ -4170,8 +4160,8 @@ export class Lexer {
             }
 
             function parse_sharp() {
-                let isdll = false,
-                    data = tk.data ?? {
+                let isdll = false;
+                let data = tk.data ?? {
                         content: '',
                         offset: tk.offset + tk.length,
                         length: 0,
@@ -4207,11 +4197,11 @@ export class Lexer {
                                 d: 'double',
                                 I: 'int64',
                             };
-                            let n = m[0],
-                                args: Variable[] = [],
-                                arg: Variable | undefined,
-                                u = '',
-                                i = 0;
+                            const n = m[0];
+                            const args: Variable[] = [];
+                            let arg: Variable | undefined;
+                            let u = '';
+                            let i = 0;
                             (h = true),
                                 (m = data.content
                                     .substring(m[0].length)
@@ -4315,9 +4305,8 @@ export class Lexer {
             }
 
             function parse_statement(local: string) {
-                let sta: Variable[] = [],
-                    bak: Token,
-                    pc: Token | undefined;
+                const sta: Variable[] = [];
+                let bak: Token, pc: Token | undefined;
                 block_mode = false;
                 loop: while (nexttoken()) {
                     if (
@@ -4331,8 +4320,8 @@ export class Lexer {
                         case 'TK_WORD':
                             (bak = lk), nexttoken();
                             if ((tk.type as string) === 'TK_EQUALS') {
-                                let vr: Variable | undefined,
-                                    o: any = {},
+                                let vr: Variable | undefined;
+                                const o: any = {},
                                     equ = tk.content,
                                     pp = parser_pos;
                                 if (bak.type === 'TK_DOT') {
@@ -4386,9 +4375,9 @@ export class Lexer {
                                 }
                             } else {
                                 if (mode === 2) {
-                                    let llk = lk,
-                                        ttk = tk,
-                                        err = diagnostic.propnotinit();
+                                    const llk = lk;
+                                    const ttk = tk;
+                                    let err = diagnostic.propnotinit();
                                     (
                                         addvariable(lk, 2, sta) ??
                                         ({} as Variable)
@@ -4549,11 +4538,11 @@ export class Lexer {
                 mustexp = 1,
                 end?: string,
             ): DocumentSymbol[] {
-                let pres = result.length,
-                    tpexp = '',
-                    byref = undefined,
-                    ternarys: number[] = [],
-                    t: any;
+                const pres = result.length;
+                let tpexp = '';
+                let byref = undefined;
+                const ternarys: number[] = [];
+                let t: any;
                 block_mode = false;
                 while (nexttoken()) {
                     if (tk.topofline === 1) {
@@ -4862,10 +4851,10 @@ export class Lexer {
                                     tpexp += ' #array';
                                 }
                             } else {
-                                let fc: Token | undefined,
-                                    quoteend: number,
-                                    tpe: any = {},
-                                    b = tk.offset;
+                                let fc: Token | undefined;
+                                let quoteend: number;
+                                const tpe: any = {};
+                                const b = tk.offset;
                                 const nospace =
                                     !lk.type ||
                                     input.charAt(lk.offset + lk.length) === '(';
@@ -4922,8 +4911,8 @@ export class Lexer {
                                             (tk = ttk).previous_token ??
                                             EMPTY_TOKEN);
                                     parser_pos = tk.offset + 1;
-                                    let par = parse_params(),
-                                        rs = result.splice(rl);
+                                    let par = parse_params();
+                                    const rs = result.splice(rl);
                                     const pfl = _parent.funccall.length,
                                         bbb = fc ? fc.offset : b;
                                     (quoteend = parser_pos), nexttoken();
@@ -5095,8 +5084,8 @@ export class Lexer {
                                 (next = false), ternaryMiss();
                                 return result.splice(pres);
                             } else {
-                                let l = _this.diagnostics.length,
-                                    isobj = false;
+                                const l = _this.diagnostics.length;
+                                let isobj = false;
                                 if (
                                     lk.type === 'TK_RESERVED' &&
                                     lk.content.toLowerCase() === 'switch'
@@ -5349,16 +5338,16 @@ export class Lexer {
             }
 
             function parse_params(types: any = {}, must = false, endc = ')') {
-                let paramsdef = true,
-                    beg = parser_pos - 1,
-                    cache: Variable[] = [],
-                    rg,
-                    la = [',', endc === ')' ? '(' : '['];
-                let byref = false,
-                    tpexp = '',
-                    bb = parser_pos,
-                    bak = tk,
-                    hasexpr = false;
+                let paramsdef = true;
+                const beg = parser_pos - 1;
+                const cache: Variable[] = [];
+                let rg;
+                const la = [',', endc === ')' ? '(' : '['];
+                let byref = false;
+                let tpexp = '';
+                let bb = parser_pos;
+                let bak = tk;
+                let hasexpr = false;
                 const info: ParamInfo = {
                     offset: beg,
                     count: 0,
@@ -5455,8 +5444,8 @@ export class Lexer {
                                         tk.length,
                                     );
                                 }
-                                let ek = tk,
-                                    o: any;
+                                const ek = tk;
+                                let o: any;
                                 if (lk.content.match(/^\d/)) {
                                     _this.addDiagnostic(
                                         diagnostic.invalidsymbolname(
@@ -5626,8 +5615,8 @@ export class Lexer {
                         }
                     } else if (la.includes(lk.content)) {
                         if (tk.content === '*') {
-                            let t = tk,
-                                tn: Variable;
+                            const t = tk;
+                            let tn: Variable;
                             nexttoken();
                             if (tk.content === endc) {
                                 cache.push(
@@ -5735,14 +5724,14 @@ export class Lexer {
             }
 
             function parse_obj(must: boolean = false, tp: any = {}): boolean {
-                let l = lk,
-                    b = tk,
-                    rl = result.length,
-                    isobj = true,
-                    props: any = {};
-                let ts: any = {},
-                    k: Token | undefined,
-                    mark: number[] = [];
+                const l = lk;
+                const b = tk;
+                const rl = result.length;
+                let isobj = true;
+                const props: any = {};
+                let ts: any = {};
+                let k: Token | undefined;
+                const mark: number[] = [];
                 const cls = DocumentSymbol.create(
                     '',
                     undefined,
@@ -5968,16 +5957,16 @@ export class Lexer {
                 types: any = {},
                 strs?: Token[],
             ) {
-                let pairnum = 0,
-                    apos = result.length,
-                    tp = parser_pos,
-                    llk = lk,
-                    pairpos = [(pairbeg ??= tk.offset)];
-                let rpair = 0,
-                    tpexp = '',
-                    byref,
-                    _pk = _this.tokens[pairbeg],
-                    ternarys: number[] = [];
+                let pairnum = 0;
+                let apos = result.length;
+                let tp = parser_pos;
+                let llk = lk;
+                const pairpos = [(pairbeg ??= tk.offset)];
+                let rpair = 0;
+                let tpexp = '';
+                let byref;
+                const _pk = _this.tokens[pairbeg];
+                const ternarys: number[] = [];
                 let info: ParamInfo = {
                     offset: pairbeg,
                     count: 0,
@@ -5985,8 +5974,8 @@ export class Lexer {
                     miss: [],
                     unknown: false,
                 };
-                let exps: string[] = [],
-                    iscall = false;
+                const exps: string[] = [];
+                let iscall = false;
                 if (((block_mode = false), types.paraminfo)) {
                     info = types.paraminfo;
                     delete types.paraminfo;
@@ -6070,11 +6059,11 @@ export class Lexer {
                         }
                         pairnum++, pairpos.push(parser_pos - 1), (llk = lk);
                     } else if (tk.content === '=>') {
-                        let rs = result.splice(apos),
-                            bb = tk,
-                            par: DocumentSymbol[] | undefined,
-                            nk: Token,
-                            b = -1;
+                        let rs = result.splice(apos);
+                        const bb = tk;
+                        let par: DocumentSymbol[] | undefined;
+                        let nk: Token;
+                        let b = -1;
                         if (lk.content === ')') {
                             if (rpair !== 1) {
                                 _this.addDiagnostic(
@@ -6401,9 +6390,9 @@ export class Lexer {
                                 }
                             }
                         } else if (input.charAt(parser_pos) === '(') {
-                            let ptk = tk,
-                                o: any = {},
-                                ttk;
+                            const ptk = tk;
+                            const o: any = {};
+                            let ttk;
                             (ttk = tk = get_next_token()),
                                 (ptk.semantic = {
                                     type: SemanticTokenTypes.method,
@@ -6709,8 +6698,8 @@ export class Lexer {
                 if (classfullname === '') {
                     return;
                 }
-                let rg: Range,
-                    ts = tk.previous_token?.previous_token;
+                let rg: Range;
+                const ts = tk.previous_token?.previous_token;
                 if (!ts || input.charAt(ts.offset - 1) === '.') {
                     return;
                 }
@@ -6718,8 +6707,8 @@ export class Lexer {
                 if (_low !== 'this' && _low !== 'super') {
                     return;
                 }
-                let p = _parent as ClassNode,
-                    s = false;
+                let p = _parent as ClassNode;
+                let s = false;
                 if (flag) {
                     const pi = tk.callinfo?.paraminfo;
                     if (
@@ -6730,8 +6719,8 @@ export class Lexer {
                     ) {
                         get_class();
                         if (p && p.kind === SymbolKind.Class) {
-                            let end = pi.comma[0],
-                                nk = tokens[tk.next_token_offset];
+                            const end = pi.comma[0];
+                            let nk = tokens[tk.next_token_offset];
                             if (input.charAt(tk.offset + tk.length) === '(') {
                                 nk = tokens[nk.next_token_offset];
                             }
@@ -6922,12 +6911,12 @@ export class Lexer {
             }
 
             function adddeclaration(node: FuncNode | ClassNode) {
-                let t: Variable,
-                    severity = DiagnosticSeverity.Error;
-                let dec = (node.declaration ??= {}),
-                    _diags = _this.diagnostics,
-                    lpv = false,
-                    pars: { [name: string]: Variable } = {};
+                let t: Variable;
+                const severity = DiagnosticSeverity.Error;
+                const dec = (node.declaration ??= {});
+                const _diags = _this.diagnostics;
+                let lpv = false;
+                const pars: { [name: string]: Variable } = {};
                 if (!dec) {
                     return;
                 }
@@ -6978,11 +6967,11 @@ export class Lexer {
                                         SymbolKind.Class,
                                     )
                                 ) {
-                                    let method,
-                                        prop: any =
-                                            t.kind === SymbolKind.Property
-                                                ? ((method = it), t)
-                                                : ((method = t), it);
+                                    let method;
+                                    const prop: any =
+                                        t.kind === SymbolKind.Property
+                                            ? ((method = it), t)
+                                            : ((method = t), it);
                                     if (!prop.call) {
                                         return (
                                             (prop.call = method),
@@ -7034,10 +7023,10 @@ export class Lexer {
                                 ] ??= it),
                         );
                 } else {
-                    let fn = node as FuncNode,
-                        vars: { [k: string]: any } = {},
-                        unresolved_vars: { [k: string]: any } = {},
-                        vr: Variable;
+                    const fn = node as FuncNode;
+                    let vars: { [k: string]: any } = {};
+                    let unresolved_vars: { [k: string]: any } = {};
+                    let vr: Variable;
                     const has_this_param =
                         node.kind === SymbolKind.Method ||
                         (node.parent?.kind === SymbolKind.Property &&
@@ -7392,10 +7381,10 @@ export class Lexer {
             mode = 0,
             isdll = false,
         ) {
-            let m: any,
-                raw: string,
-                ignore = false,
-                q = text[0];
+            let m: any;
+            let raw: string;
+            let ignore = false;
+            const q = text[0];
             if (`'"`.includes(q) && text.endsWith(q)) {
                 text = text.slice(1, -1);
             }
@@ -7572,16 +7561,16 @@ export class Lexer {
         }
 
         function create_flags(flags_base: any, mode: any) {
-            let indentation_level = 0,
-                had_comment = 0,
-                ternary_depth;
-            let last_text = '',
-                last_word = '',
-                in_expression = [
-                    MODE.ArrayLiteral,
-                    MODE.Expression,
-                    MODE.ObjectLiteral,
-                ].includes(mode);
+            let indentation_level = 0;
+            let had_comment = 0;
+            let ternary_depth;
+            let last_text = '';
+            let last_word = '';
+            let in_expression = [
+                MODE.ArrayLiteral,
+                MODE.Expression,
+                MODE.ObjectLiteral,
+            ].includes(mode);
             if (flags_base) {
                 indentation_level = flags_base.indentation_level;
                 had_comment = flags_base.had_comment;
@@ -7843,8 +7832,8 @@ export class Lexer {
         }
 
         function is_next_char(find_char: string) {
-            let local_pos = parser_pos,
-                c = input.charAt(local_pos);
+            let local_pos = parser_pos;
+            let c = input.charAt(local_pos);
             while (
                 c !== find_char &&
                 whitespace.includes(c) &&
@@ -7865,8 +7854,8 @@ export class Lexer {
 
         function get_next_token(depth = 0): Token {
             let resulting_string: string, c: string, m: RegExpMatchArray | null;
-            let bg = 0,
-                _ppos = parser_pos;
+            let bg = 0;
+            const _ppos = parser_pos;
             n_newlines = 0;
 
             while (whitespace.includes((c = input.charAt(parser_pos++)))) {
@@ -7887,8 +7876,8 @@ export class Lexer {
                 }
             }
 
-            let offset = parser_pos - 1,
-                _tk = _this.tokens[offset];
+            let offset = parser_pos - 1;
+            let _tk = _this.tokens[offset];
             if (_tk && _tk.length) {
                 if (
                     (begin_line = Boolean(
@@ -8002,9 +7991,9 @@ export class Lexer {
                                 return lst;
                             }
                             string_mode = execute = true;
-                            let _lst = lst,
-                                tk = get_token_ignore_comment(depth + 1),
-                                t: number;
+                            const _lst = lst;
+                            let tk = get_token_ignore_comment(depth + 1);
+                            let t: number;
                             while (tk.ignore && tk.type === 'TK_STRING') {
                                 if (
                                     (parser_pos = input.indexOf(
@@ -8145,9 +8134,9 @@ export class Lexer {
                                 parser_pos < input_length &&
                                 input.charAt(parser_pos) === '.'
                             ) {
-                                let cc = '',
-                                    t = '',
-                                    p = parser_pos + 1;
+                                let cc = '';
+                                let t = '';
+                                let p = parser_pos + 1;
                                 while (
                                     p < input_length &&
                                     isIdentifierChar(input.charCodeAt(p))
@@ -8203,9 +8192,9 @@ export class Lexer {
                             parser_pos < input_length &&
                             '-+'.includes(input.charAt(parser_pos))
                         ) {
-                            let sign = input.charAt(parser_pos),
-                                p = parser_pos,
-                                t: Token;
+                            const sign = input.charAt(parser_pos);
+                            const p = parser_pos;
+                            let t: Token;
                             (parser_pos += 1), (t = get_next_token(depth + 1));
                             delete _this.tokens[t.offset];
                             if (
@@ -8259,8 +8248,8 @@ export class Lexer {
             if (c === '(' || c === '[') {
                 if (c === '(') {
                     if (bg && !continuation_sections_mode) {
-                        let i = parser_pos,
-                            t: string;
+                        let i = parser_pos;
+                        let t: string;
                         while (i < input_length) {
                             if ((t = input.charAt(i++)) === '\n') {
                                 if (string_mode) {
@@ -8270,9 +8259,9 @@ export class Lexer {
                                     //   continuation
                                     //   string
                                     // )
-                                    let o = last_LF + 1,
-                                        next_LF = input.indexOf('\n', i),
-                                        m: RegExpMatchArray | null = null;
+                                    const o = last_LF + 1;
+                                    let next_LF = input.indexOf('\n', i);
+                                    let m: RegExpMatchArray | null = null;
                                     const data: number[] = [];
                                     while (
                                         next_LF > 0 &&
@@ -8358,24 +8347,28 @@ export class Lexer {
                                         type: 4,
                                         previous: lst.offset,
                                     });
-                                    let js = content.match(/(^|\s)join(\S*)/i),
-                                        ignore_comment = /(^|\s)[Cc]/.test(
+                                    const js =
+                                        content.match(/(^|\s)join(\S*)/i);
+                                    let ignore_comment = /(^|\s)[Cc]/.test(
                                             content,
                                         ),
                                         tk: Token;
-                                    let _lst = lst,
-                                        lk = lst,
-                                        optionend = false,
-                                        _mode = format_mode,
-                                        llf = parser_pos,
-                                        sum = 0;
+                                    const _lst = lst;
+                                    let lk = lst;
+                                    let optionend = false;
+                                    const _mode = format_mode;
+                                    let llf = parser_pos;
+                                    let sum = 0;
                                     let create_tokens: (
                                         n: number,
                                         LF: number,
                                     ) => any = (n, pos) => undefined;
                                     if (js) {
-                                        let s = js[2].replace(/`[srn]/g, '  '),
-                                            suffix_is_whitespace = false;
+                                        const s = js[2].replace(
+                                            /`[srn]/g,
+                                            '  ',
+                                        );
+                                        let suffix_is_whitespace = false;
                                         const tl = new Lexer(
                                             TextDocument.create(
                                                 '',
@@ -8545,12 +8538,11 @@ export class Lexer {
             }
 
             if (c === '"' || c === "'") {
-                let sep = c,
-                    o = offset,
-                    nosep = false,
-                    se = { type: SemanticTokenTypes.string },
-                    _lst: Token | undefined,
-                    pt: Token | undefined;
+                const sep = c;
+                const o = offset;
+                let nosep = false;
+                const se = { type: SemanticTokenTypes.string };
+                let _lst: Token | undefined, pt: Token | undefined;
                 resulting_string = '';
                 if (
                     !/^[\s+\-*/%:?~!&|^=<>[({,.]$/.test(
@@ -8833,8 +8825,8 @@ export class Lexer {
                     nextc.match(/\d/) &&
                     (lst.type === 'TK_EQUALS' || lst.type === 'TK_OPERATOR')
                 ) {
-                    let p = parser_pos + 1,
-                        t = '';
+                    let p = parser_pos + 1;
+                    let t = '';
                     while (
                         p < input_length &&
                         isIdentifierChar(input.charCodeAt(p))
@@ -8896,17 +8888,17 @@ export class Lexer {
             }
 
             if (c === ';') {
-                let comment = '',
-                    comment_type =
+                let comment = '';
+                let comment_type =
                         bg && '\n'.includes(input.charAt(last_LF))
                             ? 'TK_COMMENT'
                             : ((bg = 0), 'TK_INLINE_COMMENT'),
                     t: any,
                     rg: Range,
                     ignore = undefined;
-                let next_LF = offset - 1,
-                    line: string,
-                    ln = 0;
+                let next_LF = offset - 1;
+                let line: string;
+                let ln = 0;
                 while (true) {
                     (parser_pos = next_LF),
                         (next_LF = input.indexOf('\n', parser_pos + 1));
@@ -9115,9 +9107,9 @@ export class Lexer {
             }
 
             if (c === '/' && bg && input.charAt(parser_pos) === '*') {
-                let LF = input.indexOf('\n', --parser_pos),
-                    ln = 0,
-                    tk: Token;
+                let LF = input.indexOf('\n', --parser_pos);
+                let ln = 0;
+                let tk: Token;
                 while (
                     !(m = input
                         .substring(parser_pos, LF > 0 ? LF : input_length)
@@ -10130,9 +10122,8 @@ export class Lexer {
             const javadoc = lines[0].match(/^\/\*(@ahk2exe-keep|[^*]|$)/i)
                 ? false
                 : true;
-            let remove: RegExp | string = '',
-                t: RegExpMatchArray | null,
-                j: number;
+            let remove: RegExp | string = '';
+            let t: RegExpMatchArray | null, j: number;
             if (
                 !javadoc &&
                 (t = lines[lines.length - 1].match(/^(\s)\1*/)) &&
@@ -10363,19 +10354,19 @@ export class Lexer {
         | undefined
         | false
         | null {
-        let node: DocumentSymbol | undefined,
-            t: DocumentSymbol | undefined,
-            uri = this.uri;
+        let node: DocumentSymbol | undefined;
+        let t: DocumentSymbol | undefined;
+        let uri = this.uri;
         name = name.toUpperCase();
         if (
             kind === SymbolKind.Variable ||
             kind === SymbolKind.Class ||
             kind === SymbolKind.Function
         ) {
-            let scope: DocumentSymbol | undefined,
-                bak: DocumentSymbol | undefined,
-                ref = true,
-                fn_is_static = false;
+            let scope: DocumentSymbol | undefined;
+            let bak: DocumentSymbol | undefined;
+            let ref = true;
+            let fn_is_static = false;
             if (name.startsWith('$')) {
                 const index = parseInt((name = name.substring(1)));
                 if ((node = this.anonymous[index])) {
@@ -10593,13 +10584,13 @@ export class Lexer {
     }
 
     public buildContext(position: Position, ignoreright = false) {
-        let kind: SymbolKind,
-            symbol: DocumentSymbol | undefined,
-            token: Token | undefined,
-            start: number,
-            is_end_expr = false;
-        let document = this.document,
-            tokens = this.tokens,
+        let kind: SymbolKind;
+        let symbol: DocumentSymbol | undefined;
+        let token: Token | undefined;
+        let start: number;
+        let is_end_expr = false;
+        const document = this.document;
+        let tokens = this.tokens,
             { line, character } = position;
         const linetext = document
             .getText(Range.create(line, 0, line + 1, 0))
@@ -10617,8 +10608,8 @@ export class Lexer {
             ) {}
         }
         const range = Range.create(line, ++start, line, character);
-        let word = linetext.slice(start, character),
-            text = word;
+        const word = linetext.slice(start, character);
+        let text = word;
         const off = document.offsetAt(range.start);
         const pt = (token = tokens[off])
             ? token.previous_token
@@ -10630,13 +10621,13 @@ export class Lexer {
                 token?.type === 'TK_START_EXPR' &&
                 token.prefix_is_whitespace === undefined)
         ) {
-            let s = '',
-                pre = '',
-                end = pt.offset,
-                tk = pt,
-                lk = pt.previous_token;
-            let ps: any = { ')': 0, ']': 0, '}': 0 },
-                psn = 0;
+            let s = '';
+            let pre = '';
+            const end = pt.offset;
+            let tk = pt;
+            let lk = pt.previous_token;
+            const ps: any = { ')': 0, ']': 0, '}': 0 };
+            let psn = 0;
             if (is_end_expr) {
                 lk = tokens[pt.previous_pair_pos!];
                 ++ps[pt.content], ++psn, (kind = SymbolKind.Null);
@@ -10737,8 +10728,8 @@ export class Lexer {
                 /TK_WORD|TK_NUMBER|TK_START_/.test(tk.type) ||
                 (tk.content === '%' && tk.next_pair_pos)
             ) {
-                let ttk = (token = tk),
-                    t;
+                const ttk = (token = tk);
+                let t;
                 loop: while (tk.offset < end) {
                     switch (tk.type) {
                         case 'TK_DOT':
@@ -10826,8 +10817,8 @@ export class Lexer {
                     : SymbolKind.Property;
         } else if (token) {
             if (token.type === 'TK_WORD') {
-                let sk = token.semantic,
-                    fc: FuncNode;
+                const sk = token.semantic;
+                let fc: FuncNode;
                 if ((symbol = token.symbol)) {
                     kind = symbol.kind;
                     if (kind === SymbolKind.Class) {
@@ -10889,8 +10880,8 @@ export class Lexer {
         position: Position,
         root?: DocumentSymbol[],
     ): DocumentSymbol | undefined {
-        let { line, character } = position,
-            its: DocumentSymbol[] | undefined;
+        const { line, character } = position;
+        let its: DocumentSymbol[] | undefined;
         for (let item of root ?? this.children) {
             if (
                 !(its = item.children) ||
@@ -10940,8 +10931,8 @@ export class Lexer {
         ) {
             return {};
         }
-        let fn = scopenode as FuncNode,
-            roots: FuncNode[] = [fn],
+        let fn = scopenode as FuncNode;
+        const roots: FuncNode[] = [fn],
             rg = Range.create(0, 0, 0, 0);
         let vars: { [name: string]: Variable } = {};
         while ((fn = fn.parent as FuncNode)) {
@@ -11059,11 +11050,11 @@ export class Lexer {
             colors: ColorInformation[] = [];
         for (const a of t) {
             if (a.type === 2) {
-                let s = a.start,
-                    e = a.end,
-                    m = colorregexp.exec(text.substring(s, e)),
-                    range: Range,
-                    v = '';
+                let s = a.start;
+                const e = a.end;
+                const m = colorregexp.exec(text.substring(s, e));
+                let range: Range;
+                let v = '';
                 if (!m || (!m[1] && e - s + 1 !== m[2].length + 2)) {
                     continue;
                 }
@@ -11100,8 +11091,8 @@ export class Lexer {
         severity: DiagnosticSeverity = DiagnosticSeverity.Error,
         arr?: Diagnostic[],
     ) {
-        let beg = this.document.positionAt(offset),
-            end = beg;
+        const beg = this.document.positionAt(offset);
+        let end = beg;
         if (length !== undefined) {
             end = this.document.positionAt(offset + length);
         }
@@ -11251,11 +11242,11 @@ export class Lexer {
     }
 
     public find_str_cmm(offset: number): Token | undefined {
-        let sc = this.tokenranges,
-            l = 0,
-            r = sc.length - 1,
-            i = 0,
-            it;
+        const sc = this.tokenranges;
+        let l = 0;
+        let r = sc.length - 1;
+        let i = 0;
+        let it;
         while (l <= r) {
             it = sc[(i = (l + r) >> 1)];
             if (offset < it.start) {
@@ -11284,9 +11275,9 @@ export function pathanalyze(
     libdirs: string[],
     workdir: string = '',
 ) {
-    let m: RegExpMatchArray | null,
-        uri = '',
-        raw = path;
+    let m: RegExpMatchArray | null;
+    let uri = '';
+    const raw = path;
 
     if (path.startsWith('<') && path.endsWith('>')) {
         if (!(path = path.slice(1, -1))) {
@@ -11355,10 +11346,10 @@ export function getClassMembers(
     node: DocumentSymbol,
     staticmem: boolean = true,
 ): { [name: string]: DocumentSymbol } {
-    let cls = node as ClassNode,
-        bases: any[] = [],
-        v: { [name: string]: DocumentSymbol } = {},
-        l: string;
+    const cls = node as ClassNode;
+    let bases: any[] = [];
+    const v: { [name: string]: DocumentSymbol } = {};
+    let l: string;
     if (cls.staticdeclaration) {
         getmems(doc, cls, staticmem);
     }
@@ -11421,15 +11412,15 @@ export function get_class_member(
     ismethod: boolean,
     bases?: any[],
 ): DocumentSymbol | undefined {
-    let prop: DocumentSymbol | undefined,
-        method = prop,
-        sym = prop,
-        val = prop,
-        t: any;
-    let i = 0,
-        key: 'staticdeclaration' | 'declaration' = isstatic
-            ? 'staticdeclaration'
-            : 'declaration';
+    let prop: DocumentSymbol | undefined;
+    let method = prop;
+    let sym = prop;
+    let val = prop;
+    let t: any;
+    let i = 0;
+    let key: 'staticdeclaration' | 'declaration' = isstatic
+        ? 'staticdeclaration'
+        : 'declaration';
     let _bases = (bases ??= []);
     name = name.toUpperCase();
     while (true) {
@@ -11528,8 +11519,8 @@ export function get_class_call(cls: ClassNode) {
 }
 
 export function find_class(doc: Lexer, name: string, uri?: string) {
-    let arr = name.toUpperCase().split('.'),
-        n = arr.shift()!;
+    const arr = name.toUpperCase().split('.');
+    let n = arr.shift()!;
     let c = (
         uri
             ? lexers[uri]?.declaration[n]
@@ -11583,8 +11574,8 @@ export function detectVariableType(
     n: { node: DocumentSymbol; scope?: DocumentSymbol },
     pos?: Position,
 ) {
-    let name = n.node.name.toLowerCase(),
-        syms: DocumentSymbol[] = [],
+    let name = n.node.name.toLowerCase();
+    const syms: DocumentSymbol[] = [],
         types: any = {};
     if (name.match(/^[$@#]([\w.]|[^\x00-\x7f])+$/)) {
         return [name];
@@ -11642,8 +11633,8 @@ export function detectVariableType(
             }
         }
     }
-    let scope = pos ? doc.searchScopedNode(pos) : undefined,
-        ite = syms[0] as Variable;
+    let scope = pos ? doc.searchScopedNode(pos) : undefined;
+    let ite = syms[0] as Variable;
     while (scope) {
         if (scope.kind === SymbolKind.Class) {
             scope = (<ClassNode>scope).parent;
@@ -11746,8 +11737,8 @@ export function detectExp(doc: Lexer, exp: string, pos: Position): string[] {
         pos: Position,
         deep: number = 0,
     ): string[] {
-        let t: string | RegExpMatchArray | null,
-            tps: string[] = [];
+        let t: string | RegExpMatchArray | null;
+        const tps: string[] = [];
         exp = exp
             .replace(/#any(\(\d*\)|\[\]|\.(\w|[^\x00-\x7f])+)+/g, '#any')
             .replace(
@@ -11803,8 +11794,8 @@ export function detectExp(doc: Lexer, exp: string, pos: Position): string[] {
             (t = exp.replace(
                 /(([$@#\w.]|[^\x00-\x7f]|\(\d*\))+|\[[^\[\]]+\])\s*(\sand\s|\sor\s|&&|\|\||\?\?)\s*(([$@#\w.]|[^\x00-\x7f]|\(\d*\))+|\[[^\[\]]+\])/gi,
                 (...m) => {
-                    let ts: any = {},
-                        mt: RegExpMatchArray | null;
+                    let ts: any = {};
+                    let mt: RegExpMatchArray | null;
                     for (let i = 1; i < 5; i += 3) {
                         if ((mt = m[i].match(/^\[([^\[\]]+)\]$/))) {
                             mt[1].split(',').forEach((tp) => (ts[tp] = true));
@@ -11828,8 +11819,8 @@ export function detectExp(doc: Lexer, exp: string, pos: Position): string[] {
             (t = exp.replace(
                 /(([$@#\w.]|[^\x00-\x7f]|\(\d*\))+|\[[^\[\]]+\])\s*\?\s*(([$@#\w.]|[^\x00-\x7f]|\(\d*\))+|\[[^\[\]]+\])\s*:\s*(([$@#\w.]|[^\x00-\x7f]|\(\d*\))+|\[[^\[\]]+\])/,
                 (...m) => {
-                    let ts: any = {},
-                        mt: RegExpMatchArray | null;
+                    let ts: any = {};
+                    let mt: RegExpMatchArray | null;
                     for (let i = 3; i < 6; i += 2) {
                         if ((mt = m[i].match(/^\[([^\[\]]+)\]$/))) {
                             mt[1].split(',').forEach((tp) => (ts[tp] = true));
@@ -11869,16 +11860,16 @@ export function detectExp(doc: Lexer, exp: string, pos: Position): string[] {
                                 ? SymbolKind.Method
                                 : SymbolKind.Variable,
                         );
-                        let s = '',
-                            ts: any = {},
-                            tk = doc.tokens[m[3]],
-                            c: RegExpMatchArray | null | undefined;
+                        let s = '';
+                        let ts: any = {};
+                        const tk = doc.tokens[m[3]];
+                        let c: RegExpMatchArray | null | undefined;
                         if (!ns) {
                             return '#void';
                         }
                         for (const it of ns) {
-                            let n = it.node as FuncNode,
-                                uri = it.uri;
+                            let n = it.node as FuncNode;
+                            const uri = it.uri;
                             switch (n.kind) {
                                 case SymbolKind.Property:
                                     if (
@@ -12153,9 +12144,9 @@ export function detectExp(doc: Lexer, exp: string, pos: Position): string[] {
                 exp = t;
             }
         }
-        let tpexp = exp.trim(),
-            exps: string[] = [],
-            ts: any = {};
+        const tpexp = exp.trim();
+        let exps: string[] = [];
+        let ts: any = {};
         if ((t = tpexp.match(/^\[([^\[\]]+)\]$/))) {
             const ts: any = {};
             t[1].split(',').forEach((tp) => (ts[tp] = true)),
@@ -12173,9 +12164,8 @@ export function detectExp(doc: Lexer, exp: string, pos: Position): string[] {
                     /^([@#]?)(\$|\w|[^\x00-\x7f])+(\.[@#]?(\$|\w|[^\x00-\x7f])+)*$/,
                 ))
             ) {
-                let ll = '',
-                    ttt: any,
-                    sym: any;
+                let ll = '';
+                let ttt: any, sym: any;
                 if (searchcache[ex] || (t[1] && !t[3])) {
                     ts[ex] = true;
                 } else {
@@ -12372,8 +12362,8 @@ export function searchNode(
       ]
     | undefined
     | null {
-    let node: DocumentSymbol | undefined,
-        res:
+    let node: DocumentSymbol | undefined;
+    let res:
             | {
                   node: DocumentSymbol;
                   uri: string;
@@ -12390,10 +12380,10 @@ export function searchNode(
         kind === SymbolKind.Property ||
         name.includes('.')
     ) {
-        let p = name.toLowerCase().split('.'),
-            nodes = searchNode(doc, p[0], pos, SymbolKind.Class),
-            i = 0,
-            ps = 0;
+        const p = name.toLowerCase().split('.');
+        const nodes = searchNode(doc, p[0], pos, SymbolKind.Class);
+        let i = 0;
+        let ps = 0;
         if (!nodes || p.length < 2) {
             return undefined;
         }
@@ -12490,8 +12480,8 @@ export function searchNode(
                 }
                 if (n.kind === SymbolKind.Class) {
                     cc = n as ClassNode;
-                    let ss = isstatic && i > 0 && !p[i - 1].match(/^[@#]/),
-                        _ = p[i].replace(/^[@#]/, '');
+                    const ss = isstatic && i > 0 && !p[i - 1].match(/^[@#]/);
+                    let _ = p[i].replace(/^[@#]/, '');
                     const bases: any[] = [];
                     node = get_class_member(
                         doc,
@@ -12636,8 +12626,8 @@ export function searchNode(
     }
     return res ? [res] : undefined;
     function searchIncludeNode(list: { [uri: string]: string }, name: string) {
-        let ret = undefined,
-            t;
+        let ret = undefined;
+        let t;
         for (const uri in list) {
             if (
                 (t = (
@@ -12687,8 +12677,8 @@ export function getFuncCallInfo(doc: Lexer, position: Position, ci?: CallInfo) {
     if (ci?.paraminfo) {
         return get(ci.paraminfo);
     }
-    let tk: Token | undefined = doc.find_token(offset),
-        nk = tk.previous_token;
+    let tk: Token | undefined = doc.find_token(offset);
+    let nk = tk.previous_token;
     if (offset <= tk.offset && !(tk = nk)) {
         return;
     }
@@ -12740,11 +12730,11 @@ export function getincludetable(fileuri: string): {
     list: { [uri: string]: string };
     main: string;
 } {
-    let list: { [uri: string]: string } = {},
-        count = 0,
-        has = false,
-        doc: Lexer,
-        res = { list, count, main: '' };
+    let list: { [uri: string]: string } = {};
+    let count = 0;
+    let has = false;
+    let doc: Lexer;
+    let res = { list, count, main: '' };
     for (const uri in lexers) {
         (list = {}), (count = 0), (has = uri === fileuri);
         traverseinclude(lexers[uri].include, uri);
@@ -12782,14 +12772,14 @@ export function formatMarkdowndetail(
     name?: string,
     overloads?: string[],
 ): string {
-    let params: { [name: string]: string[] } = {},
-        details: string[] = [],
-        lastparam = '',
-        m: RegExpMatchArray | null;
-    let detail = node.detail,
-        ols = overloads ?? [],
-        s,
-        code = 0;
+    const params: { [name: string]: string[] } = {};
+    const details: string[] = [];
+    let lastparam = '';
+    let m: RegExpMatchArray | null;
+    let detail = node.detail;
+    const ols = overloads ?? [];
+    let s;
+    let code = 0;
     if (!detail) {
         return '';
     }
@@ -13007,8 +12997,8 @@ export function checksamenameerr(
     arr: DocumentSymbol[],
     diags: any,
 ) {
-    let _low = '',
-        vit: Variable;
+    let _low = '';
+    let vit: Variable;
     for (const it of arr) {
         if (!it.name || !it.selectionRange.end.character) {
             continue;
@@ -13156,8 +13146,8 @@ export function update_commentTags(regexp: string) {
 
 function cvt_types(tps: string) {
     if ((tps = tps.replace(/\s/g, ''))) {
-        let t: string,
-            o: any = {};
+        let t: string;
+        const o: any = {};
         while ((t = tps.replace(/\(([^)]*)\)(?!\s*=>)/g, '$1')) !== tps) {
             tps = t;
         }

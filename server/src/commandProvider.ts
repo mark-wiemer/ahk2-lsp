@@ -53,11 +53,11 @@ export function generate_fn_comment(doc: Lexer, fn: FuncNode) {
         details: string[] = [],
         result = ['/**'];
     let lastarr: string[] | undefined, m: RegExpMatchArray | null;
-    let params: { [name: string]: string[] } = {},
-        i = 0,
-        z = true;
-    let p: Position,
-        pp = Object.assign({}, fn.range.end);
+    const params: { [name: string]: string[] } = {};
+    let i = 0;
+    let z = true;
+    let p: Position;
+    const pp = Object.assign({}, fn.range.end);
     pp.character--;
     comments?.forEach((line) => {
         if (
@@ -86,8 +86,8 @@ export function generate_fn_comment(doc: Lexer, fn: FuncNode) {
         if ((lastarr = params[it.name.toUpperCase()])) {
             lastarr.forEach((s) => result.push(' * ' + s));
         } else if (it.name) {
-            let rets: string[] = [],
-                o: any = {};
+            let rets: string[] = [];
+            const o: any = {};
             for (const ret in it.returntypes) {
                 reset_detect_cache(),
                     detectExp(
@@ -111,8 +111,8 @@ export function generate_fn_comment(doc: Lexer, fn: FuncNode) {
     if (returns.length) {
         returns.forEach((s) => result.push(' * ' + s));
     } else {
-        let rets: string[] = [],
-            o: any = {};
+        let rets: string[] = [];
+        const o: any = {};
         for (const ret in fn.returntypes) {
             reset_detect_cache(),
                 detectExp(
@@ -151,9 +151,9 @@ export async function generateComment(args: any[]) {
     let { uri, position } = (await connection.sendRequest(
         'ahk2.getActiveTextEditorUriAndPosition',
     )) as { uri: string; position: Position };
-    let doc = lexers[(uri = uri.toLowerCase())],
-        scope = doc.searchScopedNode(position),
-        ts = scope?.children || doc.children;
+    const doc = lexers[(uri = uri.toLowerCase())];
+    let scope = doc.searchScopedNode(position);
+    const ts = scope?.children || doc.children;
     for (const it of ts) {
         if (
             (it.kind === SymbolKind.Function ||
@@ -167,8 +167,8 @@ export async function generateComment(args: any[]) {
         }
     }
     if (scope && (scope as FuncNode).params) {
-        let text = generate_fn_comment(doc, scope as FuncNode),
-            pos = scope.selectionRange.start;
+        let text = generate_fn_comment(doc, scope as FuncNode);
+        let pos = scope.selectionRange.start;
         let tk: Token, range: Range;
         if (scope.detail === undefined) {
             (text += '\n'), (tk = doc.tokens[doc.document.offsetAt(pos)]);
@@ -194,8 +194,8 @@ export async function generateComment(args: any[]) {
 }
 
 export function exportSymbols(uri: string) {
-    let doc = lexers[uri.toLowerCase()],
-        cache: any = {},
+    let doc = lexers[uri.toLowerCase()];
+    const cache: any = {},
         result: any = {};
     if (!doc) {
         return;

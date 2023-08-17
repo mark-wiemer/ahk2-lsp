@@ -54,8 +54,8 @@ const textdecoders: TextDecoder[] = [
 
 export async function activate(context: ExtensionContext) {
     // The server is implemented in node
-    let serverModule: string,
-        serverPath = process.env.VSCODE_AHK_SERVER_PATH;
+    let serverModule: string;
+    const serverPath = process.env.VSCODE_AHK_SERVER_PATH;
     if (serverPath) {
         serverModule = context.asAbsolutePath(`server/${serverPath}/server.js`);
     } else {
@@ -181,9 +181,9 @@ export async function activate(context: ExtensionContext) {
         server_is_ready = true;
     });
 
-    let extlist: string[],
-        debugexts: { [type: string]: string },
-        langs: string[] = [];
+    let extlist: string[];
+    let debugexts: { [type: string]: string };
+    let langs: string[] = [];
     function update_extensions_info() {
         debugexts = {};
         for (const ext of extensions.all) {
@@ -302,11 +302,10 @@ function decode(buf: Buffer) {
 }
 
 async function runCurrentScriptFile(selection = false): Promise<void> {
-    let editor = window.activeTextEditor,
-        executePath =
-            ahkpath_cur ||
-            (workspace.getConfiguration('AutoHotkey2')
-                .InterpreterPath as string);
+    const editor = window.activeTextEditor;
+    let executePath =
+        ahkpath_cur ||
+        (workspace.getConfiguration('AutoHotkey2').InterpreterPath as string);
     if (!editor) {
         return;
     }
@@ -323,9 +322,9 @@ async function runCurrentScriptFile(selection = false): Promise<void> {
         );
         return;
     }
-    let selecttext = '',
-        path = '*',
-        command = `"${executePath}" /ErrorStdOut=utf-8 `;
+    let selecttext = '';
+    let path = '*';
+    let command = `"${executePath}" /ErrorStdOut=utf-8 `;
     let startTime: Date;
     outputchannel.show(true);
     if (!ahkprocesses.size) {
@@ -434,8 +433,8 @@ async function compileScript() {
     if (!editor) {
         return;
     }
-    let cmd = '',
-        cmdop = workspace.getConfiguration('AutoHotkey2').CompilerCMD as string;
+    let cmd = '';
+    let cmdop = workspace.getConfiguration('AutoHotkey2').CompilerCMD as string;
     const ws =
         workspace.getWorkspaceFolder(editor.document.uri)?.uri.fsPath ?? '';
     const compilePath = findfile(
@@ -607,8 +606,8 @@ async function begindebug(
     params = false,
     attach = false,
 ) {
-    let editor = window.activeTextEditor,
-        executePath = ahkpath_cur;
+    const editor = window.activeTextEditor;
+    let executePath = ahkpath_cur;
     if (!editor) {
         return;
     }
@@ -722,12 +721,12 @@ async function sleep(ms: number) {
 async function setInterpreter() {
     let index = -1,
         { path: ahkpath, from } = getInterpreterPath();
-    let list: QuickPickItem[] = [],
-        it: QuickPickItem,
-        _ = (ahkpath = ahkpath_cur || ahkpath).toLowerCase();
-    let pick = window.createQuickPick(),
-        active: QuickPickItem | undefined,
-        sel: QuickPickItem = { label: '' };
+    const list: QuickPickItem[] = [];
+    let it: QuickPickItem;
+    let _ = (ahkpath = ahkpath_cur || ahkpath).toLowerCase();
+    const pick = window.createQuickPick();
+    let active: QuickPickItem | undefined;
+    let sel: QuickPickItem = { label: '' };
     if (zhcn) {
         list.push({
             alwaysShow: true,
@@ -888,8 +887,8 @@ function getInterpreterPath() {
 }
 
 function findfile(files: string[], workspace: string) {
-    let paths: string[] = [],
-        s: string;
+    const paths: string[] = [];
+    let s: string;
     const t = ahkconfig.inspect('InterpreterPath');
     if ((add(ahkpath_cur), t)) {
         add(t.workspaceFolderValue as string);
@@ -964,8 +963,8 @@ async function updateVersionInfo() {
             );
         } else {
             const d = new Date();
-            let content = info.content,
-                ver;
+            let content = info.content;
+            let ver;
             content = content.replace(
                 /(?<=^\s*[;*]?\s*@date[:\s]\s*)(\d+\/\d+\/\d+)/im,
                 d.getFullYear() +

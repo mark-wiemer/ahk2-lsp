@@ -24,12 +24,12 @@ export async function hoverProvider(
     }
     const uri = params.textDocument.uri.toLowerCase(),
         doc = lexers[uri];
-    let context = doc?.buildContext(params.position),
-        t: any,
-        hover: any[] = [];
+    const context = doc?.buildContext(params.position);
+    let t: any;
+    const hover: any[] = [];
     if (context) {
-        let word = context.text.toLowerCase(),
-            kind: SymbolKind = SymbolKind.Variable;
+        let word = context.text.toLowerCase();
+        let kind: SymbolKind = SymbolKind.Variable;
         let nodes:
                 | [
                       {
@@ -110,8 +110,8 @@ export async function hoverProvider(
                     }
                 });
             } else {
-                let { node, scope } = nodes[0],
-                    fn = node as FuncNode;
+                let { node, scope } = nodes[0];
+                const fn = node as FuncNode;
                 if (
                     node.kind === SymbolKind.Class &&
                     !fn.full?.startsWith('(')

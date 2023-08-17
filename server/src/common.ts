@@ -206,9 +206,9 @@ export function restorePath(path: string): string {
     if (path.includes('..')) {
         path = resolve(path);
     }
-    let dirs = path.toLowerCase().split(/[/\\]/),
-        i = 1,
-        s = dirs[0];
+    const dirs = path.toLowerCase().split(/[/\\]/);
+    let i = 1;
+    let s = dirs[0];
     while (i < dirs.length) {
         for (const d of readdirSync(s + '\\')) {
             if (d.toLowerCase() === dirs[i]) {
@@ -222,8 +222,8 @@ export function restorePath(path: string): string {
 }
 
 export function getlocalefilepath(filepath: string): string | undefined {
-    let t = filepath.match(/<>./),
-        s: string;
+    const t = filepath.match(/<>./);
+    let s: string;
     if (t) {
         if (existsSync((s = filepath.replace('<>', locale)))) {
             return s;
@@ -253,8 +253,8 @@ export function getlocalefile(filepath: string, encoding?: string) {
 }
 
 export function getwebfile(filepath: string) {
-    let t = filepath.match(/<>./),
-        s: string | undefined;
+    const t = filepath.match(/<>./);
+    let s: string | undefined;
     const ff: string[] = [];
     const req = new XMLHttpRequest();
     if (t) {
@@ -583,8 +583,8 @@ export async function parseWorkspaceFolders() {
         }
     } else {
         for (const uri of workspaceFolders) {
-            let dir = URI.parse(uri).fsPath,
-                t;
+            const dir = URI.parse(uri).fsPath;
+            let t;
             for (const file of getallahkfiles(dir)) {
                 l = URI.file(file).toString().toLowerCase();
                 if (!lexers[l] && (t = openFile(file, false))) {
@@ -704,10 +704,9 @@ export async function sleep(ms: number) {
 }
 
 function glob2regexp(glob: string) {
-    let reStr = '^',
-        inGroup = false,
-        isNot: boolean,
-        c: string;
+    let reStr = '^';
+    let inGroup = false;
+    let isNot: boolean, c: string;
     if ((isNot = glob.startsWith('!'))) {
         glob = glob.slice(1);
     }

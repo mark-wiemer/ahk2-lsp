@@ -16,8 +16,8 @@ async function get_ahkProvider_port(): Promise<number> {
         if (!existsSync(executePath)) {
             return resolve(0);
         }
-        let server,
-            port = 1200;
+        let server;
+        let port = 1200;
         while (true) {
             try {
                 server = await createClientSocketTransport(port);

@@ -40,10 +40,8 @@ export async function typeFormatting(
     let doc = lexers[params.textDocument.uri.toLowerCase()],
         { ch, position } = params,
         result: TextEdit[] | undefined;
-    let opts = Object.assign({}, extsettings.FormatOptions),
-        tk: Token,
-        s: string,
-        pp: number | undefined;
+    const opts = Object.assign({}, extsettings.FormatOptions);
+    let tk: Token, s: string, pp: number | undefined;
     opts.indent_string = ' '.repeat(params.options.tabSize);
     s = doc.document.getText({
         start: { line: 0, character: 0 },
@@ -53,8 +51,8 @@ export async function typeFormatting(
         opts.indent_string = '\t';
     }
     if (ch === '\n') {
-        let { line, character } = position,
-            linetexts = doc.document
+        let { line, character } = position;
+        let linetexts = doc.document
                 .getText({
                     start: { line: line - 1, character: 0 },
                     end: { line: line + 2, character: 0 },

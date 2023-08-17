@@ -56,8 +56,8 @@ export function symbolProvider(
     ) {
         return symbolcache[uri];
     }
-    let gvar: { [name: string]: Variable } = { ...ahkvars },
-        winapis: any = {};
+    const gvar: { [name: string]: Variable } = { ...ahkvars };
+    let winapis: any = {};
     let list = [uri, ...Object.keys(doc.relevance ?? {})];
     list = list.map((u) => lexers[u]?.d_uri).concat(list);
     for (const uri of list) {
@@ -65,9 +65,9 @@ export function symbolProvider(
         if (!lex) {
             continue;
         }
-        let d = lex.d,
-            dec = lex.declaration,
-            t;
+        const d = lex.d;
+        const dec = lex.declaration;
+        let t;
         for (const k in dec) {
             if (
                 !(t = gvar[k]) ||
@@ -145,8 +145,8 @@ export function symbolProvider(
         outer_is_global = false,
     ) {
         const t: DocumentSymbol[] = [];
-        let tk: Token,
-            iscls = (node as DocumentSymbol).kind === SymbolKind.Class;
+        let tk: Token;
+        const iscls = (node as DocumentSymbol).kind === SymbolKind.Class;
         node.children?.forEach((info: Variable) => {
             if (info.children) {
                 t.push(info);
@@ -189,9 +189,9 @@ export function symbolProvider(
             checkParams(doc, (vars[name] ?? gvar[name]) as FuncNode, info);
         });
         t.forEach((info) => {
-            let inherit: { [key: string]: DocumentSymbol } = {},
-                fn = info as FuncNode,
-                s: Variable;
+            let inherit: { [key: string]: DocumentSymbol } = {};
+            const fn = info as FuncNode;
+            let s: Variable;
             switch (info.kind) {
                 case SymbolKind.Class:
                     const rg = Range.create(0, 0, 0, 0),
@@ -356,9 +356,9 @@ export function symbolProvider(
         if (doc.d) {
             return;
         }
-        let dec: any = { ...ahkvars },
-            dd: Lexer,
-            lbs: any = {};
+        const dec: any = { ...ahkvars };
+        let dd: Lexer;
+        const lbs: any = {};
         Object.keys(doc.labels).forEach((lb) => (lbs[lb] = true));
         for (const uri in doc.relevance) {
             if ((dd = lexers[uri])) {
@@ -430,8 +430,8 @@ export function symbolProvider(
             }
         }
         function checkextendsclassexist(name: string) {
-            let n = name.split('.'),
-                c: ClassNode | undefined;
+            const n = name.split('.');
+            let c: ClassNode | undefined;
             for (const t of n) {
                 c = c?.staticdeclaration[t] ?? dec[t];
                 if (c?.kind !== SymbolKind.Class || (<any>c).def === false) {
@@ -441,9 +441,9 @@ export function symbolProvider(
             return true;
         }
         function err_extends(doc: Lexer, it: ClassNode, not_exist = true) {
-            let o = doc.document.offsetAt(it.selectionRange.start),
-                tks = doc.tokens,
-                tk: Token;
+            let o = doc.document.offsetAt(it.selectionRange.start);
+            const tks = doc.tokens;
+            let tk: Token;
             if (
                 !(tk = tks[tks[o].next_token_offset]) ||
                 !(tk = tks[tk.next_token_offset])
@@ -469,10 +469,9 @@ export function symbolProvider(
         islib: boolean = false,
         kind?: number,
     ): Token {
-        let tk: Token,
-            stk: SemanticToken | undefined,
-            st: SemanticTokenTypes | undefined,
-            offset: number;
+        let tk: Token;
+        let stk: SemanticToken | undefined;
+        let st: SemanticTokenTypes | undefined, offset: number;
         switch (kind ?? it.kind) {
             case SymbolKind.TypeParameter:
                 if (
@@ -544,8 +543,8 @@ export function symbolProvider(
 }
 
 export function checkParams(doc: Lexer, node: FuncNode, info: CallInfo) {
-    let paraminfo = info.paraminfo!,
-        is_cls: boolean;
+    const paraminfo = info.paraminfo!;
+    let is_cls: boolean;
     if (!paraminfo || !extsettings.Diagnostics.ParamsCheck) {
         return;
     }
@@ -556,9 +555,9 @@ export function checkParams(doc: Lexer, node: FuncNode, info: CallInfo) {
         return;
     }
     if (node.kind === SymbolKind.Function || node.kind === SymbolKind.Method) {
-        let paramcount = node.params.length,
-            pc = paraminfo.count,
-            miss: { [index: number]: boolean } = {};
+        let paramcount = node.params.length;
+        let pc = paraminfo.count;
+        const miss: { [index: number]: boolean } = {};
         if (node.variadic) {
             if (paramcount > 0 && node.params[paramcount - 1].arr) {
                 paramcount--;
@@ -596,9 +595,9 @@ export function checkParams(doc: Lexer, node: FuncNode, info: CallInfo) {
                 }
             });
         } else {
-            let maxcount = paramcount,
-                l = paraminfo.miss.length,
-                t = 0;
+            const maxcount = paramcount;
+            let l = paraminfo.miss.length;
+            let t = 0;
             while (
                 paramcount > 0 &&
                 node.params[paramcount - 1].defaultVal !== undefined
@@ -697,9 +696,9 @@ export async function workspaceSymbolProvider(
     params: WorkspaceSymbolParams,
     token: CancellationToken,
 ): Promise<SymbolInformation[]> {
-    let symbols: SymbolInformation[] = [],
-        n = 0,
-        query = params.query;
+    const symbols: SymbolInformation[] = [];
+    let n = 0;
+    const query = params.query;
     if (
         token.isCancellationRequested ||
         !query ||
@@ -739,8 +738,8 @@ export async function workspaceSymbolProvider(
             [],
         )) || []) as string[];
         for (const uri_ of uris) {
-            let uri = uri_.toLowerCase(),
-                d: Lexer;
+            const uri = uri_.toLowerCase();
+            let d: Lexer;
             if (!lexers[uri]) {
                 const content = (await connection.sendRequest(
                     'ahk2.getWorkspaceFileContent',

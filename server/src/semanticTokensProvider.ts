@@ -33,12 +33,12 @@ const memscache = new Map<ClassNode, { [name: string]: DocumentSymbol }>();
 function resolve_sem(tk: Token, doc: Lexer) {
     let l: string, sem: SemanticToken | undefined;
     if ((sem = tk.semantic)) {
-        let pos = tk.pos ?? (tk.pos = doc.document.positionAt(tk.offset)),
-            type = sem.type;
+        const pos = tk.pos ?? (tk.pos = doc.document.positionAt(tk.offset));
+        let type = sem.type;
         if (type === SemanticTokenTypes.string) {
             if (tk.ignore) {
-                let l = pos.line + 1,
-                    data = tk.data as number[];
+                let l = pos.line + 1;
+                const data = tk.data as number[];
                 for (let i = 0; i < data.length; i++) {
                     doc.STB.push(l++, 0, data[i], type, 0);
                 }
@@ -140,9 +140,9 @@ function resolveSemanticType(name: string, tk: Token, doc: Lexer) {
                 curclass &&
                 sem.modifier !== 1 << SemanticTokenModifiers.modification
             ) {
-                let n = curclass.staticdeclaration[name],
-                    kind = n?.kind,
-                    temp: { [name: string]: DocumentSymbol };
+                let n = curclass.staticdeclaration[name];
+                let kind = n?.kind;
+                let temp: { [name: string]: DocumentSymbol };
                 if (!n || (n as any).def === false) {
                     const t = (temp =
                         memscache.get(curclass) ??
