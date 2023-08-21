@@ -91,8 +91,8 @@ export class PEFile {
                 virtualAddress,
                 sizeOfRawData,
                 pointerToRawData,
-            ),
-                (offset += 40);
+            );
+            offset += 40;
         }
         for (let i = 0; i < numberOfRvaAndSize; i++) {
             readSync(fd, buf, 0, 8, dataDirectoryOffset + 8 * i);
@@ -160,7 +160,9 @@ export class PEFile {
             const nameOffset = imageData.readUInt32LE(nameTblPtr),
                 ordinal = imageData.readUInt16LE(ordTblPtr),
                 fnOffset = imageData.readUInt32LE(funcTblPtr + ordinal * 4);
-            (nameTblPtr += 4), (ordTblPtr += 2), (ordinalList[ordinal] = true);
+            nameTblPtr += 4;
+            ordTblPtr += 2;
+            ordinalList[ordinal] = true;
             const EntryPoint =
                 fnOffset > baseRva && fnOffset < endOfSection
                     ? this.getAscii(fnOffset)
@@ -180,12 +182,12 @@ export class PEFile {
                 fnOffset > baseRva && fnOffset < endOfSection
                     ? this.getAscii(fnOffset)
                     : '0x' + (fnOffset + 0x100000000).toString(16).substring(1);
-            (ordinalList[ordinal] = true),
-                Exports.Functions.splice(ordinal, 0, {
-                    Name: '',
-                    EntryPoint,
-                    Ordinal: OrdinalBase + ordinal,
-                });
+            ordinalList[ordinal] = true;
+            Exports.Functions.splice(ordinal, 0, {
+                Name: '',
+                EntryPoint,
+                Ordinal: OrdinalBase + ordinal,
+            });
         }
         return (resinfo.data = Exports);
     }
@@ -208,14 +210,14 @@ export class PEFile {
         let offset = baseRva;
         let readPtr, ffff: any, IMAGE_ORDINAL_FLAG: any;
         if (this.isBit64) {
-            (ptrsize = 8),
-                (ffff = BigInt(0xffff)),
-                (IMAGE_ORDINAL_FLAG = BigInt('0x8000000000000000')),
-                (readPtr = imageData.readBigUInt64LE.bind(imageData));
+            ptrsize = 8;
+            ffff = BigInt(0xffff);
+            IMAGE_ORDINAL_FLAG = BigInt('0x8000000000000000');
+            readPtr = imageData.readBigUInt64LE.bind(imageData);
         } else {
-            (ffff = 0xffff),
-                (IMAGE_ORDINAL_FLAG = 0x80000000),
-                (readPtr = imageData.readUInt32LE.bind(imageData));
+            ffff = 0xffff;
+            IMAGE_ORDINAL_FLAG = 0x80000000;
+            readPtr = imageData.readUInt32LE.bind(imageData);
         }
         const Imports: { [dll: string]: string[] } = {};
         while (firstThunk) {
@@ -282,19 +284,17 @@ export class PEFile {
                     continue;
                 }
                 const offsetToData = imageData.readUInt32LE(rva + 4);
-                let entry = {
-                        name,
-                        id: name & 0x0000ffff,
-                        pad: name & 0xffff0000,
-                        nameOffset: name & 0x7fffffff,
-                        offsetToData,
-                        dataIsDirectory: Boolean(
-                            (offsetToData & 0x80000000) >> 31,
-                        ),
-                        offsetToDirectory: offsetToData & 0x7fffffff,
-                    },
-                    entryName,
-                    entryId;
+                const entry = {
+                    name,
+                    id: name & 0x0000ffff,
+                    pad: name & 0xffff0000,
+                    nameOffset: name & 0x7fffffff,
+                    offsetToData,
+                    dataIsDirectory: Boolean((offsetToData & 0x80000000) >> 31),
+                    offsetToDirectory: offsetToData & 0x7fffffff,
+                };
+                let entryName;
+                let entryId;
                 if ((name & 0x80000000) >> 31) {
                     // nameIsString
                     const offset = baseRva + entry.nameOffset,
@@ -473,12 +473,12 @@ export class PEFile {
             function getString(offset: number, hasinfo = true) {
                 let info: any = {};
                 if (hasinfo) {
-                    (info = {
+                    info = {
                         Length: rawData.readUInt16LE(offset),
                         ValueLength: rawData.readUInt16LE(offset + 2),
                         Type: rawData.readUInt16LE(offset + 4),
-                    }),
-                        (offset += 6);
+                    };
+                    offset += 6;
                 }
                 nullindex =
                     ((rawData.indexOf(Buffer.alloc(2), offset) + 1) >> 1) * 2;
