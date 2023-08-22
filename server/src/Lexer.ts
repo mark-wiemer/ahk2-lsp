@@ -227,21 +227,15 @@ export namespace FuncNode {
         isstatic?: boolean,
     ): FuncNode {
         let full = '';
-        let hasref = false;
-        let variadic = false;
+        const hasref = params.some((param) => param.ref);
+        const variadic = params.some((param) => param.arr);
         (<any>params).format?.(params);
         for (const param of params) {
-            full +=
-                ', ' +
-                (param.ref ? ((hasref = true), '&') : '') +
-                param.name +
-                (param.defaultVal
-                    ? ' := ' + param.defaultVal
-                    : param.defaultVal === null
-                    ? '?'
-                    : param.arr
-                    ? ((variadic = true), '*')
-                    : '');
+            full += ', ';
+            full += param.ref ? '&' : '';
+            full += param.name;
+            full += param.defaultVal ? ' := ' + param.defaultVal : '';
+            full += param.defaultVal === null ? '?' : param.arr ? '*' : '';
         }
         full =
             (isstatic ? 'static ' : '') + name + '(' + full.substring(2) + ')';
@@ -771,7 +765,8 @@ export class Lexer {
             const sweet_code = output_lines
                 .map((line) => line.text.join(''))
                 .join('\n');
-            (output_lines = []), (format_mode = false);
+            output_lines = [];
+            format_mode = false;
             return sweet_code;
 
             function conditional_is_end(tk: Token) {
@@ -816,9 +811,11 @@ export class Lexer {
             params: Variable[],
         ) {
             opt = { keep_array_indentation: true, max_preserve_newlines: 1 };
-            (space_in_other = true), (indent_string = '\t');
+            space_in_other = true;
+            indent_string = '\t';
             delete (<any>params).format;
-            (format_mode = true), (preindent_string = '');
+            format_mode = true;
+            preindent_string = '';
             for (const param of params) {
                 if (!param.range_offset) {
                     continue;
@@ -849,11 +846,13 @@ export class Lexer {
                     .join('\n')
                     .trim();
             }
-            (format_mode = false), (output_lines = []);
+            format_mode = false;
+            output_lines = [];
         }
 
         if (d || document.uri.match(/\.d\.(ahk2?|ah2)(?=(\?|$))/i)) {
-            (this.d = d || 1), (allow_$ ||= true);
+            this.d = d || 1;
+            allow_$ ||= true;
             this.parseScript = function (): void {
                 input = this.document.getText();
                 input_length = input.length;
@@ -869,7 +868,8 @@ export class Lexer {
                 let l = 0;
                 let isstatic = false;
                 let tk: Token, lk: Token;
-                this.clear(), (this.reflat = true);
+                this.clear();
+                this.reflat = true;
                 customblocks = { region: [], bracket: [] };
                 this.maybev1 = undefined;
                 let blocks = 0;
@@ -1229,7 +1229,9 @@ export class Lexer {
                                             tokens[j + 2].type ===
                                                 'TK_START_EXPR' && j++;
                                         do {
-                                            (j = j + 1), (r = ''), (lt = '');
+                                            j = j + 1;
+                                            r = '';
+                                            lt = '';
                                             while (
                                                 (lk = tokens[j + 1]) &&
                                                 (lk.type === 'TK_WORD' ||
@@ -1336,7 +1338,8 @@ export class Lexer {
                                     ][tn.name.toUpperCase()] = tn;
                                 }
                             }
-                            (i = j + 1), (isstatic = false);
+                            i = j + 1;
+                            isstatic = false;
                             break;
                         case 'TK_RESERVED':
                             isstatic = false;
@@ -1441,7 +1444,8 @@ export class Lexer {
                                 );
                             }
                         default:
-                            i++, (isstatic = false);
+                            i++;
+                            isstatic = false;
                             break;
                     }
                 }
@@ -1485,7 +1489,8 @@ export class Lexer {
                     }
                 }
                 checksamenameerr({}, this.children, this.diagnostics);
-                (this.diags = this.diagnostics.length), (this.isparsed = true);
+                this.diags = this.diagnostics.length;
+                this.isparsed = true;
                 customblocks.region.forEach((o) =>
                     this.addFoldingRange(o, parser_pos - 1, 'region'),
                 );
@@ -1550,7 +1555,8 @@ export class Lexer {
                     this.children,
                     this.diagnostics,
                 );
-                (this.diags = this.diagnostics.length), (this.isparsed = true);
+                this.diags = this.diagnostics.length;
+                this.isparsed = true;
                 customblocks.region.forEach((o) =>
                     this.addFoldingRange(o, parser_pos - 1, 'region'),
                 );
@@ -1650,7 +1656,8 @@ export class Lexer {
                     break;
                 }
             }
-            _this.clear(), (parser_pos = input_length);
+            _this.clear();
+            parser_pos = input_length;
             throw new ParseStopError(message, tk);
         }
 
@@ -1739,7 +1746,8 @@ export class Lexer {
             function parse_brace(level = 0) {
                 if (tk.type === 'TK_START_BLOCK') {
                     delete tk.data;
-                    nexttoken(), (next = false);
+                    nexttoken();
+                    next = false;
                     if (!tk.topofline && !lk.topofline) {
                         _this.addDiagnostic(
                             diagnostic.unexpected(tk.content),
@@ -1885,7 +1893,8 @@ export class Lexer {
                                         const rs = result.splice(rl),
                                             storemode = mode,
                                             pp = _parent;
-                                        (mode |= 1), (_parent = tn);
+                                        mode |= 1;
+                                        _parent = tn;
                                         const sub = parse_line(
                                             (o = {}),
                                             undefined,
@@ -2123,7 +2132,8 @@ export class Lexer {
                                                                 SemanticTokenModifiers.readonly),
                                                     };
                                                     // nk = tk, sk = _this.get_token(parser_pos, true), parser_pos = sk.offset + sk.length;
-                                                    nexttoken(), (nk = lk);
+                                                    nexttoken();
+                                                    nk = lk;
                                                     if (tk.content === '=>') {
                                                         const o: any = {};
                                                         let sub: DocumentSymbol[];
@@ -2526,7 +2536,8 @@ export class Lexer {
                                 );
                                 tokens[p].next_pair_pos = tk.offset;
                                 if (tk.topofline === 1) {
-                                    (last_LF = tk.offset), (begin_line = true);
+                                    last_LF = tk.offset;
+                                    begin_line = true;
                                 }
                             }
                             if (blocks < level) {
@@ -2573,7 +2584,8 @@ export class Lexer {
                                         'case',
                                     );
                                 }
-                                nexttoken(), (next = false);
+                                nexttoken();
+                                next = false;
                                 tk.topofline ||= -1;
                                 break;
                             }
@@ -2718,7 +2730,8 @@ export class Lexer {
                             (tn.funccall = []),
                                 (tn.declaration = {}),
                                 result.push(tn);
-                            (tn.global = {}), (tn.local = {});
+                            tn.global = {};
+                            tn.local = {};
                             while ((tk.type as string) === 'TK_SHARP') {
                                 parse_sharp(), nexttoken();
                             }
@@ -2741,7 +2754,8 @@ export class Lexer {
                                 _this.addSymbolFolding(tn, tk.offset),
                                     adddeclaration(tn);
                             } else if (tk.topofline) {
-                                adddeclaration(tn), (next = false);
+                                adddeclaration(tn);
+                                next = false;
                                 if (tk.type.startsWith('TK_HOT')) {
                                     break;
                                 }
@@ -2769,7 +2783,8 @@ export class Lexer {
                                 const tparent = _parent,
                                     tmode = mode,
                                     l = tk.content.toLowerCase();
-                                (_parent = tn), (mode = 1);
+                                _parent = tn;
+                                mode = 1;
                                 if (l === 'return') {
                                     tn.children = parse_line(
                                         undefined,
@@ -2845,7 +2860,9 @@ export class Lexer {
                 let nk: Token | undefined;
                 if (((block_mode = false), mode === 2)) {
                     nk = get_next_token();
-                    (next = false), (parser_pos = t), (tk.type = 'TK_WORD');
+                    next = false;
+                    parser_pos = t;
+                    tk.type = 'TK_WORD';
                     if (
                         '.[('.includes(input.charAt(tk.offset + tk.length)) ||
                         nk.content.match(/^(:=|=>|\{)$/)
@@ -2878,7 +2895,8 @@ export class Lexer {
                 switch (_low) {
                     case 'class':
                         if (tk.topofline !== 1) {
-                            (next = false), (tk.type = 'TK_WORD');
+                            next = false;
+                            tk.type = 'TK_WORD';
                             break;
                         }
                         let cl: Token;
@@ -2959,7 +2977,8 @@ export class Lexer {
                             (tn.funccall = []),
                                 (tn.children = []),
                                 (tn.cache = []);
-                            (tn.staticdeclaration = {}), (tn.declaration = {});
+                            tn.staticdeclaration = {};
+                            tn.declaration = {};
                             tn.returntypes = {
                                 [(
                                     classfullname +
@@ -3158,7 +3177,8 @@ export class Lexer {
                     case 'loop':
                         if (mode === 2) {
                             nk = _this.get_token(parser_pos);
-                            (next = false), (tk.type = 'TK_WORD');
+                            next = false;
+                            tk.type = 'TK_WORD';
                             if (nk.content !== ':=') {
                                 _this.addDiagnostic(
                                     diagnostic.propdeclaraerr(),
@@ -3204,7 +3224,8 @@ export class Lexer {
                                     (sub = tk.content.toLowerCase()),
                                 ))
                         ) {
-                            (min = 1), (max = sub === 'parse' ? 3 : 2);
+                            min = 1;
+                            max = sub === 'parse' ? 3 : 2;
                             (tk.type = 'TK_RESERVED'),
                                 (act += ' ' + sub),
                                 nexttoken();
@@ -3340,7 +3361,8 @@ export class Lexer {
                     case 'break':
                     case 'goto':
                         if (mode === 2) {
-                            (next = false), (tk.type = 'TK_WORD');
+                            next = false;
+                            tk.type = 'TK_WORD';
                             if (
                                 _this.get_token(parser_pos, true).content !==
                                 ':='
@@ -3381,7 +3403,8 @@ export class Lexer {
                                         addlabel(tk),
                                         delete tk.semantic;
                                 }
-                                nexttoken(), (next = false);
+                                nexttoken();
+                                next = false;
                             } else if (
                                 input.charAt(lk.offset + lk.length) === '('
                             ) {
@@ -3399,14 +3422,16 @@ export class Lexer {
                                         });
                                     }
                                 });
-                                nexttoken(), (next = false);
+                                nexttoken();
+                                next = false;
                             } else if (tk.type === 'TK_STRING') {
                                 _this.addDiagnostic(
                                     diagnostic.unexpected(tk.content),
                                     tk.offset,
                                     tk.length,
                                 );
-                                nexttoken(), (next = false);
+                                nexttoken();
+                                next = false;
                             } else {
                                 (parser_pos = lk.offset + lk.length),
                                     (lk.type = 'TK_WORD'),
@@ -3456,7 +3481,8 @@ export class Lexer {
                         } else {
                             tk.ignore = true;
                         }
-                        (tk.type = 'TK_WORD'), (next = false);
+                        tk.type = 'TK_WORD';
+                        next = false;
                         break;
                     case 'case':
                         if (case_pos.length && tk.topofline) {
@@ -3468,7 +3494,8 @@ export class Lexer {
                                     'case',
                                 );
                             }
-                            nexttoken(), (next = false);
+                            nexttoken();
+                            next = false;
                             if (tk.content !== ':' && !tk.topofline) {
                                 result.push(
                                     ...parse_line(
@@ -3487,7 +3514,8 @@ export class Lexer {
                                     ),
                                         (next = false);
                                 } else {
-                                    (next = true), nexttoken(), (next = false);
+                                    (next = true), nexttoken();
+                                    next = false;
                                     if (tk.type === 'TK_START_BLOCK') {
                                         tk.previous_pair_pos = beginpos;
                                     } else {
@@ -3512,7 +3540,8 @@ export class Lexer {
                         }
                         break;
                     case 'try':
-                        nexttoken(), (next = false);
+                        nexttoken();
+                        next = false;
                         if (tk.type === 'TK_COMMA') {
                             stop_parse(lk);
                         }
@@ -3557,7 +3586,9 @@ export class Lexer {
                                 );
                         } else {
                             const tps: any = {};
-                            (lk = tk), (tk = nk), (next = false);
+                            lk = tk;
+                            tk = nk;
+                            next = false;
                             if (_low === 'return' || _low === 'throw') {
                                 if (tk.type === 'TK_COMMA') {
                                     stop_parse(lk);
@@ -3594,7 +3625,8 @@ export class Lexer {
                                             'case',
                                         );
                                     }
-                                    nexttoken(), (next = false);
+                                    nexttoken();
+                                    next = false;
                                 } else {
                                     _this.addDiagnostic(
                                         diagnostic.unexpected(tk.content),
@@ -3641,9 +3673,11 @@ export class Lexer {
                 let nk: Token;
                 const bp = tk.offset;
                 line_begin_pos = bp;
-                (lk = nk = tk), (p = get_token_ignore_comment());
+                lk = nk = tk;
+                p = get_token_ignore_comment();
                 if (p.topofline || p.content !== '(') {
-                    (tk = p), (p = undefined);
+                    tk = p;
+                    p = undefined;
                 } else {
                     tk = get_token_ignore_comment();
                 }
@@ -3684,14 +3718,17 @@ export class Lexer {
                                     tk.length,
                                 );
                             } else {
-                                addvariable(tk), (tp += tk.content);
+                                addvariable(tk);
+                                tp += tk.content;
                             }
-                            (lk = tk), (tk = get_token_ignore_comment());
+                            lk = tk;
+                            tk = get_token_ignore_comment();
                             if (tk.type === 'TK_DOT') {
                                 nexttoken();
                                 while (true) {
                                     if ((tk.type as string) === 'TK_WORD') {
-                                        addprop(tk), (tp += '.' + tk.content);
+                                        addprop(tk);
+                                        tp += '.' + tk.content;
                                         nexttoken();
                                     } else if (tk.content === '%') {
                                         _this.addDiagnostic(
@@ -3700,7 +3737,8 @@ export class Lexer {
                                             tk.length,
                                         );
                                         parse_pair('%', '%');
-                                        nexttoken(), (tp = '#any');
+                                        nexttoken();
+                                        tp = '#any';
                                     } else {
                                         break;
                                     }
@@ -3713,7 +3751,8 @@ export class Lexer {
                             }
                             tp && (tps[tp.toUpperCase()] ??= tp);
                             if (tk.content === ',') {
-                                (lk = tk), (tk = get_token_ignore_comment());
+                                lk = tk;
+                                tk = get_token_ignore_comment();
                                 if (!allIdentifierChar.test(tk.content)) {
                                     break;
                                 }
@@ -3730,7 +3769,8 @@ export class Lexer {
                                 );
                                 return parse_body(null, bp);
                             } else if (tk.content === ')') {
-                                nexttoken(), (next = false);
+                                nexttoken();
+                                next = false;
                                 return parse_body(null, bp);
                             }
                         } else if (tk.content === '{' || tk.topofline) {
@@ -3739,7 +3779,8 @@ export class Lexer {
                         }
                     }
                     if (tk.content.toLowerCase() === 'as') {
-                        (lk = tk), (tk = get_token_ignore_comment());
+                        lk = tk;
+                        tk = get_token_ignore_comment();
                         next = false;
                         if (
                             tk.type !== 'TK_WORD' &&
@@ -3776,7 +3817,8 @@ export class Lexer {
                                 if (vr) {
                                     const arr: string[] = Object.values(tps),
                                         o: any = (vr.returntypes = {});
-                                    (next = true), (vr.def = true);
+                                    next = true;
+                                    vr.def = true;
                                     !arr.length && arr.push('@error');
                                     for (const s of arr) {
                                         o[s.replace(/([^.]+)$/, '@$1')] = 0;
@@ -3804,7 +3846,8 @@ export class Lexer {
                     } else {
                         if (p) {
                             if (tk.content === ')') {
-                                (lk = tk), (tk = get_token_ignore_comment());
+                                lk = tk;
+                                tk = get_token_ignore_comment();
                             } else {
                                 _this.addDiagnostic(
                                     diagnostic.missing(')'),
@@ -3835,7 +3878,8 @@ export class Lexer {
 
             function parse_top_word() {
                 let c = '';
-                (next = true), nexttoken(), (next = false);
+                (next = true), nexttoken();
+                next = false;
                 if (
                     tk.type !== 'TK_EQUALS' &&
                     !/^(=[=>]?|\?\??|:)$/.test(tk.content) &&
@@ -4022,7 +4066,8 @@ export class Lexer {
                         next = false;
                     } else if (next) {
                         line_begin_pos = tk.offset;
-                        nexttoken(), (next = false);
+                        nexttoken();
+                        next = false;
                         parse_body(true, lk.offset);
                         return true;
                     }
@@ -4059,14 +4104,16 @@ export class Lexer {
                     if (t.type === 'TK_COMMA') {
                         info.miss.push(info.count++);
                     } else if (!t.topofline || is_line_continue(tk, t)) {
-                        ++info.count, (nk = t);
+                        ++info.count;
+                        nk = t;
                     }
                 } else {
                     b = tk.content ? tk.offset : lk.offset + lk.length + 1;
                     if (tk.type === 'TK_COMMA') {
                         info.miss.push(info.count++);
                     } else if (!tk.topofline || is_line_continue(lk, tk)) {
-                        ++info.count, (nk = tk);
+                        ++info.count;
+                        nk = tk;
                     }
                 }
                 while (true) {
@@ -4288,7 +4335,8 @@ export class Lexer {
                             if (last_hotif !== undefined) {
                                 _this.addFoldingRange(last_hotif, tk.offset);
                             }
-                            nexttoken(), (next = false);
+                            nexttoken();
+                            next = false;
                             last_hotif = tk.topofline ? undefined : lk.offset;
                         }
                         break;
@@ -4445,7 +4493,8 @@ export class Lexer {
                                         tk.topofline &&
                                         allIdentifierChar.test(tk.content)
                                     ) {
-                                        (lk = EMPTY_TOKEN), (next = false);
+                                        lk = EMPTY_TOKEN;
+                                        next = false;
                                         break loop;
                                     }
                                     if (
@@ -4520,7 +4569,8 @@ export class Lexer {
                                     tk.length,
                                 );
                             }
-                            (next = false), (tk.type = 'TK_WORD');
+                            next = false;
+                            tk.type = 'TK_WORD';
                             break;
                         case 'TK_END_BLOCK':
                             next = false;
@@ -4576,7 +4626,8 @@ export class Lexer {
                             nexttoken();
                             if ((tk.type as string) === 'TK_COMMA') {
                                 if (predot) {
-                                    addprop(lk), (tpexp += '.' + lk.content);
+                                    addprop(lk);
+                                    tpexp += '.' + lk.content;
                                 } else if (
                                     input.charAt(lk.offset - 1) !== '%'
                                 ) {
@@ -4601,7 +4652,8 @@ export class Lexer {
                                 } else {
                                     lk.ignore = true;
                                 }
-                                (types[tpexp] = 0), (next = false);
+                                types[tpexp] = 0;
+                                next = false;
                                 return result.splice(pres);
                             } else if (tk.content === '=>') {
                                 const o: any = {},
@@ -4732,7 +4784,8 @@ export class Lexer {
                                     addprop(lk);
                                     types[tpexp + '.' + lk.content] = 0;
                                 } else {
-                                    (types['#any'] = 0), (lk.ignore = true);
+                                    types['#any'] = 0;
+                                    lk.ignore = true;
                                 }
                                 ternaryMiss();
                                 return result.splice(pres);
@@ -4797,7 +4850,8 @@ export class Lexer {
                                             tpexp =
                                                 tpexp.slice(0, -1) + '#varref';
                                         } else {
-                                            (tpexp += tp), (vr.def = true);
+                                            tpexp += tp;
+                                            vr.def = true;
                                         }
                                     } else {
                                         next = false;
@@ -4831,7 +4885,8 @@ export class Lexer {
                                         maybeclassprop(lk);
                                     }
                                 } else {
-                                    (tpexp += '.' + lk.content), (next = false);
+                                    tpexp += '.' + lk.content;
+                                    next = false;
                                 }
                                 addprop(lk);
                             }
@@ -4961,7 +5016,8 @@ export class Lexer {
                                     );
                                     const _p = _parent,
                                         _m = mode;
-                                    (_parent = tn), (mode = 1);
+                                    _parent = tn;
+                                    mode = 1;
                                     result.push(
                                         (fc.symbol = fc.definition = tn),
                                     );
@@ -5134,7 +5190,8 @@ export class Lexer {
                                 } else {
                                     (types[tpexp] = 0),
                                         _this.diagnostics.splice(l);
-                                    ternaryMiss(), (next = false);
+                                    ternaryMiss();
+                                    next = false;
                                     return result.splice(pres);
                                 }
                             }
@@ -5147,7 +5204,8 @@ export class Lexer {
                         case 'TK_END_BLOCK':
                         case 'TK_END_EXPR':
                         case 'TK_COMMA':
-                            (next = false), (types[tpexp] = 0);
+                            next = false;
+                            types[tpexp] = 0;
                             ternaryMiss();
                             return result.splice(pres);
                         case 'TK_LABEL':
@@ -5184,7 +5242,8 @@ export class Lexer {
                                 ) {
                                     break;
                                 }
-                                (next = false), (tk.type = 'TK_WORD');
+                                next = false;
+                                tk.type = 'TK_WORD';
                                 break;
                             }
                             _this.addDiagnostic(
@@ -5198,7 +5257,8 @@ export class Lexer {
                             if (tk.content === '%') {
                                 const prec = input.charAt(tk.offset - 1);
                                 if (inpair === '%') {
-                                    (next = false), (types[tpexp] = 0);
+                                    next = false;
+                                    types[tpexp] = 0;
                                     ternaryMiss();
                                     return result.splice(pres);
                                 } else if (prec.match(/\w|\.|[^\x00-\x7f]/)) {
@@ -5360,7 +5420,8 @@ export class Lexer {
                     miss: [],
                     unknown: false,
                 };
-                (block_mode = false), (bak.paraminfo = info);
+                block_mode = false;
+                bak.paraminfo = info;
                 if (
                     lk.type === 'TK_WORD' &&
                     bak.prefix_is_whitespace === undefined
@@ -5381,7 +5442,8 @@ export class Lexer {
                                 );
                                 break;
                             }
-                            (types['#void'] = 0), (tk.previous_pair_pos = beg);
+                            types['#void'] = 0;
+                            tk.previous_pair_pos = beg;
                             info.miss.push(info.count++);
                             Object.defineProperty(types, 'paraminfo', {
                                 value: info,
@@ -5478,7 +5540,8 @@ export class Lexer {
                                     ...parse_expression(',', (o = {}), 2),
                                 ),
                                     (next = true);
-                                (bb = parser_pos), (bak = tk);
+                                bb = parser_pos;
+                                bak = tk;
                                 let t = Object.keys(o).pop();
                                 if (t) {
                                     t = t.trim().toLowerCase();
@@ -5608,7 +5671,8 @@ export class Lexer {
                                             ? lk.length
                                             : tk.offset - lk.offset,
                                     );
-                                    (next = false), (lk = EMPTY_TOKEN);
+                                    next = false;
+                                    lk = EMPTY_TOKEN;
                                     continue;
                                 }
                                 (paramsdef = false), info.count--;
@@ -5644,7 +5708,8 @@ export class Lexer {
                             const t = tk;
                             tk = get_token_ignore_comment();
                             if (tk.type === 'TK_WORD') {
-                                (byref = true), (next = false);
+                                byref = true;
+                                next = false;
                                 continue;
                             } else {
                                 _this.addDiagnostic(
@@ -5676,19 +5741,22 @@ export class Lexer {
                             configurable: true,
                         });
                     }
-                    (types[tpexp] = 0), (tk.previous_pair_pos = beg);
+                    types[tpexp] = 0;
+                    tk.previous_pair_pos = beg;
                     _this.addFoldingRange(beg, parser_pos, 'block');
                     return cache;
                 } else {
                     result.push(...cache);
-                    (parser_pos = bb), (tk = bak);
+                    parser_pos = bb;
+                    tk = bak;
                     parse_pair(endc === ')' ? '(' : '[', endc, beg, types);
                     return;
                 }
             }
 
             function parse_prop() {
-                (next = false), (parser_pos = tk.offset + tk.length);
+                next = false;
+                parser_pos = tk.offset + tk.length;
                 while (nexttoken()) {
                     switch (tk.type) {
                         case 'TK_OPERATOR':
@@ -5771,7 +5839,8 @@ export class Lexer {
                     (lk = l), (tk = b), result.splice(rl);
                     parser_pos = tk.skip_pos ?? tk.offset + tk.length;
                     if (must) {
-                        parse_errobj(), (tk.previous_pair_pos = b.offset);
+                        parse_errobj();
+                        tk.previous_pair_pos = b.offset;
                         _this.addDiagnostic(
                             diagnostic.objectliteralerr(),
                             e.offset,
@@ -5798,8 +5867,10 @@ export class Lexer {
                 }
                 if (Object.keys(props).length) {
                     cls.name = cls.full = `$${_this.anonymous.push(cls) - 1}`;
-                    (cls.staticdeclaration = props), (cls.declaration = {});
-                    (tp[cls.name] = true), (cls.uri = _this.uri);
+                    cls.staticdeclaration = props;
+                    cls.declaration = {};
+                    tp[cls.name] = true;
+                    cls.uri = _this.uri;
                 }
                 return true;
 
@@ -5996,7 +6067,8 @@ export class Lexer {
                             (t.previous_pair_pos !== undefined ||
                                 t.type === 'TK_WORD'))
                     ) {
-                        (_pk.paraminfo = info), (iscall = true);
+                        _pk.paraminfo = info;
+                        iscall = true;
                     }
                 }
                 while (nexttoken()) {
@@ -6019,7 +6091,8 @@ export class Lexer {
                                 pairbeg,
                                 1,
                             );
-                            (next = false), (tpexp = '#any');
+                            next = false;
+                            tpexp = '#any';
                             ternaryMiss();
                             return;
                         }
@@ -6062,7 +6135,8 @@ export class Lexer {
                                 (rpair = 0),
                                 (tpexp += '(');
                         }
-                        pairnum++, pairpos.push(parser_pos - 1), (llk = lk);
+                        pairnum++, pairpos.push(parser_pos - 1);
+                        llk = lk;
                     } else if (tk.content === '=>') {
                         let rs = result.splice(apos);
                         const bb = tk;
@@ -6098,7 +6172,8 @@ export class Lexer {
                             input.charAt(lk.offset - 1) !== '.'
                         ) {
                             let rg: Range;
-                            (nk = tk), (b = lk.offset);
+                            nk = tk;
+                            b = lk.offset;
                             par = [
                                 Variable.create(
                                     lk.content,
@@ -6171,7 +6246,8 @@ export class Lexer {
                                 ) {
                                     const vr = addvariable(tk);
                                     if (vr) {
-                                        nexttoken(), (next = false);
+                                        nexttoken();
+                                        next = false;
                                         if (
                                             (tk.type as string) === 'TK_EQUALS'
                                         ) {
@@ -6222,7 +6298,8 @@ export class Lexer {
                                                     tpexp.slice(0, -1) +
                                                     '#varref';
                                             } else {
-                                                (tpexp += tp), (vr.def = true);
+                                                tpexp += tp;
+                                                vr.def = true;
                                             }
                                         } else if (byref) {
                                             tpexp =
@@ -6436,7 +6513,8 @@ export class Lexer {
                             input.charAt(parser_pos) === '%'
                         ) {
                             maybeclassprop(tk, null), parse_prop();
-                            nexttoken(), (next = false);
+                            nexttoken();
+                            next = false;
                         } else {
                             addprop(tk),
                                 (tpexp += '.' + tk.content),
@@ -6507,7 +6585,8 @@ export class Lexer {
                             tk.offset,
                             1,
                         );
-                        pairMiss(), (next = false), exps.push(tpexp);
+                        pairMiss();
+                        (next = false), exps.push(tpexp);
                         types[
                             tpexp.indexOf('#any') < 0
                                 ? '(' + tpexp + ')'
@@ -6535,7 +6614,8 @@ export class Lexer {
                             ) {
                                 continue;
                             }
-                            (next = false), (tk.type = 'TK_WORD');
+                            next = false;
+                            tk.type = 'TK_WORD';
                             continue;
                         }
                         _this.addDiagnostic(
@@ -6546,7 +6626,9 @@ export class Lexer {
                     } else if (tk.type === 'TK_COMMA') {
                         iscall && (tk.paraminfo = info);
                         if (pairnum === 0 && b !== '%') {
-                            exps.push(tpexp), (tpexp = ''), ++info.count;
+                            exps.push(tpexp);
+                            tpexp = '';
+                            ++info.count;
                             if (
                                 lk.type === 'TK_COMMA' ||
                                 lk.type === 'TK_START_EXPR'
@@ -6608,7 +6690,8 @@ export class Lexer {
                                 1,
                             );
                         } else if (['++', '--'].includes(tk.content)) {
-                            (byref = false), (tpexp = tpexp.slice(0, -3));
+                            byref = false;
+                            tpexp = tpexp.slice(0, -3);
                             continue;
                         } else if (
                             b !== '%' &&
@@ -6616,8 +6699,8 @@ export class Lexer {
                             (input[tk.offset - 1] === '%' ||
                                 input[tk.offset + tk.length] === '%')
                         ) {
-                            (next = false),
-                                (tk.type = 'TK_WORD'),
+                            next = false;
+                            (tk.type = 'TK_WORD'),
                                 (tk.semantic = {
                                     type: SemanticTokenTypes.variable,
                                 });
