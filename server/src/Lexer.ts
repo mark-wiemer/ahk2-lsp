@@ -7203,8 +7203,8 @@ export class Lexer {
                         if (!it.name) {
                             continue;
                         }
-                        node.children?.unshift(it),
-                            (it.def = it.assigned = true);
+                        node.children?.unshift(it);
+                        it.def = it.assigned = true;
                         it.kind = SymbolKind.TypeParameter;
                         if (it.defaultVal !== undefined || it.arr) {
                             lpv = true;
@@ -7277,8 +7277,8 @@ export class Lexer {
                             }
                         }
                         _this.declaration[k] ??= dec[k] = v;
-                        (v.assigned ||= Boolean(v.returntypes)),
-                            ((v as any).infunc = true);
+                        v.assigned ||= Boolean(v.returntypes);
+                        (v as any).infunc = true;
                     });
                     fn.children.forEach((it) => {
                         _low = it.name.toUpperCase();
@@ -7447,10 +7447,10 @@ export class Lexer {
                     }
                     fn.unresolved_vars = unresolved_vars;
                     if (has_this_param) {
-                        delete pars.THIS,
-                            delete pars.SUPER,
-                            delete dec.THIS,
-                            delete dec.SUPER;
+                        delete pars.THIS;
+                        delete pars.SUPER;
+                        delete dec.THIS;
+                        delete dec.SUPER;
                     }
                     for (const k in (vars = fn.local)) {
                         vars[k].def = true;
@@ -7755,8 +7755,8 @@ export class Lexer {
             while (line?.text.length === 0) {
                 line = output_lines.pop();
             }
-            line && output_lines.push(line);
-            flags.had_comment && output_lines.push(create_output_line());
+            if (line) output_lines.push(line);
+            if (flags.had_comment) output_lines.push(create_output_line());
         }
 
         function just_added_newline(): boolean {
@@ -8100,7 +8100,7 @@ export class Lexer {
                                 offset,
                                 m[1].length,
                                 1,
-                            )),
+                            ));
                                 (offset += m[1].length);
                             lst.skip_pos = parser_pos;
                             lst.data = {
@@ -8344,9 +8344,8 @@ export class Lexer {
                         ) {
                             const sign = input.charAt(parser_pos);
                             const p = parser_pos;
-                            let t: Token;
                             parser_pos += 1;
-                            t = get_next_token(depth + 1);
+                            const t = get_next_token(depth + 1);
                             delete _this.tokens[t.offset];
                             if (
                                 t.type === 'TK_NUMBER' &&
