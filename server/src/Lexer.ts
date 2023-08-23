@@ -1000,7 +1000,7 @@ export class Lexer {
                                             (tk = tokens[++j]).content !== '}'
                                         ) {
                                             if (tk.content === '=>') {
-                                                let rets: string[];
+                                                const rets: string[] = [];
                                                 const tt = FuncNode.create(
                                                     lk.content,
                                                     SymbolKind.Function,
@@ -1015,9 +1015,8 @@ export class Lexer {
                                                 );
                                                 lk.symbol = lk.definition = tt;
                                                 lk = tokens[++j];
-                                                lk.type === 'TK_START_EXPR' &&
-                                                    (lk = tokens[++j]);
-                                                rets = [];
+                                                if (lk.type === 'TK_START_EXPR')
+                                                    lk = tokens[++j];
                                                 if (lk.type === 'TK_WORD') {
                                                     rets.push(
                                                         '#' +
@@ -1051,9 +1050,11 @@ export class Lexer {
                                                         j--;
                                                     }
                                                 }
-                                                tokens[j + 1].type ===
-                                                    'TK_END_EXPR' &&
-                                                    (lk = tokens[++j]);
+                                                if (
+                                                    tokens[j + 1].type ===
+                                                    'TK_END_EXPR'
+                                                )
+                                                    lk = tokens[++j];
                                                 tt.range.end =
                                                     this.document.positionAt(
                                                         lk.offset + lk.length,
@@ -1077,8 +1078,9 @@ export class Lexer {
                                         let rets: string[] = [];
                                         if (lk.content === '=>') {
                                             lk = tokens[++j];
-                                            lk.type === 'TK_START_EXPR' &&
-                                                (lk = tokens[++j]);
+                                            if (lk.type === 'TK_START_EXPR') {
+                                                lk = tokens[++j];
+                                            }
                                             rets = [];
                                             lk.type === 'TK_WORD' &&
                                                 rets.push(
@@ -1208,8 +1210,9 @@ export class Lexer {
                                                         )),
                                                     );
                                                     tn.arr = true;
-                                                    defVal &&
-                                                        (tn.defaultVal = false);
+                                                    if (defVal) {
+                                                        tn.defaultVal = false;
+                                                    }
                                                 } else if (lk.content === '[') {
                                                     defVal++;
                                                 } else if (lk.content === ']') {
@@ -1261,8 +1264,9 @@ export class Lexer {
                                         } while (
                                             tokens[j + 1]?.content === '|'
                                         );
-                                        lk?.type !== 'TK_END_EXPR' &&
-                                            (lk = tokens[j]);
+                                        if (lk?.type !== 'TK_END_EXPR') {
+                                            lk = tokens[j];
+                                        }
                                     }
                                     const tn = FuncNode.create(
                                         tk.content,
@@ -1384,8 +1388,9 @@ export class Lexer {
                                 p[blocks].staticdeclaration[
                                     cl.name.toUpperCase()
                                 ] = cl;
-                                cl.name.startsWith('_') &&
-                                    (cl.kind = SymbolKind.Interface);
+                                if (cl.name.startsWith('_')) {
+                                    cl.kind = SymbolKind.Interface;
+                                }
                                 if (
                                     (_cm =
                                         comments[cl.selectionRange.start.line])
@@ -3932,8 +3937,9 @@ export class Lexer {
                     }
                 } else {
                     let act, offset;
-                    /^=>?$/.test(tk.content) &&
-                        ((act = tk.content), (offset = tk.offset));
+                    if (/^=>?$/.test(tk.content)) {
+                        (act = tk.content), (offset = tk.offset);
+                    }
                     reset_extra_index(tk);
                     tk = lk;
                     lk = EMPTY_TOKEN;
