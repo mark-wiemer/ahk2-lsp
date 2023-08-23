@@ -9281,8 +9281,8 @@ export class Lexer {
                     ln++;
                 }
                 if (m && m[1]) {
-                    (parser_pos = input.indexOf('*/', last_LF) + 2),
-                        (begin_line = true);
+                    parser_pos = input.indexOf('*/', last_LF) + 2;
+                    begin_line = true;
                     last_LF = parser_pos - 1;
                 } else {
                     parser_pos = LF < 0 ? input_length : LF;
@@ -9412,10 +9412,10 @@ export class Lexer {
                     }
                 } else {
                     lst.type = 'TK_UNKNOWN';
-                    (lst.content += input
+                    lst.content += input
                         .substring(offset, parser_pos)
-                        .trimRight()),
-                        (lst.length += parser_pos - offset);
+                        .trimRight();
+                    lst.length += parser_pos - offset;
                 }
                 return lst;
             }
@@ -9624,9 +9624,9 @@ export class Lexer {
 
         function handle_start_block() {
             if (ck.data) {
-                set_mode(MODE.ObjectLiteral),
-                    (keep_object_line =
-                        !_this.tokens[ck.next_token_offset]?.topofline);
+                set_mode(MODE.ObjectLiteral);
+                keep_object_line =
+                    !_this.tokens[ck.next_token_offset]?.topofline;
                 flags.indentation_level = real_indentation_level();
                 if (previous_flags.mode !== MODE.Conditional) {
                     previous_flags.indentation_level = flags.indentation_level;
@@ -9670,7 +9670,8 @@ export class Lexer {
                     last_type === 'TK_LABEL' &&
                     /^(default)?:$/.test(last_text)
                 ) {
-                    flags.indentation_level--, (flags.case_body = null);
+                    flags.indentation_level--;
+                    flags.case_body = null;
                     trim_newlines();
                 }
                 if (
@@ -10084,9 +10085,9 @@ export class Lexer {
                 whitespace.includes(ck.prefix_is_whitespace || '\0') &&
                 ck.previous_token?.callinfo
             ) {
-                input_wanted_newline && opt.preserve_newlines
-                    ? print_newline(true)
-                    : (output_space_before_token = true);
+                if (input_wanted_newline && opt.preserve_newlines) {
+                    print_newline(true);
+                } else output_space_before_token = true;
             } else {
                 output_space_before_token =
                     (space_in_other && last_type === 'TK_COMMA') ||
