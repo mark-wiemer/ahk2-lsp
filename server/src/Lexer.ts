@@ -8094,14 +8094,14 @@ export class Lexer {
                         } else {
                             last_LF = next_LF;
                             parser_pos = offset + m[0].length;
-                            (lst = createToken(
+                            lst = createToken(
                                 m[1],
                                 'TK_HOTLINE',
                                 offset,
                                 m[1].length,
                                 1,
-                            ));
-                                (offset += m[1].length);
+                            );
+                            offset += m[1].length;
                             lst.skip_pos = parser_pos;
                             lst.data = {
                                 content: input.substring(offset, parser_pos),
@@ -8419,17 +8419,17 @@ export class Lexer {
                                             .substring(i, next_LF)
                                             .match(/^\s*\)/))
                                     ) {
-                                        data.push(next_LF - i),
-                                            (next_LF = input.indexOf(
-                                                '\n',
-                                                (i = next_LF + 1),
-                                            ));
+                                        data.push(next_LF - i);
+                                        next_LF = input.indexOf(
+                                            '\n',
+                                            (i = next_LF + 1),
+                                        );
                                     }
                                     if (next_LF < 0) {
-                                        data.push(input_length - i),
-                                            (m = input
-                                                .substring(i, input_length)
-                                                .match(/^\s*\)/));
+                                        data.push(input_length - i);
+                                        m = input
+                                            .substring(i, input_length)
+                                            .match(/^\s*\)/);
                                     }
                                     parser_pos = m
                                         ? i + m[0].length
@@ -8499,10 +8499,10 @@ export class Lexer {
                                     });
                                     const js =
                                         content.match(/(^|\s)join(\S*)/i);
-                                    let ignore_comment = /(^|\s)[Cc]/.test(
-                                            content,
-                                        ),
-                                        tk: Token;
+                                    const ignore_comment = /(^|\s)[Cc]/.test(
+                                        content,
+                                    );
+                                    let tk: Token;
                                     const _lst = lst;
                                     let lk = lst;
                                     let optionend = false;
@@ -8549,13 +8549,12 @@ export class Lexer {
                                                         last_LF + 1,
                                                     );
                                                     for (let tk of tks) {
-                                                        (tk = Object.assign(
+                                                        tk = Object.assign(
                                                             {},
                                                             tk,
-                                                        )),
-                                                            (tk.offset =
-                                                                last_LF),
-                                                            tokens.push(tk);
+                                                        );
+                                                        tk.offset = last_LF;
+                                                        tokens.push(tk);
                                                     }
                                                 }
                                                 return {
@@ -8700,7 +8699,7 @@ export class Lexer {
                         (c = input.charAt(offset - 1)),
                     )
                 ) {
-                    sep === c && c === '"' && stop_parse(lst);
+                    if (sep === c && c === '"') stop_parse(lst);
                     _this.addDiagnostic(diagnostic.missingspace(), offset, 1);
                 }
                 while ((c = input.charAt(parser_pos++))) {
@@ -8772,14 +8771,14 @@ export class Lexer {
                                 }
                                 // lst.semantic = se;
                                 _this.addFoldingRange(offset, p, 'string');
-                                (lst = createToken(
+                                lst = createToken(
                                     ')',
                                     'TK_END_EXPR',
                                     parser_pos,
                                     1,
                                     1,
-                                )),
-                                    (lst.ignore = true);
+                                );
+                                lst.ignore = true;
                                 if (pt) {
                                     pt.next_pair_pos = parser_pos;
                                     lst.previous_pair_pos = pt.offset;
@@ -8794,11 +8793,11 @@ export class Lexer {
                                 ) {
                                     parser_pos++;
                                 }
-                                (resulting_string = input.substring(
+                                resulting_string = input.substring(
                                     offset,
                                     parser_pos,
-                                )),
-                                    (offset = parser_pos);
+                                );
+                                offset = parser_pos;
                             }
                         }
                     } else if (
@@ -8955,8 +8954,8 @@ export class Lexer {
                         lst.semantic = se;
                     }
                     if (continuation_sections_mode) {
-                        _this.addFoldingRange(offset, input_length, 'string'),
-                            (continuation_sections_mode = false);
+                        _this.addFoldingRange(offset, input_length, 'string');
+                        continuation_sections_mode = false;
                     }
                     return lst;
                 }
@@ -9051,13 +9050,13 @@ export class Lexer {
 
             if (c === ';') {
                 let comment = '';
-                let comment_type =
-                        bg && '\n'.includes(input.charAt(last_LF))
-                            ? 'TK_COMMENT'
-                            : ((bg = 0), 'TK_INLINE_COMMENT'),
-                    t: any,
-                    rg: Range,
-                    ignore = undefined;
+                const comment_type =
+                    bg && '\n'.includes(input.charAt(last_LF))
+                        ? 'TK_COMMENT'
+                        : ((bg = 0), 'TK_INLINE_COMMENT');
+                let t: any;
+                let rg: Range;
+                let ignore = undefined;
                 let next_LF = offset - 1;
                 let line: string;
                 let ln = 0;
@@ -9075,8 +9074,7 @@ export class Lexer {
                         if ((t = line.match(/^;\s*@/))) {
                             let s = line.substring(t[0].length);
                             if ((s = s.toLowerCase()) === 'include-winapi') {
-                                h &&
-                                    (t = lexers[ahkuris.winapi]) &&
+                                if (h && (t = lexers[ahkuris.winapi]))
                                     Object.defineProperty(
                                         includetable,
                                         ahkuris.winapi,
