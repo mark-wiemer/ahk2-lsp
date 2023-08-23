@@ -70,17 +70,20 @@ export function generate_fn_comment(doc: Lexer, fn: FuncNode) {
             ] ??=
                 []).push('@param ' + m[2].trim());
         } else if ((m = line.match(/^@(returns?)([\s:]\s*(.*))?$/i))) {
-            (lastarr = returns), returns.push(`@${m[1].toLowerCase()} ${m[3]}`);
+            lastarr = returns;
+            returns.push(`@${m[1].toLowerCase()} ${m[3]}`);
         } else if (lastarr && !line.startsWith('@')) {
             lastarr.push(line);
         } else {
-            (lastarr = undefined), details.push(line);
+            lastarr = undefined;
+            details.push(line);
         }
     });
     if (details.join('').trim()) {
         details.forEach((s) => result.push(' * ' + s));
     } else {
-        result.push(' * $0'), (z = false);
+        result.push(' * $0');
+        z = false;
     }
     fn.params.forEach((it) => {
         if ((lastarr = params[it.name.toUpperCase()])) {
@@ -89,12 +92,12 @@ export function generate_fn_comment(doc: Lexer, fn: FuncNode) {
             let rets: string[] = [];
             const o: any = {};
             for (const ret in it.returntypes) {
-                reset_detect_cache(),
-                    detectExp(
-                        doc,
-                        ret,
-                        Position.is((p = it.returntypes[ret])) ? p : pp,
-                    ).forEach((tp) => (o[trim(tp)] = true));
+                reset_detect_cache();
+                detectExp(
+                    doc,
+                    ret,
+                    Position.is((p = it.returntypes[ret])) ? p : pp,
+                ).forEach((tp) => (o[trim(tp)] = true));
             }
             rets = o['#any'] ? [] : Object.keys(o);
             if (rets.length) {
@@ -114,12 +117,12 @@ export function generate_fn_comment(doc: Lexer, fn: FuncNode) {
         let rets: string[] = [];
         const o: any = {};
         for (const ret in fn.returntypes) {
-            reset_detect_cache(),
-                detectExp(
-                    doc,
-                    ret,
-                    Position.is((p = fn.returntypes[ret])) ? p : pp,
-                ).forEach((tp) => (o[trim(tp)] = true));
+            reset_detect_cache();
+            detectExp(
+                doc,
+                ret,
+                Position.is((p = fn.returntypes[ret])) ? p : pp,
+            ).forEach((tp) => (o[trim(tp)] = true));
         }
         rets = o['#any'] ? ['any'] : Object.keys(o);
         if (rets.length) {
@@ -148,9 +151,13 @@ export async function generateComment(args: any[]) {
     ) {
         return;
     }
-    let { uri, position } = (await connection.sendRequest(
-        'ahk2.getActiveTextEditorUriAndPosition',
-    )) as { uri: string; position: Position };
+
+    const result = await connection.sendRequest<{
+        uri: string;
+        position: Position;
+    }>('ahk2.getActiveTextEditorUriAndPosition');
+    let uri = result.uri;
+    const position = result.position;
     const doc = lexers[(uri = uri.toLowerCase())];
     let scope = doc.searchScopedNode(position);
     const ts = scope?.children || doc.children;
@@ -171,7 +178,8 @@ export async function generateComment(args: any[]) {
         let pos = scope.selectionRange.start;
         let tk: Token, range: Range;
         if (scope.detail === undefined) {
-            (text += '\n'), (tk = doc.tokens[doc.document.offsetAt(pos)]);
+            text += '\n';
+            tk = doc.tokens[doc.document.offsetAt(pos)];
             if (tk.topofline === 2) {
                 tk = tk.previous_token!;
             }
@@ -209,7 +217,9 @@ export function exportSymbols(uri: string) {
         }
         let includes;
         includes = Object.values(doc.include).map((p) => restorePath(p));
-        !includes.length && (includes = undefined);
+        if (!includes.length) {
+            includes = undefined;
+        }
         dump(
             Object.values(doc.declaration),
             (result[doc.fsPath || doc.document.uri] = { includes }),

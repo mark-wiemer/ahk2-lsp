@@ -16,10 +16,10 @@ export async function colorPresentation(
     const textEdit: TextEdit = { range: params.range, newText: '' };
     const color = params.color;
     let m: any;
-    let text = lexers[params.textDocument.uri.toLowerCase()]?.document.getText(
-            params.range,
-        ),
-        hex = '';
+    const text = lexers[
+        params.textDocument.uri.toLowerCase()
+    ]?.document.getText(params.range);
+    let hex = '';
     if (!text || token.isCancellationRequested) {
         return;
     }
