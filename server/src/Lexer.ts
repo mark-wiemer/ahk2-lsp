@@ -3014,8 +3014,8 @@ export class Lexer {
                                     set_extends(tn, m[1]);
                                 }
                             }
-                            (tn.extends = ex.toLowerCase()),
-                                (tn.uri ??= _this.uri);
+                            tn.extends = ex.toLowerCase();
+                            tn.uri ??= _this.uri;
                             let t: any = FuncNode.create(
                                 '__Init',
                                 SymbolKind.Method,
@@ -3024,8 +3024,8 @@ export class Lexer {
                                 [],
                                 [],
                             );
-                            ((tn.declaration.__INIT = t).ranges = []),
-                                (t.parent = tn);
+                            (tn.declaration.__INIT = t).ranges = [];
+                            t.parent = tn;
                             t = FuncNode.create(
                                 '__Init',
                                 SymbolKind.Method,
@@ -3035,27 +3035,26 @@ export class Lexer {
                                 [],
                                 true,
                             );
-                            ((tn.staticdeclaration.__INIT = t).ranges = []),
-                                (t.parent = tn);
+                            (tn.staticdeclaration.__INIT = t).ranges = [];
+                            t.parent = tn;
                             tn.children.push(
                                 ...parse_block(
                                     2,
                                     sv,
                                     classfullname + cl.content + '.',
                                 ),
-                            ),
-                                (tn.range = make_range(
-                                    beginpos,
-                                    parser_pos - beginpos,
-                                ));
-                            adddeclaration(tn as ClassNode),
-                                (cl.semantic = {
-                                    type: SemanticTokenTypes.class,
-                                    modifier:
-                                        (1 <<
-                                            SemanticTokenModifiers.definition) |
-                                        (1 << SemanticTokenModifiers.readonly),
-                                });
+                            );
+                            tn.range = make_range(
+                                beginpos,
+                                parser_pos - beginpos,
+                            );
+                            adddeclaration(tn as ClassNode);
+                            cl.semantic = {
+                                type: SemanticTokenTypes.class,
+                                modifier:
+                                    (1 << SemanticTokenModifiers.definition) |
+                                    (1 << SemanticTokenModifiers.readonly),
+                            };
                             _this.addSymbolFolding(tn, tk.offset);
                             result.push(tn);
                             return true;
@@ -3131,7 +3130,6 @@ export class Lexer {
                             ) {
                                 tk.topofline = 2;
                             } else {
-                                let sta: any[];
                                 const rl = result.length,
                                     _ = _parent;
                                 if (mode === 2) {
@@ -3139,7 +3137,7 @@ export class Lexer {
                                     _parent = _parent.staticdeclaration.__INIT;
                                 }
                                 next = false;
-                                sta = parse_statement(
+                                const sta = parse_statement(
                                     _low === 'global' ? '' : _low,
                                 );
                                 if (_low === 'global') {
@@ -3153,15 +3151,15 @@ export class Lexer {
                                     if (mode === 2) {
                                         _parent.children.push(
                                             ...result.splice(rl),
-                                        ),
-                                            (_parent = _);
+                                        );
+                                        _parent = _;
                                         for (const it of sta) {
                                             it.static = true;
-                                            (it.full = it.full.replace(
+                                            it.full = it.full?.replace(
                                                 ') ',
                                                 ') static ',
-                                            )),
-                                                ((it as FuncNode).parent = _);
+                                            );
+                                            (it as FuncNode).parent = _;
                                         }
                                     } else {
                                         const isstatic = _low === 'static';
@@ -3523,8 +3521,8 @@ export class Lexer {
                                         diagnostic.unexpected(tk.content),
                                         tk.offset,
                                         tk.length,
-                                    ),
-                                        (next = false);
+                                    );
+                                    next = false;
                                 } else {
                                     next = true;
                                     nexttoken();
@@ -3762,7 +3760,7 @@ export class Lexer {
                                     }
                                 }
                             }
-                            tp && (tps[tp.toUpperCase()] ??= tp);
+                            if (tp) tps[tp.toUpperCase()] ??= tp;
                             if (tk.content === ',') {
                                 lk = tk;
                                 tk = get_token_ignore_comment();
@@ -3809,8 +3807,8 @@ export class Lexer {
                                 diagnostic.reservedworderr(tk.content),
                                 tk.offset,
                                 tk.length,
-                            ),
-                                (tk.type = 'TK_WORD');
+                            );
+                            tk.type = 'TK_WORD';
                         } else {
                             const t = get_token_ignore_comment();
                             parser_pos = tk.offset + tk.length;
@@ -3823,8 +3821,8 @@ export class Lexer {
                                     diagnostic.unexpected(nk.content),
                                     nk.offset,
                                     nk.length,
-                                ),
-                                    (next = false);
+                                );
+                                next = false;
                             } else {
                                 const vr = addvariable(tk);
                                 if (vr) {
@@ -3832,7 +3830,7 @@ export class Lexer {
                                         o: any = (vr.returntypes = {});
                                     next = true;
                                     vr.def = true;
-                                    !arr.length && arr.push('@error');
+                                    if (!arr.length) arr.push('@error');
                                     for (const s of arr) {
                                         o[s.replace(/([^.]+)$/, '@$1')] = 0;
                                     }
@@ -3945,7 +3943,8 @@ export class Lexer {
                 } else {
                     let act, offset;
                     if (/^=>?$/.test(tk.content)) {
-                        (act = tk.content), (offset = tk.offset);
+                        act = tk.content;
+                        offset = tk.offset;
                     }
                     reset_extra_index(tk);
                     tk = lk;
@@ -3960,7 +3959,6 @@ export class Lexer {
 
             function parse_funccall(type: SymbolKind, nextc: string) {
                 let tn: CallInfo;
-                let sub: DocumentSymbol[];
                 const fc = lk;
                 const pi: ParamInfo = {
                     offset: fc.offset,
@@ -3993,7 +3991,7 @@ export class Lexer {
                     );
                 }
                 fc.paraminfo = pi;
-                sub = parse_line(
+                const sub = parse_line(
                     undefined,
                     undefined,
                     undefined,
@@ -4143,7 +4141,8 @@ export class Lexer {
                     }
                     if (tk.type === 'TK_COMMA') {
                         next = true;
-                        ++hascomma, ++info.count;
+                        ++hascomma;
+                        ++info.count;
                         if (
                             lk.type === 'TK_COMMA' ||
                             lk.type === 'TK_START_EXPR'
@@ -4161,7 +4160,7 @@ export class Lexer {
                             );
                         }
                         info.comma.push(tk.offset);
-                        pi && (tk.paraminfo = pi);
+                        if (pi) tk.paraminfo = pi;
                     } else if (tk.topofline) {
                         next = false;
                         break;
@@ -4172,8 +4171,8 @@ export class Lexer {
                             diagnostic.unexpected(tk.content),
                             tk.offset,
                             tk.length,
-                        ),
-                            (next = false);
+                        );
+                        next = false;
                     }
                     if (
                         t === parser_pos &&
@@ -4201,7 +4200,7 @@ export class Lexer {
                         ((q = expr.indexOf('?')) === -1 ||
                             expr.indexOf(':', q) === -1)
                     ) {
-                        act === '=' &&
+                        if (act === '=')
                             stop_parse(
                                 _this.tokens[(nk as Token).next_token_offset],
                             );
