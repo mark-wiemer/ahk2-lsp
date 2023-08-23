@@ -7146,8 +7146,10 @@ export class Lexer {
                             });
                         }
                     });
-                    dec.__INIT && children.unshift(dec.__INIT),
+                    if (dec.__INIT) {
+                        children.unshift(dec.__INIT);
                         children.unshift(sdec.__INIT);
+                    }
                     cls.cache
                         ?.splice(0)
                         .forEach(
