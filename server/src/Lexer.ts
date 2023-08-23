@@ -5095,11 +5095,11 @@ export class Lexer {
                                             const pp = ttk.paraminfo?.count
                                                 ? `(${ttk.offset})`
                                                 : '()';
-                                            (tpexp +=
+                                            tpexp +=
                                                 check_concat(fc) +
                                                 fc.content +
-                                                pp),
-                                                addvariable(fc);
+                                                pp;
+                                            addvariable(fc);
                                             fc.semantic ??= {
                                                 type: SemanticTokenTypes.function,
                                             };
@@ -5287,9 +5287,10 @@ export class Lexer {
                                 } else {
                                     tpexp += check_concat(tk) + '#any';
                                 }
-                                prec === '.'
-                                    ? (maybeclassprop(tk, null), parse_prop())
-                                    : parse_pair('%', '%');
+                                if (prec === '.') {
+                                    maybeclassprop(tk, null);
+                                    parse_prop();
+                                } else parse_pair('%', '%');
                             } else if (
                                 tk.content === '=>' &&
                                 lk.type === 'TK_WORD'
@@ -5325,8 +5326,8 @@ export class Lexer {
                                 tn.range.end = document.positionAt(
                                     lk.offset + lk.length,
                                 );
-                                (tn.funccall = _parent.funccall.splice(prec)),
-                                    (tn.returntypes = o);
+                                tn.funccall = _parent.funccall.splice(prec);
+                                tn.returntypes = o;
                                 for (const t in o) {
                                     o[t] = tn.range.end;
                                 }
@@ -5562,8 +5563,8 @@ export class Lexer {
                                 cache.push(tn);
                                 result.push(
                                     ...parse_expression(',', (o = {}), 2),
-                                ),
-                                    (next = true);
+                                );
+                                next = true;
                                 bb = parser_pos;
                                 bak = tk;
                                 let t = Object.keys(o).pop();
@@ -5591,11 +5592,11 @@ export class Lexer {
                                                     .content;
                                         }
                                     } else if (t !== 'unset') {
-                                        (tn.range_offset = [
+                                        tn.range_offset = [
                                             ek.offset,
                                             tk.offset,
-                                        ]),
-                                            (hasexpr = true);
+                                        ];
+                                        hasexpr = true;
                                     }
                                 }
                                 if (byref) {
@@ -5603,8 +5604,8 @@ export class Lexer {
                                     tn.ref = tn.assigned = true;
                                     tpexp = '#varref';
                                 } else {
-                                    (tpexp = Object.keys(o).pop() ?? '#void'),
-                                        (tn.returntypes = o);
+                                    tpexp = Object.keys(o).pop() ?? '#void';
+                                    tn.returntypes = o;
                                 }
                                 if ((tk.type as string) === 'TK_COMMA') {
                                     info.comma.push(tk.offset);
@@ -5626,9 +5627,9 @@ export class Lexer {
                                                 t.length,
                                             )),
                                         );
-                                        cache.push(tn),
-                                            ((<any>tn).arr = true),
-                                            (info.unknown = true);
+                                        cache.push(tn);
+                                        (<any>tn).arr = true;
+                                        info.unknown = true;
                                         bb = parser_pos;
                                         bak = tk;
                                         break;
@@ -5665,15 +5666,16 @@ export class Lexer {
                                                 t.length,
                                             );
                                         }
-                                        info.comma.push(tk.offset),
-                                            (bb = parser_pos);
+                                        info.comma.push(tk.offset);
+                                        bb = parser_pos;
                                         bak = tk;
                                         continue;
                                     } else {
                                         if (
                                             !(paramsdef = tk.content === endc)
                                         ) {
-                                            cache.pop(), info.count--;
+                                            cache.pop();
+                                            info.count--;
                                         }
                                         break;
                                     }
@@ -5889,8 +5891,8 @@ export class Lexer {
                     _this.addFoldingRange(
                         (tk.previous_pair_pos = b.offset),
                         tk.offset,
-                    ),
-                        (b.next_pair_pos = tk.offset);
+                    );
+                    b.next_pair_pos = tk.offset;
                 } else {
                     _this.addDiagnostic(diagnostic.missing('}'), b.offset, 1);
                 }
@@ -5906,7 +5908,7 @@ export class Lexer {
                 function objkey(): boolean {
                     while (nexttoken()) {
                         k = undefined;
-                        tk.topofline === 1 && (tk.topofline = -1);
+                        if (tk.topofline === 1) tk.topofline = -1;
                         switch (tk.type) {
                             case 'TK_OPERATOR':
                                 if (tk.content === '%') {
@@ -5950,11 +5952,11 @@ export class Lexer {
                             case 'TK_STRING':
                                 nexttoken();
                                 if (tk.content === ':') {
-                                    (k = Object.assign({}, lk)),
-                                        (k.content = k.content.slice(1, -1)),
-                                        k.offset++,
-                                        (k.length -= 2);
-                                    !h &&
+                                    k = Object.assign({}, lk);
+                                    k.content = k.content.slice(1, -1);
+                                    k.offset++;
+                                    k.length -= 2;
+                                    if (!h)
                                         _this.addDiagnostic(
                                             diagnostic.invalidpropname(),
                                             lk.offset,
@@ -5965,9 +5967,9 @@ export class Lexer {
                                 return (isobj = false);
                             case 'TK_LABEL':
                                 if (tk.content.match(/^(\w|[^\x00-\x7f])+:$/)) {
-                                    (k = Object.assign({}, tk)),
-                                        (k.content = k.content.slice(0, -1)),
-                                        k.length--;
+                                    k = Object.assign({}, tk);
+                                    k.content = k.content.slice(0, -1);
+                                    k.length--;
                                     return true;
                                 }
                                 return (isobj = false);
