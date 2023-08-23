@@ -10770,8 +10770,9 @@ export class Lexer {
         let start: number;
         let is_end_expr = false;
         const document = this.document;
-        let tokens = this.tokens,
-            { line, character } = position;
+        const tokens = this.tokens;
+        const line = position.line;
+        let character = position.character;
         const linetext = document
             .getText(Range.create(line, 0, line + 1, 0))
             .trimRight();
@@ -10810,7 +10811,9 @@ export class Lexer {
             let psn = 0;
             if (is_end_expr) {
                 lk = tokens[pt.previous_pair_pos!];
-                ++ps[pt.content], ++psn, (kind = SymbolKind.Null);
+                ++ps[pt.content];
+                ++psn;
+                kind = SymbolKind.Null;
             }
             while (lk) {
                 switch (lk.type) {
@@ -10858,7 +10861,8 @@ export class Lexer {
                     case 'TK_END_EXPR':
                     case 'TK_END_BLOCK':
                         tk = lk;
-                        ps[lk.content]++, psn++;
+                        ps[lk.content]++;
+                        psn++;
                         if (
                             (lk = tokens[lk.previous_pair_pos!]) &&
                             (lk.content !== '}' || lk.data)
@@ -10979,11 +10983,11 @@ export class Lexer {
                                 tk = tokens[tk.next_token_offset!];
                                 break;
                             }
-                            (s +=
+                            s +=
                                 (tk.prefix_is_whitespace !== undefined
                                     ? ' '
-                                    : '') + tk.content),
-                                (tk = tokens[tk.next_token_offset]);
+                                    : '') + tk.content;
+                            tk = tokens[tk.next_token_offset];
                             break;
                     }
                 }
@@ -11241,12 +11245,11 @@ export class Lexer {
                 let s = a.start;
                 const e = a.end;
                 const m = colorregexp.exec(text.substring(s, e));
-                let range: Range;
                 let v = '';
                 if (!m || (!m[1] && e - s + 1 !== m[2].length + 2)) {
                     continue;
                 }
-                range = Range.create(
+                const range = Range.create(
                     document.positionAt(
                         (s += m.index + 1 + (m[1]?.length ?? 0)),
                     ),
@@ -11263,8 +11266,8 @@ export class Lexer {
                     cls.unshift('alpha');
                 }
                 for (const i of cls) {
-                    (color[i] = parseInt('0x' + v.substring(0, 2)) / 255),
-                        (v = v.slice(2));
+                    color[i] = parseInt('0x' + v.substring(0, 2)) / 255;
+                    v = v.slice(2);
                 }
                 colors.push({ range, color });
             }
@@ -11424,7 +11427,7 @@ export class Lexer {
                         break;
                     }
                 }
-                del && dels.push(lex.uri);
+                if (del) dels.push(lex.uri);
             }
         });
         dels.forEach((u) => lexers[u]?.close(force));
@@ -11528,7 +11531,7 @@ export function parseinclude(lex: Lexer, dir: string) {
     }
     for (const t of need_update) {
         t.update_relevance();
-        t.diagnostics.length && t.update();
+        if (t.diagnostics.length) t.update();
     }
 }
 
