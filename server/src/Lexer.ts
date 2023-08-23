@@ -13007,7 +13007,7 @@ export function formatMarkdowndetail(
             if (line.startsWith('@')) {
                 lastparam = '';
                 if (code) {
-                    code === 2 && details.push('```');
+                    if (code === 2) details.push('```');
                     code = 0;
                 }
                 if ((m = line.match(/^@(\S+)(.*)$/))) {
@@ -13022,22 +13022,20 @@ export function formatMarkdowndetail(
                                         '',
                                     );
                                     if ((lastparam = m[3]).startsWith('[')) {
-                                        (m[3] = m[3]
+                                        m[3] = m[3]
                                             .substring(1)
                                             .replace(
                                                 /^((\w|\.|[^\x00-\x7f])+).*$/,
                                                 '$1',
-                                            )),
-                                            (lastparam = m[3].replace(
-                                                /\..*$/,
-                                                '',
-                                            ));
+                                            );
+                                        lastparam = m[3].replace(/\..*$/, '');
                                     }
                                     s =
                                         `\n*@param* \`${m[3]}\`${
                                             m[2] ? `: *${m[2]}*` : ''
                                         }` + (t ? ' — ' + t : '');
-                                    name ?? details.push(s);
+                                    if (name === undefined || name === null)
+                                        details.push(s);
                                     lastparam = lastparam.toUpperCase();
                                     (params[lastparam] ??= []).push(s);
                                     if (m[3].toUpperCase() === lastparam) {
@@ -13069,8 +13067,8 @@ export function formatMarkdowndetail(
                                 }
                                 details.push('\n*@example*');
                             }
-                            details.push('```ahk2' + (s ? '\n' + s : '')),
-                                (code = 2);
+                            details.push('```ahk2' + (s ? '\n' + s : ''));
+                            code = 2;
                             break;
                         case 'var':
                         case 'prop':
@@ -13093,8 +13091,8 @@ export function formatMarkdowndetail(
                                 const o: any = {},
                                     tps = cvt_types(m[1]);
                                 if (tps) {
-                                    tps.forEach((t) => (o[t] = true)),
-                                        ((node as FuncNode).returntypes = o);
+                                    tps.forEach((t) => (o[t] = true));
+                                    (node as FuncNode).returntypes = o;
                                 }
                                 return '';
                             });
@@ -13113,7 +13111,7 @@ export function formatMarkdowndetail(
                 }
             } else if (lastparam) {
                 params[lastparam].push(line);
-                name ?? details.push(line);
+                if (name === undefined || name === null) details.push(line);
             } else if (code === 1 && (s = line.indexOf('</caption>')) > -1) {
                 details.push(
                     line.substring(0, s),
@@ -13121,8 +13119,8 @@ export function formatMarkdowndetail(
                         ((s = line.substring(s + 10).trimLeft())
                             ? '\n' + s
                             : ''),
-                ),
-                    (code = 2);
+                );
+                code = 2;
             } else {
                 details.push(line);
             }
@@ -13149,8 +13147,8 @@ export function formatMarkdowndetail(
         }
     });
     if (name !== undefined) {
-        (s = params[name.toUpperCase()]?.join('\n') ?? ''),
-            (detail = s + '\n\n' + details.join('\n'));
+        s = params[name.toUpperCase()]?.join('\n') ?? '';
+        detail = s + '\n\n' + details.join('\n');
     } else if (!overloads && ols.length) {
         detail =
             '*@overload*\n```ahk2\n' +
@@ -13266,22 +13264,22 @@ export function checksamenameerr(
                             t.assigned ||= vit.assigned;
                         }
                     } else if (vit.def) {
-                        delete vit.def,
-                            diags.push({
-                                message: samenameerr(decs[_low], it),
-                                range: it.selectionRange,
-                                severity: DiagnosticSeverity.Error,
-                            });
+                        delete vit.def;
+                        diags.push({
+                            message: samenameerr(decs[_low], it),
+                            range: it.selectionRange,
+                            severity: DiagnosticSeverity.Error,
+                        });
                     }
                 } else {
                     if (decs[_low].kind === SymbolKind.Variable) {
                         if ((<Variable>decs[_low]).def) {
-                            delete (<Variable>decs[_low]).def,
-                                diags.push({
-                                    message: samenameerr(it, decs[_low]),
-                                    range: decs[_low].selectionRange,
-                                    severity: DiagnosticSeverity.Error,
-                                });
+                            delete (<Variable>decs[_low]).def;
+                            diags.push({
+                                message: samenameerr(it, decs[_low]),
+                                range: decs[_low].selectionRange,
+                                severity: DiagnosticSeverity.Error,
+                            });
                         }
                         decs[_low] = it;
                     } else if ((<Variable>decs[_low]).def !== false) {
