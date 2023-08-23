@@ -4234,12 +4234,12 @@ export class Lexer {
 
             function parse_sharp() {
                 let isdll = false;
-                let data = tk.data ?? {
-                        content: '',
-                        offset: tk.offset + tk.length,
-                        length: 0,
-                    },
-                    l: string;
+                const data = tk.data ?? {
+                    content: '',
+                    offset: tk.offset + tk.length,
+                    length: 0,
+                };
+                let l: string;
                 switch ((l = tk.content.toLowerCase())) {
                     case '#dllload':
                         isdll = true;
@@ -4295,8 +4295,8 @@ export class Lexer {
                                                     SymbolKind.Variable,
                                                     rg2,
                                                 )),
-                                            ),
-                                                (arg.defaultVal = null);
+                                            );
+                                            arg.defaultVal = null;
                                             u = '';
                                         } else if (
                                             arg &&
@@ -4436,13 +4436,13 @@ export class Lexer {
                                             ? '#string'
                                             : '#number']: true,
                                     };
-                                    (vr.range = {
+                                    vr.range = {
                                         start: vr.range.start,
                                         end: document.positionAt(
                                             lk.offset + lk.length,
                                         ),
-                                    }),
-                                        (vr.def = true);
+                                    };
+                                    vr.def = true;
                                     const tt = vr.returntypes;
                                     for (const t in tt) {
                                         tt[t] = vr.range.end;
@@ -4505,7 +4505,7 @@ export class Lexer {
                                             }
                                         }
                                     }
-                                    err &&
+                                    if (err)
                                         _this.addDiagnostic(
                                             err,
                                             lk.offset,
@@ -4660,11 +4660,11 @@ export class Lexer {
                                             tpexp =
                                                 tpexp.slice(0, -1) + ' #varref';
                                         } else {
-                                            (tpexp +=
-                                                check_concat(lk) + lk.content),
-                                                (vr.returntypes = {
-                                                    '#number': 0,
-                                                });
+                                            tpexp +=
+                                                check_concat(lk) + lk.content;
+                                            vr.returntypes = {
+                                                '#number': 0,
+                                            };
                                         }
                                     } else {
                                         tpexp += check_concat(lk) + lk.content;
@@ -4754,14 +4754,12 @@ export class Lexer {
                                     maybeclassprop(lk, null);
                                     tk = lk;
                                     lk = tk.previous_token ?? EMPTY_TOKEN;
-                                    parse_prop(),
-                                        nexttoken(),
-                                        (suf ||= ['++', '--'].includes(
-                                            tk.content,
-                                        ));
+                                    parse_prop();
+                                    nexttoken();
+                                    suf ||= ['++', '--'].includes(tk.content);
                                 } else {
-                                    (tpexp += check_concat(lk) + '#any'),
-                                        (lk.ignore = true);
+                                    tpexp += check_concat(lk) + '#any';
+                                    lk.ignore = true;
                                 }
                                 if (!suf) {
                                     next = false;
@@ -4784,12 +4782,12 @@ export class Lexer {
                                                     tpexp.slice(0, -1) +
                                                     ' #varref';
                                             } else {
-                                                (tpexp +=
+                                                tpexp +=
                                                     check_concat(lk) +
-                                                    lk.content),
-                                                    (vr.returntypes = {
-                                                        '#number': 0,
-                                                    });
+                                                    lk.content;
+                                                vr.returntypes = {
+                                                    '#number': 0,
+                                                };
                                             }
                                         } else {
                                             tpexp +=
@@ -4819,11 +4817,12 @@ export class Lexer {
                                 ) {
                                     if (byref !== undefined) {
                                         vr.def = true;
-                                        byref
-                                            ? (vr.ref = vr.assigned = true)
-                                            : (vr.returntypes = {
-                                                  '#number': 0,
-                                              });
+                                        if (byref) {
+                                            vr.ref = vr.assigned = true;
+                                        } else
+                                            vr.returntypes = {
+                                                '#number': 0,
+                                            };
                                     }
                                     if ((tk.type as string) === 'TK_EQUALS') {
                                         if (
@@ -4894,14 +4893,14 @@ export class Lexer {
                                         }
                                     }
                                 } else {
-                                    (tpexp += check_concat(lk) + lk.content),
-                                        (next = false);
+                                    tpexp += check_concat(lk) + lk.content;
+                                    next = false;
                                     lk.ignore = true;
                                 }
                             } else {
                                 if ((tk.type as string) === 'TK_EQUALS') {
-                                    (tpexp = tpexp.replace(/\s*\S+$/, '')),
-                                        (next = true);
+                                    tpexp = tpexp.replace(/\s*\S+$/, '');
+                                    next = true;
                                     if (tk.content === ':=') {
                                         maybeclassprop(lk);
                                     }
@@ -4982,15 +4981,15 @@ export class Lexer {
                                         fc = lk;
                                     }
                                 }
-                                parse_pair('(', ')', undefined, tpe),
-                                    (quoteend = parser_pos);
+                                parse_pair('(', ')', undefined, tpe);
+                                quoteend = parser_pos;
                                 if (
                                     _this.get_token(parser_pos).content === '=>'
                                 ) {
-                                    result.splice(rl),
-                                        (lk =
-                                            (tk = ttk).previous_token ??
-                                            EMPTY_TOKEN);
+                                    result.splice(rl);
+                                    lk =
+                                        (tk = ttk).previous_token ??
+                                        EMPTY_TOKEN;
                                     parser_pos = tk.offset + 1;
                                     let par = parse_params();
                                     const rs = result.splice(rl);
