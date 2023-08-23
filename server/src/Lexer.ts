@@ -12094,13 +12094,13 @@ export function detectExp(doc: Lexer, exp: string, pos: Position): string[] {
                                             return '#any';
                                         }
                                         for (const tp in tps) {
-                                            tp.includes('=>') &&
-                                                (searchcache[tp] ??= gen_fat_fn(
+                                            if (tp.includes('=>'))
+                                                searchcache[tp] ??= gen_fat_fn(
                                                     tp,
                                                     uri,
                                                     n,
                                                     it.scope,
-                                                ));
+                                                );
                                             if ((n = searchcache[tp]?.node)) {
                                                 if (
                                                     n.kind ===
@@ -12193,8 +12193,8 @@ export function detectExp(doc: Lexer, exp: string, pos: Position): string[] {
                                             ),
                                             o: any = {};
                                         if (m) {
-                                            m.forEach((s) => (o[s] = true)),
-                                                (n.returntypes = o);
+                                            m.forEach((s) => (o[s] = true));
+                                            n.returntypes = o;
                                         }
                                         const pos = {
                                             line: n.range.end.line,
@@ -12223,13 +12223,13 @@ export function detectExp(doc: Lexer, exp: string, pos: Position): string[] {
                                                 ? pos
                                                 : it.node.selectionRange.end,
                                         ).forEach((tp) => {
-                                            tp.includes('=>') &&
-                                                (searchcache[tp] ??= gen_fat_fn(
+                                            if (tp.includes('=>'))
+                                                searchcache[tp] ??= gen_fat_fn(
                                                     tp,
                                                     uri,
                                                     it.node,
                                                     it.scope,
-                                                ));
+                                                );
                                             if ((n = searchcache[tp]?.node)) {
                                                 if (
                                                     n.kind ===
@@ -12282,8 +12282,8 @@ export function detectExp(doc: Lexer, exp: string, pos: Position): string[] {
                                                 ),
                                                 o: any = {};
                                             if (m) {
-                                                m.forEach((s) => (o[s] = true)),
-                                                    (call.returntypes = o);
+                                                m.forEach((s) => (o[s] = true));
+                                                call.returntypes = o;
                                             }
                                             for (const e in call.returntypes) {
                                                 detectExp(
@@ -12345,8 +12345,8 @@ export function detectExp(doc: Lexer, exp: string, pos: Position): string[] {
         let ts: any = {};
         if ((t = tpexp.match(/^\[([^\[\]]+)\]$/))) {
             const ts: any = {};
-            t[1].split(',').forEach((tp) => (ts[tp] = true)),
-                tps.forEach((tp) => (ts[tp] = true));
+            t[1].split(',').forEach((tp) => (ts[tp] = true));
+            tps.forEach((tp) => (ts[tp] = true));
             exps = Object.keys(ts);
         } else {
             exps = [tpexp];
@@ -12463,12 +12463,12 @@ export function detectExp(doc: Lexer, exp: string, pos: Position): string[] {
                                 searchcache[ll] = n;
                                 break;
                             case SymbolKind.Function:
-                                (ts[
+                                ts[
                                     (ll = ex.startsWith('$')
                                         ? ex
                                         : _name(n.node.name.toLowerCase()))
-                                ] = true),
-                                    (searchcache[ll] = n);
+                                ] = true;
+                                searchcache[ll] = n;
                                 break;
                             case SymbolKind.Class:
                                 ll = n.ref
@@ -12586,7 +12586,8 @@ export function searchNode(
         if (!nodes || p.length < 2) {
             return undefined;
         }
-        let { node: n, uri: u } = nodes[0];
+        let n = nodes[0].node;
+        const u = nodes[0].uri;
         uri = u || uri;
         if (nodes[0].ref && p[0].match(/^[^@#]/)) {
             p[0] = '@' + p[0];
@@ -12723,10 +12724,8 @@ export function searchNode(
                                     .toUpperCase()
                                     .match(/^\(([^()]+)\)\s+/);
                                 if (t && ahkvars[t[1]]) {
-                                    (node = Object.assign({}, node)),
-                                        (_ = (
-                                            n as ClassNode
-                                        ).full.toUpperCase());
+                                    node = Object.assign({}, node);
+                                    _ = (n as ClassNode).full.toUpperCase();
                                     (<FuncNode>node).returntypes = {
                                         [ss ? _ : _.replace(/([^.]+)$/, '@$1')]:
                                             true,
@@ -12862,8 +12861,8 @@ export function getFuncCallInfo(doc: Lexer, position: Position, ci?: CallInfo) {
             index = offset > pi.offset + tk.content.length ? 0 : -1;
         } else {
             index = 0;
-            tk.content === '[' && (kind = SymbolKind.Property);
-            !pi.name && (kind ??= SymbolKind.Null);
+            if (tk.content === '[') kind = SymbolKind.Property;
+            if (!pi.name) kind ??= SymbolKind.Null;
         }
         if (index !== -1) {
             for (const c of pi.comma) {
