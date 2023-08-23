@@ -1015,8 +1015,11 @@ export class Lexer {
                                                 );
                                                 lk.symbol = lk.definition = tt;
                                                 lk = tokens[++j];
-                                                if (lk.type === 'TK_START_EXPR')
+                                                if (
+                                                    lk.type === 'TK_START_EXPR'
+                                                ) {
                                                     lk = tokens[++j];
+                                                }
                                                 if (lk.type === 'TK_WORD') {
                                                     rets.push(
                                                         '#' +
@@ -1053,8 +1056,9 @@ export class Lexer {
                                                 if (
                                                     tokens[j + 1].type ===
                                                     'TK_END_EXPR'
-                                                )
+                                                ) {
                                                     lk = tokens[++j];
+                                                }
                                                 tt.range.end =
                                                     this.document.positionAt(
                                                         lk.offset + lk.length,
@@ -1082,11 +1086,12 @@ export class Lexer {
                                                 lk = tokens[++j];
                                             }
                                             rets = [];
-                                            if (lk.type === 'TK_WORD')
+                                            if (lk.type === 'TK_WORD') {
                                                 rets.push(
                                                     '#' +
                                                         lk.content.toLowerCase(),
                                                 );
+                                            }
                                             while (
                                                 tokens[j + 1].content === '|'
                                             ) {
@@ -1105,8 +1110,9 @@ export class Lexer {
                                             if (
                                                 tokens[j + 1].type ===
                                                 'TK_END_EXPR'
-                                            )
+                                            ) {
                                                 lk = tokens[++j];
+                                            }
                                         }
                                         if (rets[0] !== '#void') {
                                             tn.returntypes = {
@@ -1237,8 +1243,9 @@ export class Lexer {
                                         if (
                                             tokens[j + 2].type ===
                                             'TK_START_EXPR'
-                                        )
+                                        ) {
                                             j++;
+                                        }
                                         do {
                                             j = j + 1;
                                             r = '';
@@ -1267,7 +1274,9 @@ export class Lexer {
                                                         .replace('$', '')
                                                         .toLowerCase()),
                                                 );
-                                                if (r === '@void') rets.pop();
+                                                if (r === '@void') {
+                                                    rets.pop();
+                                                }
                                             }
                                         } while (
                                             tokens[j + 1]?.content === '|'
@@ -1296,7 +1305,7 @@ export class Lexer {
                                         _this.document.getText(tn.range);
                                     tn.static = isstatic;
                                     tn.declaration = {};
-                                    if (tn.variadic)
+                                    if (tn.variadic) {
                                         params.push(
                                             ...params.splice(
                                                 params.findIndex(
@@ -1305,6 +1314,7 @@ export class Lexer {
                                                 1,
                                             ),
                                         );
+                                    }
                                     tk.semantic = {
                                         type: blocks
                                             ? SemanticTokenTypes.method
@@ -1519,12 +1529,13 @@ export class Lexer {
                         .toLowerCase());
                 if (!inBrowser && !lexers[this.d_uri]) {
                     const t = openFile(restorePath(path), false);
-                    if (t)
+                    if (t) {
                         (lexers[uri] = new Lexer(
                             t,
                             undefined,
                             1,
                         )).parseScript();
+                    }
                 }
                 return '';
             });
@@ -1555,13 +1566,14 @@ export class Lexer {
                     this.children.push(...parse_block());
                 } catch (e: any) {
                     if (e instanceof ParseStopError) {
-                        if (e.message)
+                        if (e.message) {
                             this.addDiagnostic(
                                 e.message,
                                 e.token.offset,
                                 e.token.length,
                                 DiagnosticSeverity.Warning,
                             );
+                        }
                     } else {
                         console.error(e);
                     }
@@ -1611,7 +1623,7 @@ export class Lexer {
                             const s = input
                                 .substring(parser_pos, next_LF)
                                 .trimLeft();
-                            if (s.length)
+                            if (s.length) {
                                 createToken(
                                     s,
                                     'TK_STRING',
@@ -1619,6 +1631,7 @@ export class Lexer {
                                     s.length,
                                     0,
                                 );
+                            }
                             parser_pos = next_LF;
                         } while (is_next_char(','));
                     }
@@ -3760,7 +3773,9 @@ export class Lexer {
                                     }
                                 }
                             }
-                            if (tp) tps[tp.toUpperCase()] ??= tp;
+                            if (tp) {
+                                tps[tp.toUpperCase()] ??= tp;
+                            }
                             if (tk.content === ',') {
                                 lk = tk;
                                 tk = get_token_ignore_comment();
@@ -3830,7 +3845,9 @@ export class Lexer {
                                         o: any = (vr.returntypes = {});
                                     next = true;
                                     vr.def = true;
-                                    if (!arr.length) arr.push('@error');
+                                    if (!arr.length) {
+                                        arr.push('@error');
+                                    }
                                     for (const s of arr) {
                                         o[s.replace(/([^.]+)$/, '@$1')] = 0;
                                     }
@@ -4160,7 +4177,9 @@ export class Lexer {
                             );
                         }
                         info.comma.push(tk.offset);
-                        if (pi) tk.paraminfo = pi;
+                        if (pi) {
+                            tk.paraminfo = pi;
+                        }
                     } else if (tk.topofline) {
                         next = false;
                         break;
@@ -4200,10 +4219,11 @@ export class Lexer {
                         ((q = expr.indexOf('?')) === -1 ||
                             expr.indexOf(':', q) === -1)
                     ) {
-                        if (act === '=')
+                        if (act === '=') {
                             stop_parse(
                                 _this.tokens[(nk as Token).next_token_offset],
                             );
+                        }
                         _this.addDiagnostic(
                             `${diagnostic.unexpected(act)}, ${diagnostic
                                 .didyoumean(':=')
@@ -4505,12 +4525,13 @@ export class Lexer {
                                             }
                                         }
                                     }
-                                    if (err)
+                                    if (err) {
                                         _this.addDiagnostic(
                                             err,
                                             lk.offset,
                                             lk.length,
                                         );
+                                    }
                                     if (
                                         tk.topofline &&
                                         allIdentifierChar.test(tk.content)
@@ -4819,10 +4840,11 @@ export class Lexer {
                                         vr.def = true;
                                         if (byref) {
                                             vr.ref = vr.assigned = true;
-                                        } else
+                                        } else {
                                             vr.returntypes = {
                                                 '#number': 0,
                                             };
+                                        }
                                     }
                                     if ((tk.type as string) === 'TK_EQUALS') {
                                         if (
@@ -5290,7 +5312,9 @@ export class Lexer {
                                 if (prec === '.') {
                                     maybeclassprop(tk, null);
                                     parse_prop();
-                                } else parse_pair('%', '%');
+                                } else {
+                                    parse_pair('%', '%');
+                                }
                             } else if (
                                 tk.content === '=>' &&
                                 lk.type === 'TK_WORD'
@@ -5908,7 +5932,9 @@ export class Lexer {
                 function objkey(): boolean {
                     while (nexttoken()) {
                         k = undefined;
-                        if (tk.topofline === 1) tk.topofline = -1;
+                        if (tk.topofline === 1) {
+                            tk.topofline = -1;
+                        }
                         switch (tk.type) {
                             case 'TK_OPERATOR':
                                 if (tk.content === '%') {
@@ -5956,12 +5982,13 @@ export class Lexer {
                                     k.content = k.content.slice(1, -1);
                                     k.offset++;
                                     k.length -= 2;
-                                    if (!h)
+                                    if (!h) {
                                         _this.addDiagnostic(
                                             diagnostic.invalidpropname(),
                                             lk.offset,
                                             lk.length,
                                         );
+                                    }
                                     return true;
                                 }
                                 return (isobj = false);
@@ -6345,17 +6372,19 @@ export class Lexer {
                                                 ['++', '--'].includes(
                                                     tk.content,
                                                 )
-                                            )
+                                            ) {
                                                 byref = false;
+                                            }
                                         }
                                         if (byref !== undefined) {
                                             vr.def = true;
                                             if (byref) {
                                                 vr.ref = vr.assigned = true;
-                                            } else
+                                            } else {
                                                 vr.returntypes = {
                                                     '#number': 0,
                                                 };
+                                            }
                                         } else if (
                                             tk.content === '??' ||
                                             (tk.ignore && tk.content === '?')
@@ -6618,7 +6647,9 @@ export class Lexer {
                         if (prec === '.') {
                             maybeclassprop(tk, null);
                             parse_prop();
-                        } else parse_pair('%', '%');
+                        } else {
+                            parse_pair('%', '%');
+                        }
                     } else if (tk.type.startsWith('TK_END_')) {
                         _this.addDiagnostic(
                             diagnostic.unexpected(tk.content),
@@ -6665,7 +6696,9 @@ export class Lexer {
                             tk.length,
                         );
                     } else if (tk.type === 'TK_COMMA') {
-                        if (iscall) tk.paraminfo = info;
+                        if (iscall) {
+                            tk.paraminfo = info;
+                        }
                         if (pairnum === 0 && b !== '%') {
                             exps.push(tpexp);
                             tpexp = '';
@@ -6753,7 +6786,9 @@ export class Lexer {
                 exps.push(tpexp);
                 types[b + tpexp + e] = 0;
                 if (tk.type === 'TK_EOF' && pairnum > -1) {
-                    if (e === '%') stop_parse(_pk);
+                    if (e === '%') {
+                        stop_parse(_pk);
+                    }
                     pairMiss();
                 } else {
                     tokens[tk.previous_pair_pos!].next_pair_pos = tk.offset;
@@ -6807,12 +6842,13 @@ export class Lexer {
                     const pc =
                         tokens[tk.previous_pair_pos!]?.paraminfo?.count ?? 0;
                     if (pc !== 1) {
-                        if (extsettings.Diagnostics.ParamsCheck)
+                        if (extsettings.Diagnostics.ParamsCheck) {
                             _this.addDiagnostic(
                                 diagnostic.paramcounterr(1, pc),
                                 fc.offset,
                                 parser_pos - fc.offset,
                             );
+                        }
                     } else if (result.length > l && lk.type === 'TK_WORD') {
                         const vr = result[result.length - 1] as Variable;
                         if (
@@ -7755,8 +7791,12 @@ export class Lexer {
             while (line?.text.length === 0) {
                 line = output_lines.pop();
             }
-            if (line) output_lines.push(line);
-            if (flags.had_comment) output_lines.push(create_output_line());
+            if (line) {
+                output_lines.push(line);
+            }
+            if (flags.had_comment) {
+                output_lines.push(create_output_line());
+            }
         }
 
         function just_added_newline(): boolean {
@@ -8699,7 +8739,9 @@ export class Lexer {
                         (c = input.charAt(offset - 1)),
                     )
                 ) {
-                    if (sep === c && c === '"') stop_parse(lst);
+                    if (sep === c && c === '"') {
+                        stop_parse(lst);
+                    }
                     _this.addDiagnostic(diagnostic.missingspace(), offset, 1);
                 }
                 while ((c = input.charAt(parser_pos++))) {
@@ -9074,12 +9116,13 @@ export class Lexer {
                         if ((t = line.match(/^;\s*@/))) {
                             let s = line.substring(t[0].length);
                             if ((s = s.toLowerCase()) === 'include-winapi') {
-                                if (h && (t = lexers[ahkuris.winapi]))
+                                if (h && (t = lexers[ahkuris.winapi])) {
                                     Object.defineProperty(
                                         includetable,
                                         ahkuris.winapi,
                                         { value: t.fsPath, enumerable: false },
                                     );
+                                }
                             } else if ((t = s.match(/^include\s+(.*)/i))) {
                                 add_include_dllload(
                                     t[1].replace(/\s+;.*$/, '').trim(),
@@ -10087,7 +10130,9 @@ export class Lexer {
             ) {
                 if (input_wanted_newline && opt.preserve_newlines) {
                     print_newline(true);
-                } else output_space_before_token = true;
+                } else {
+                    output_space_before_token = true;
+                }
             } else {
                 output_space_before_token =
                     (space_in_other && last_type === 'TK_COMMA') ||
@@ -11427,7 +11472,9 @@ export class Lexer {
                         break;
                     }
                 }
-                if (del) dels.push(lex.uri);
+                if (del) {
+                    dels.push(lex.uri);
+                }
             }
         });
         dels.forEach((u) => lexers[u]?.close(force));
@@ -11531,7 +11578,9 @@ export function parseinclude(lex: Lexer, dir: string) {
     }
     for (const t of need_update) {
         t.update_relevance();
-        if (t.diagnostics.length) t.update();
+        if (t.diagnostics.length) {
+            t.update();
+        }
     }
 }
 
@@ -12094,13 +12143,14 @@ export function detectExp(doc: Lexer, exp: string, pos: Position): string[] {
                                             return '#any';
                                         }
                                         for (const tp in tps) {
-                                            if (tp.includes('=>'))
+                                            if (tp.includes('=>')) {
                                                 searchcache[tp] ??= gen_fat_fn(
                                                     tp,
                                                     uri,
                                                     n,
                                                     it.scope,
                                                 );
+                                            }
                                             if ((n = searchcache[tp]?.node)) {
                                                 if (
                                                     n.kind ===
@@ -12223,13 +12273,14 @@ export function detectExp(doc: Lexer, exp: string, pos: Position): string[] {
                                                 ? pos
                                                 : it.node.selectionRange.end,
                                         ).forEach((tp) => {
-                                            if (tp.includes('=>'))
+                                            if (tp.includes('=>')) {
                                                 searchcache[tp] ??= gen_fat_fn(
                                                     tp,
                                                     uri,
                                                     it.node,
                                                     it.scope,
                                                 );
+                                            }
                                             if ((n = searchcache[tp]?.node)) {
                                                 if (
                                                     n.kind ===
@@ -12861,8 +12912,12 @@ export function getFuncCallInfo(doc: Lexer, position: Position, ci?: CallInfo) {
             index = offset > pi.offset + tk.content.length ? 0 : -1;
         } else {
             index = 0;
-            if (tk.content === '[') kind = SymbolKind.Property;
-            if (!pi.name) kind ??= SymbolKind.Null;
+            if (tk.content === '[') {
+                kind = SymbolKind.Property;
+            }
+            if (!pi.name) {
+                kind ??= SymbolKind.Null;
+            }
         }
         if (index !== -1) {
             for (const c of pi.comma) {
@@ -13007,7 +13062,9 @@ export function formatMarkdowndetail(
             if (line.startsWith('@')) {
                 lastparam = '';
                 if (code) {
-                    if (code === 2) details.push('```');
+                    if (code === 2) {
+                        details.push('```');
+                    }
                     code = 0;
                 }
                 if ((m = line.match(/^@(\S+)(.*)$/))) {
@@ -13034,8 +13091,9 @@ export function formatMarkdowndetail(
                                         `\n*@param* \`${m[3]}\`${
                                             m[2] ? `: *${m[2]}*` : ''
                                         }` + (t ? ' — ' + t : '');
-                                    if (name === undefined || name === null)
+                                    if (name === undefined || name === null) {
                                         details.push(s);
+                                    }
                                     lastparam = lastparam.toUpperCase();
                                     (params[lastparam] ??= []).push(s);
                                     if (m[3].toUpperCase() === lastparam) {
@@ -13111,7 +13169,9 @@ export function formatMarkdowndetail(
                 }
             } else if (lastparam) {
                 params[lastparam].push(line);
-                if (name === undefined || name === null) details.push(line);
+                if (name === undefined || name === null) {
+                    details.push(line);
+                }
             } else if (code === 1 && (s = line.indexOf('</caption>')) > -1) {
                 details.push(
                     line.substring(0, s),
