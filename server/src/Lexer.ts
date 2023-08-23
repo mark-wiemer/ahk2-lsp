@@ -1082,7 +1082,7 @@ export class Lexer {
                                                 lk = tokens[++j];
                                             }
                                             rets = [];
-                                            lk.type === 'TK_WORD' &&
+                                            if (lk.type === 'TK_WORD')
                                                 rets.push(
                                                     '#' +
                                                         lk.content.toLowerCase(),
@@ -1102,9 +1102,11 @@ export class Lexer {
                                                     j--;
                                                 }
                                             }
-                                            tokens[j + 1].type ===
-                                                'TK_END_EXPR' &&
-                                                (lk = tokens[++j]);
+                                            if (
+                                                tokens[j + 1].type ===
+                                                'TK_END_EXPR'
+                                            )
+                                                lk = tokens[++j];
                                         }
                                         if (rets[0] !== '#void') {
                                             tn.returntypes = {
@@ -1171,11 +1173,13 @@ export class Lexer {
                                                     } else if (
                                                         lk.content === '['
                                                     ) {
-                                                        defVal++, j++;
+                                                        defVal++;
+                                                        j++;
                                                     } else if (
                                                         lk.content === ']'
                                                     ) {
-                                                        defVal--, j++;
+                                                        defVal--;
+                                                        j++;
                                                     }
                                                 }
                                                 break;
@@ -1230,8 +1234,11 @@ export class Lexer {
                                         '=>:'.includes(tokens[j + 1].content)
                                     ) {
                                         rets = [];
-                                        tokens[j + 2].type ===
-                                            'TK_START_EXPR' && j++;
+                                        if (
+                                            tokens[j + 2].type ===
+                                            'TK_START_EXPR'
+                                        )
+                                            j++;
                                         do {
                                             j = j + 1;
                                             r = '';
@@ -1244,7 +1251,8 @@ export class Lexer {
                                                 lt !== lk.type
                                             ) {
                                                 r += lk.content;
-                                                j++, (lt = lk.type);
+                                                j++;
+                                                lt = lk.type;
                                                 lk.semantic = {
                                                     type: SemanticTokenTypes.class,
                                                 };
@@ -1259,7 +1267,7 @@ export class Lexer {
                                                         .replace('$', '')
                                                         .toLowerCase()),
                                                 );
-                                                r === '@void' && rets.pop();
+                                                if (r === '@void') rets.pop();
                                             }
                                         } while (
                                             tokens[j + 1]?.content === '|'
@@ -1288,7 +1296,7 @@ export class Lexer {
                                         _this.document.getText(tn.range);
                                     tn.static = isstatic;
                                     tn.declaration = {};
-                                    tn.variadic &&
+                                    if (tn.variadic)
                                         params.push(
                                             ...params.splice(
                                                 params.findIndex(
@@ -1431,7 +1439,8 @@ export class Lexer {
                                 ) {
                                     set_extends(cl, m[1]);
                                 }
-                                blocks++, p.push(cl);
+                                blocks++;
+                                p.push(cl);
                                 i = j + 1;
                             } else {
                                 tk.type = 'TK_WORD';
@@ -1439,7 +1448,8 @@ export class Lexer {
                             break;
                         case 'TK_END_BLOCK':
                             if (blocks) {
-                                blocks--, cls.pop();
+                                blocks--;
+                                cls.pop();
                                 const cl = p.pop() as DocumentSymbol;
                                 cl.range.end = this.document.positionAt(
                                     tk.offset + tk.length,
@@ -1509,7 +1519,7 @@ export class Lexer {
                         .toLowerCase());
                 if (!inBrowser && !lexers[this.d_uri]) {
                     const t = openFile(restorePath(path), false);
-                    t &&
+                    if (t)
                         (lexers[uri] = new Lexer(
                             t,
                             undefined,
@@ -1519,8 +1529,8 @@ export class Lexer {
                 return '';
             });
             this.parseScript = function (): void {
-                (input = this.document.getText()),
-                    (input_length = input.length);
+                input = this.document.getText();
+                input_length = input.length;
                 includedir = this.scriptpath;
                 dlldir = '';
                 begin_line = true;
@@ -1545,7 +1555,7 @@ export class Lexer {
                     this.children.push(...parse_block());
                 } catch (e: any) {
                     if (e instanceof ParseStopError) {
-                        e.message &&
+                        if (e.message)
                             this.addDiagnostic(
                                 e.message,
                                 e.token.offset,
@@ -1601,7 +1611,7 @@ export class Lexer {
                             const s = input
                                 .substring(parser_pos, next_LF)
                                 .trimLeft();
-                            s.length &&
+                            if (s.length)
                                 createToken(
                                     s,
                                     'TK_STRING',
@@ -1798,8 +1808,8 @@ export class Lexer {
                                     delete tokens[p];
                                 }
                                 tk.content += ':';
-                                (tk.length = (parser_pos = p + 1) - tk.offset),
-                                    (tk.type = 'TK_LABEL');
+                                tk.length = (parser_pos = p + 1) - tk.offset;
+                                tk.type = 'TK_LABEL';
                                 line_begin_pos = undefined;
                             }
                         }
@@ -1930,8 +1940,8 @@ export class Lexer {
                                             vars = new Map<string, any>(),
                                             ofs = tk.offset;
                                         tk.previous_pair_pos = oo;
-                                        vars.set('#parent', tn),
-                                            (tn.funccall = []);
+                                        vars.set('#parent', tn);
+                                        tn.funccall = [];
                                         result.push(tn);
                                         tn.children = rs;
                                         tn.children.push(
@@ -2045,8 +2055,8 @@ export class Lexer {
                                                 _cm.content,
                                             );
                                         }
-                                        par.format?.(par),
-                                            (prop.parent = _parent);
+                                        par.format?.(par);
+                                        prop.parent = _parent;
                                         prop.params = par;
                                         prop.full =
                                             `(${classfullname.slice(0, -1)}) ${
@@ -2075,9 +2085,9 @@ export class Lexer {
                                                 : '');
                                         prop.static = isstatic;
                                         prop.children = result.splice(rl);
-                                        result.push(prop),
-                                            addprop(fc, prop),
-                                            (prop.funccall = []);
+                                        result.push(prop);
+                                        addprop(fc, prop);
+                                        prop.funccall = [];
                                         if (
                                             fc.content.toLowerCase() !==
                                             '__item'
@@ -2143,7 +2153,6 @@ export class Lexer {
                                                     nk = lk;
                                                     if (tk.content === '=>') {
                                                         const o: any = {};
-                                                        let sub: DocumentSymbol[];
                                                         const fcs =
                                                             _parent.funccall
                                                                 .length;
@@ -2161,18 +2170,17 @@ export class Lexer {
                                                             ),
                                                             [...par],
                                                         );
-                                                        (lk.symbol =
-                                                            lk.definition =
-                                                                tn),
-                                                            (mode = 3);
+                                                        lk.symbol =
+                                                            lk.definition = tn;
+                                                        mode = 3;
                                                         tn.parent = prop;
-                                                        (sub = parse_line(
+                                                        const sub = parse_line(
                                                             o,
                                                             undefined,
                                                             'return',
                                                             1,
-                                                        )),
-                                                            (mode = 2);
+                                                        );
+                                                        mode = 2;
                                                         tn.funccall?.push(
                                                             ..._parent.funccall.splice(
                                                                 fcs,
@@ -2222,14 +2230,14 @@ export class Lexer {
                                                                             0,
                                                                         ),
                                                                     )),
-                                                            ),
-                                                                (v.detail =
-                                                                    completionitem.value());
+                                                            );
+                                                            v.detail =
+                                                                completionitem.value();
                                                         }
                                                         tn.children.push(
                                                             ...sub,
-                                                        ),
-                                                            adddeclaration(tn);
+                                                        );
+                                                        adddeclaration(tn);
                                                         _this.linepos[
                                                             tn.range.end.line
                                                         ] = nk.offset;
@@ -2285,9 +2293,9 @@ export class Lexer {
                                                                             0,
                                                                         ),
                                                                     )),
-                                                            ),
-                                                                (v.detail =
-                                                                    completionitem.value());
+                                                            );
+                                                            v.detail =
+                                                                completionitem.value();
                                                         }
                                                         adddeclaration(tn);
                                                         _this.addSymbolFolding(
@@ -2381,19 +2389,18 @@ export class Lexer {
                                                     next = false;
                                                 }
                                             }
-                                            (prop.range.end =
+                                            prop.range.end =
                                                 document.positionAt(
                                                     parser_pos - 1,
-                                                )),
-                                                (mode = mmm);
+                                                );
+                                            mode = mmm;
                                             _this.addSymbolFolding(prop, brace);
                                         } else if (tk.content === '=>') {
                                             const off = parser_pos;
                                             const o: any = {};
-                                            let tn: FuncNode;
                                             const fcs = _parent.funccall.length;
                                             mode = 3;
-                                            tn = FuncNode.create(
+                                            const tn = FuncNode.create(
                                                 'get',
                                                 SymbolKind.Function,
                                                 (rg = make_range(
@@ -2405,17 +2412,17 @@ export class Lexer {
                                             );
                                             tn.parent = prop;
                                             (prop as any).get = tn;
-                                            (tn.children = parse_line(
+                                            tn.children = parse_line(
                                                 o,
                                                 undefined,
                                                 'return',
                                                 1,
-                                            )),
-                                                (tn.returntypes = o);
+                                            );
+                                            tn.returntypes = o;
                                             tn.funccall?.push(
                                                 ..._parent.funccall.splice(fcs),
-                                            ),
-                                                (mode = 2);
+                                            );
+                                            mode = 2;
                                             tn.range.end = document.positionAt(
                                                 lk.offset + lk.length,
                                             );
@@ -2428,8 +2435,8 @@ export class Lexer {
                                             for (const t in o) {
                                                 o[t] = tn.range.end;
                                             }
-                                            adddeclaration(tn),
-                                                prop.children.push(tn);
+                                            adddeclaration(tn);
+                                            prop.children.push(tn);
                                             _this.linepos[prop.range.end.line] =
                                                 oo;
                                         }
@@ -2455,13 +2462,12 @@ export class Lexer {
                                         _ = _parent;
                                     _parent = _parent.declaration.__INIT;
                                     const sta = parse_statement('');
-                                    _parent.children.push(...result.splice(rl)),
-                                        (_parent = _);
-                                    result.push(...sta),
-                                        sta.forEach(
-                                            (it) =>
-                                                ((it as FuncNode).parent = _),
-                                        );
+                                    _parent.children.push(...result.splice(rl));
+                                    _parent = _;
+                                    result.push(...sta);
+                                    sta.forEach(
+                                        (it) => ((it as FuncNode).parent = _),
+                                    );
                                     if (line_begin_pos !== undefined) {
                                         _this.linepos[
                                             (lk.pos ??= document.positionAt(
@@ -2470,7 +2476,8 @@ export class Lexer {
                                         ] = line_begin_pos;
                                     }
                                 } else {
-                                    reset_extra_index(tk), (tk = lk);
+                                    reset_extra_index(tk);
+                                    tk = lk;
                                     lk = EMPTY_TOKEN;
                                     parser_pos = tk.offset + tk.length;
                                     parse_top_word();
@@ -2486,16 +2493,16 @@ export class Lexer {
                             }
 
                             if (mode === 2) {
-                                const rl = result.length,
-                                    _ = _parent;
+                                const rl = result.length;
+                                const _ = _parent;
                                 _parent = _parent.declaration.__INIT;
                                 const sta = parse_statement('');
-                                _parent.children.push(...result.splice(rl)),
-                                    (_parent = _);
-                                result.push(...sta),
-                                    sta.forEach(
-                                        (it) => ((it as FuncNode).parent = _),
-                                    );
+                                _parent.children.push(...result.splice(rl));
+                                _parent = _;
+                                result.push(...sta);
+                                sta.forEach(
+                                    (it) => ((it as FuncNode).parent = _),
+                                );
                             } else {
                                 if (tk.topofline) {
                                     parse_top_word();
@@ -2529,7 +2536,8 @@ export class Lexer {
                                     tk.length,
                                 );
                             } else {
-                                blocks++, blockpos.push(parser_pos - 1);
+                                blocks++;
+                                blockpos.push(parser_pos - 1);
                             }
                             break;
 
@@ -2552,8 +2560,8 @@ export class Lexer {
                                         diagnostic.unexpected('}'),
                                         tk.offset,
                                         1,
-                                    ),
-                                        (blocks = 0);
+                                    );
+                                    blocks = 0;
                                     blockpos.length = 0;
                                 } else {
                                     if (blockpos.length) {
@@ -2611,8 +2619,8 @@ export class Lexer {
                             );
                             result.push(tn);
                             if (_parent.labels) {
-                                (_low = tk.content.toUpperCase().slice(0, -1)),
-                                    ((<any>tn).def = true);
+                                _low = tk.content.toUpperCase().slice(0, -1);
+                                (<any>tn).def = true;
                                 if (!_parent.labels[_low]) {
                                     _parent.labels[_low] = [tn];
                                 } else if (_parent.labels[_low][0].def) {
@@ -2620,8 +2628,8 @@ export class Lexer {
                                         diagnostic.duplabel(),
                                         tk.offset,
                                         tk.length - 1,
-                                    ),
-                                        _parent.labels[_low].push(tn);
+                                    );
+                                    _parent.labels[_low].push(tn);
                                 } else {
                                     _parent.labels[_low].unshift(tn);
                                 }
@@ -2650,10 +2658,8 @@ export class Lexer {
                                 make_range(tk.offset, tk.length),
                                 make_range(tk.offset, tk.length - 2),
                             );
-                            (tn.range.end = document.positionAt(
-                                parser_pos - 1,
-                            )),
-                                result.push(tn);
+                            tn.range.end = document.positionAt(parser_pos - 1);
+                            result.push(tn);
                             if (
                                 (_cm = comments[tn.selectionRange.start.line])
                             ) {
@@ -2740,7 +2746,8 @@ export class Lexer {
                             tn.global = {};
                             tn.local = {};
                             while ((tk.type as string) === 'TK_SHARP') {
-                                parse_sharp(), nexttoken();
+                                parse_sharp();
+                                nexttoken();
                             }
                             if (tk.content === '{') {
                                 tk.previous_pair_pos = ht.offset;
@@ -2758,8 +2765,8 @@ export class Lexer {
                                     ht.offset,
                                     parser_pos - ht.offset,
                                 );
-                                _this.addSymbolFolding(tn, tk.offset),
-                                    adddeclaration(tn);
+                                _this.addSymbolFolding(tn, tk.offset);
+                                adddeclaration(tn);
                             } else if (tk.topofline) {
                                 adddeclaration(tn);
                                 next = false;
@@ -2844,8 +2851,8 @@ export class Lexer {
                                     diagnostic.propdeclaraerr(),
                                     tk.offset,
                                     tk.length,
-                                ),
-                                    parse_line();
+                                );
+                                parse_line();
                             } else {
                                 result.push(...parse_line());
                                 if (line_begin_pos !== undefined) {
@@ -2982,8 +2989,8 @@ export class Lexer {
                                 make_range(cl.offset, cl.length),
                             ) as ClassNode;
                             cl.symbol = cl.definition = tn;
-                            sv.set('#parent', tn),
-                                (tn.full = classfullname + cl.content);
+                            sv.set('#parent', tn);
+                            tn.full = classfullname + cl.content;
                             tn.funccall = [];
                             tn.children = [];
                             tn.cache = [];
