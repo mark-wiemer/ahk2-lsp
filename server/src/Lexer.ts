@@ -6018,12 +6018,12 @@ export class Lexer {
                                 cls.extends = t.replace(/([^.]+)$/, '@$1');
                             }
                         } else {
-                            ((props[_] = Variable.create(
+                            (props[_] = Variable.create(
                                 k.content,
                                 SymbolKind.Property,
                                 make_range(k.offset, k.length),
-                            )).returntypes = ts),
-                                addprop(k);
+                            )).returntypes = ts;
+                            addprop(k);
                         }
                     }
                     if (tk.type === 'TK_COMMA') {
@@ -6167,7 +6167,8 @@ export class Lexer {
                             rpair = 0;
                             tpexp += '(';
                         }
-                        pairnum++, pairpos.push(parser_pos - 1);
+                        pairnum++;
+                        pairpos.push(parser_pos - 1);
                         llk = lk;
                     } else if (tk.content === '=>') {
                         let rs = result.splice(apos);
@@ -6181,8 +6182,8 @@ export class Lexer {
                                     diagnostic.unknownoperatoruse(),
                                     tk.offset,
                                     2,
-                                ),
-                                    (next = true);
+                                );
+                                next = true;
                                 continue;
                             }
                             lk = llk;
@@ -6219,8 +6220,8 @@ export class Lexer {
                                 diagnostic.unknownoperatoruse(),
                                 tk.offset,
                                 2,
-                            ),
-                                (next = true);
+                            );
+                            next = true;
                             continue;
                         }
                         if (nk.content !== '=>') {
@@ -6259,9 +6260,9 @@ export class Lexer {
                             tn.parent = _parent;
                         }
                         apos = result.length;
-                        result.push(tn),
-                            adddeclaration(tn),
-                            (tn.funccall = _parent.funccall.splice(prec));
+                        result.push(tn);
+                        adddeclaration(tn);
+                        tn.funccall = _parent.funccall.splice(prec);
                         tpexp =
                             tpexp.replace(/(\([^()]*\)|\S*)$/, '') +
                             ` $${_this.anonymous.push(tn as FuncNode) - 1}`;
@@ -6338,19 +6339,23 @@ export class Lexer {
                                             tpexp =
                                                 tpexp.slice(0, -1) + '#varref';
                                         } else {
-                                            (tpexp +=
-                                                check_concat(lk) + lk.content),
+                                            tpexp +=
+                                                check_concat(lk) + lk.content;
+                                            if (
                                                 ['++', '--'].includes(
                                                     tk.content,
-                                                ) && (byref = false);
+                                                )
+                                            )
+                                                byref = false;
                                         }
                                         if (byref !== undefined) {
                                             vr.def = true;
-                                            byref
-                                                ? (vr.ref = vr.assigned = true)
-                                                : (vr.returntypes = {
-                                                      '#number': 0,
-                                                  });
+                                            if (byref) {
+                                                vr.ref = vr.assigned = true;
+                                            } else
+                                                vr.returntypes = {
+                                                    '#number': 0,
+                                                };
                                         } else if (
                                             tk.content === '??' ||
                                             (tk.ignore && tk.content === '?')
@@ -6435,12 +6440,12 @@ export class Lexer {
                                     }
                                     tn.returntypes = o;
                                     adddeclaration(tn);
-                                    result.push(tn),
-                                        _this.addFoldingRangePos(
-                                            tn.range.start,
-                                            tn.range.end,
-                                            'line',
-                                        );
+                                    result.push(tn);
+                                    _this.addFoldingRangePos(
+                                        tn.range.start,
+                                        tn.range.end,
+                                        'line',
+                                    );
                                     if (fc.content) {
                                         tpexp += ' ' + fc.content.toLowerCase();
                                     } else {
@@ -6458,33 +6463,33 @@ export class Lexer {
                                         const pp = ttk.paraminfo?.count
                                             ? `(${ttk.offset})`
                                             : '()';
-                                        addvariable(fc),
-                                            _parent.funccall.push(
-                                                (tn = DocumentSymbol.create(
-                                                    fc.content,
-                                                    undefined,
-                                                    SymbolKind.Function,
-                                                    make_range(
-                                                        fc.offset,
-                                                        quoteend - fc.offset,
-                                                    ),
-                                                    make_range(
-                                                        fc.offset,
-                                                        fc.length,
-                                                    ),
-                                                )),
-                                            );
+                                        addvariable(fc);
+                                        _parent.funccall.push(
+                                            (tn = DocumentSymbol.create(
+                                                fc.content,
+                                                undefined,
+                                                SymbolKind.Function,
+                                                make_range(
+                                                    fc.offset,
+                                                    quoteend - fc.offset,
+                                                ),
+                                                make_range(
+                                                    fc.offset,
+                                                    fc.length,
+                                                ),
+                                            )),
+                                        );
                                         Object.assign(ttk.paraminfo ?? {}, {
                                             name: fc.content,
                                         });
                                         tn.paraminfo = o.paraminfo;
                                         tn.offset = fc.offset;
                                         fc.callinfo = tn;
-                                        (tpexp +=
-                                            check_concat(fc) + fc.content + pp),
-                                            (fc.semantic ??= {
-                                                type: SemanticTokenTypes.function,
-                                            });
+                                        tpexp +=
+                                            check_concat(fc) + fc.content + pp;
+                                        fc.semantic ??= {
+                                            type: SemanticTokenTypes.function,
+                                        };
                                     } else {
                                         fc.ignore = true;
                                     }
@@ -6508,11 +6513,10 @@ export class Lexer {
                         } else if (input.charAt(parser_pos) === '(') {
                             const ptk = tk;
                             const o: any = {};
-                            let ttk;
-                            (ttk = tk = get_next_token()),
-                                (ptk.semantic = {
-                                    type: SemanticTokenTypes.method,
-                                });
+                            const ttk = (tk = get_next_token());
+                            ptk.semantic = {
+                                type: SemanticTokenTypes.method,
+                            };
                             parse_pair('(', ')', undefined, o);
                             let tn: CallInfo;
                             const pp = ttk.paraminfo?.count
@@ -6611,9 +6615,10 @@ export class Lexer {
                         } else {
                             tpexp += check_concat(tk) + '#any';
                         }
-                        prec === '.'
-                            ? (maybeclassprop(tk, null), parse_prop())
-                            : parse_pair('%', '%');
+                        if (prec === '.') {
+                            maybeclassprop(tk, null);
+                            parse_prop();
+                        } else parse_pair('%', '%');
                     } else if (tk.type.startsWith('TK_END_')) {
                         _this.addDiagnostic(
                             diagnostic.unexpected(tk.content),
@@ -6660,7 +6665,7 @@ export class Lexer {
                             tk.length,
                         );
                     } else if (tk.type === 'TK_COMMA') {
-                        iscall && (tk.paraminfo = info);
+                        if (iscall) tk.paraminfo = info;
                         if (pairnum === 0 && b !== '%') {
                             exps.push(tpexp);
                             tpexp = '';
@@ -6748,7 +6753,7 @@ export class Lexer {
                 exps.push(tpexp);
                 types[b + tpexp + e] = 0;
                 if (tk.type === 'TK_EOF' && pairnum > -1) {
-                    e === '%' && stop_parse(_pk);
+                    if (e === '%') stop_parse(_pk);
                     pairMiss();
                 } else {
                     tokens[tk.previous_pair_pos!].next_pair_pos = tk.offset;
@@ -6802,7 +6807,7 @@ export class Lexer {
                     const pc =
                         tokens[tk.previous_pair_pos!]?.paraminfo?.count ?? 0;
                     if (pc !== 1) {
-                        extsettings.Diagnostics.ParamsCheck &&
+                        if (extsettings.Diagnostics.ParamsCheck)
                             _this.addDiagnostic(
                                 diagnostic.paramcounterr(1, pc),
                                 fc.offset,
@@ -6898,12 +6903,12 @@ export class Lexer {
                                             s,
                                         );
                                     } else {
-                                        (t = Variable.create(
+                                        t = Variable.create(
                                             '',
                                             SymbolKind.Variable,
                                             make_range(0, 0),
-                                        )),
-                                            (t.arr = true);
+                                        );
+                                        t.arr = true;
                                         t = FuncNode.create(
                                             prop,
                                             SymbolKind.Method,
@@ -6918,12 +6923,12 @@ export class Lexer {
                                         `(${classfullname.slice(0, -1)}) ` +
                                         t.full;
                                 } else {
-                                    (t = Variable.create(
+                                    t = Variable.create(
                                         prop,
                                         SymbolKind.Property,
                                         rg,
-                                    )),
-                                        (t.static = s);
+                                    );
+                                    t.static = s;
                                 }
                                 p.cache.push(t);
                                 (t as FuncNode).parent = p;
@@ -7006,10 +7011,8 @@ export class Lexer {
                     tn.kind = SymbolKind.Property;
                     addprop(token, tn);
                     if (classfullname) {
-                        (tn.full = `(${classfullname.slice(0, -1)}) ${
-                            tn.name
-                        }`),
-                            (token.symbol = tn);
+                        tn.full = `(${classfullname.slice(0, -1)}) ${tn.name}`;
+                        token.symbol = tn;
                     }
                 } else if (_low.match(/^\d/)) {
                     _this.addDiagnostic(
