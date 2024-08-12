@@ -60,7 +60,7 @@ suite('External formatter', () => {
 				await vscode.commands.executeCommand(
 					'editor.action.formatDocument',
 				);
-				await sleep(500);
+				await sleep(100);
 			}
 
 			await formattingPromise;
