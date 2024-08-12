@@ -1,9 +1,8 @@
-import { convertPosition, getDocument, sleep } from '../test/utils';
+import { getDocument, sleep } from '../test/utils';
 import * as assert from 'assert';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { documentFormatting } from '../../../server/src/formattingProvider';
 
 const inFilenameSuffix = '.in.ahk2';
 const outFilenameSuffix = '.out.ahk2';
@@ -13,10 +12,9 @@ interface FormatTest {
 }
 
 // Currently in `out` folder, need to get back to main `src` folder
+// * this path changes if you import from the server folder
 const filesParentPath = path.join(
-	__dirname, // client/dist/client/src/test
-	'..', // client/dist/client/src
-	'..', // client/dist/client
+	__dirname, // client/dist/test
 	'..', // client/dist
 	'..', // client
 	'src', // client/src
@@ -44,65 +42,28 @@ suite('External formatter', () => {
 				unformattedSampleFile,
 			);
 
-			// Act with vscode.commands
-			const extension = vscode.extensions.getExtension(
-				'thqby.vscode-autohotkey2-lsp',
-			);
-			if (extension) {
-				await extension.activate();
-				await sleep(1000);
-			}
-			const formattingPromise = new Promise<void>((resolve, reject) => {
+			// Act
+			let eventFired = false;
+			const formattingPromise = new Promise<void>((resolve) => {
 				const disposable = vscode.workspace.onDidChangeTextDocument(
 					(event) => {
-						console.log('onDidChangeTextDocument event fired');
 						if (event.document === textEditor.document) {
-							console.log('Document matched, resolving promise');
+							eventFired = true;
 							disposable.dispose();
 							resolve();
 						}
 					},
 				);
-				vscode.commands
-					.executeCommand('editor.action.formatDocument')
-					.then(
-						() => {
-							console.log('Format document command executed');
-						},
-						(err) => {
-							console.error(
-								'Error executing format document command',
-								err,
-							);
-							reject(err);
-						},
-					);
 			});
 
-			await formattingPromise;
+			while (!eventFired) {
+				await vscode.commands.executeCommand(
+					'editor.action.formatDocument',
+				);
+				await sleep(500);
+			}
 
-			// Act with custom code
-			// this requires a lexer to be created
-			// which requires the extension to be activated
-			// which requires the compile step to have worked
-			// which overwrites the output of the test compile step
-			// and the two are difficult to make compatible because of the extension development path
-			// const edits = await documentFormatting({
-			// 	textDocument: { uri: unformattedSampleFile.uri.toString() },
-			// 	options: { tabSize: 4, insertSpaces: false },
-			// });
-			// // editing the file also saves the file, so we'll need to teardown
-			// await textEditor.edit((editBuilder) => {
-			// 	edits.forEach((edit) =>
-			// 		editBuilder.replace(
-			// 			new vscode.Range(
-			// 				convertPosition(edit.range.start),
-			// 				convertPosition(edit.range.end),
-			// 			),
-			// 			edit.newText,
-			// 		),
-			// 	);
-			// });
+			await formattingPromise;
 
 			// Assert
 			assert.strictEqual(textEditor.document.getText(), outFileString);

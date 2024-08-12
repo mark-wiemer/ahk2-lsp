@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { Position as LSPosition } from 'vscode-languageserver-types';
 
 /**
  * Shortcut for `vscode.workspace.openTextDocument(Uri.file(fileName))`
@@ -7,11 +6,6 @@ import { Position as LSPosition } from 'vscode-languageserver-types';
  */
 export const getDocument = async (path: string): Promise<vscode.TextDocument> =>
 	await vscode.workspace.openTextDocument(path);
-
-// Helper function to convert LSPosition to vscode.Position
-export const convertPosition = (position: LSPosition): vscode.Position => {
-	return new vscode.Position(position.line, position.character);
-};
 
 // Copying to test helpers for easy import
 export async function sleep(ms: number) {

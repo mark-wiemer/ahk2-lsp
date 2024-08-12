@@ -2,6 +2,6 @@
 import { defineConfig } from '@vscode/test-cli';
 export default defineConfig({
 	extensionDevelopmentPath: '..',
-	files: 'dist/client/src/test/**/*.test.js',
+	files: 'dist/**/*.test.js',
 	version: '1.92.0',
 });
