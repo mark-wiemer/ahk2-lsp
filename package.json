@@ -578,7 +578,8 @@
 	},
 	"scripts": {
 		"vscode:prepublish": "webpack --mode production --devtool hidden-source-map",
-		"compile": "rimraf client/dist && webpack",
+		"clean": "rimraf client/dist && rimraf server/dist",
+		"compile": "webpack",
 		"compile-cli": "webpack --config webpack.config.cli.js --mode production --devtool hidden-source-map",
 		"eslint": "eslint --fix",
 		"watch": "tsc -b -w",
@@ -587,8 +588,9 @@
 		"publish": "vsce publish",
 		"package": "vsce package",
 		"chrome": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ./test-data",
-		"test": "cd client && tsc && vscode-test",
-		"validate": "npm run compile && npm run test && npm run package"
+		"test": "webpack && cd client && tsc && vscode-test",
+		"pretest": "npm run clean",
+		"validate": "npm run test && npm run package"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.4.0",
