@@ -595,7 +595,7 @@
 		"pretest": "npm run compile-test",
 		"test//": "Run tests. Requires the extension to be compiled",
 		"test": "cd client && vscode-test",
-		"validate": "npm run test && npm run package"
+		"validate": "npm run clean && npm run vscode:prepublish && npm run test && npm run package"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.4.0",
