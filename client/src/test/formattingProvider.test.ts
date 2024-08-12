@@ -26,9 +26,8 @@ suite('External formatter', () => {
 	const externalFormatTests: FormatTest[] = [{ filenameRoot: '0-format' }];
 
 	externalFormatTests.forEach((formatTest) => {
-		test(`${formatTest.filenameRoot} external format`, async function () {
+		test(`${formatTest.filenameRoot} external format`, async () => {
 			// Arrange
-			this.timeout(10_000);
 			const inFilename = formatTest.filenameRoot + inFilenameSuffix;
 			const outFilename = formatTest.filenameRoot + outFilenameSuffix;
 			const outFileString = fs
@@ -41,8 +40,6 @@ suite('External formatter', () => {
 			const textEditor = await vscode.window.showTextDocument(
 				unformattedSampleFile,
 			);
-
-			// Act
 			let eventFired = false;
 			const formattingPromise = new Promise<void>((resolve) => {
 				const disposable = vscode.workspace.onDidChangeTextDocument(
@@ -56,13 +53,13 @@ suite('External formatter', () => {
 				);
 			});
 
+			// Act
 			while (!eventFired) {
 				await vscode.commands.executeCommand(
 					'editor.action.formatDocument',
 				);
-				await sleep(100);
+				await sleep(50);
 			}
-
 			await formattingPromise;
 
 			// Assert

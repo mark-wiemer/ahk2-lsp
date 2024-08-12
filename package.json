@@ -578,6 +578,7 @@
 	},
 	"scripts": {
 		"vscode:prepublish": "webpack --mode production --devtool hidden-source-map",
+		"clean//": "Remove both the compiled extension and compiled test files",
 		"clean": "rimraf client/dist && rimraf server/dist",
 		"compile": "webpack",
 		"compile-cli": "webpack --config webpack.config.cli.js --mode production --devtool hidden-source-map",
@@ -588,8 +589,9 @@
 		"publish": "vsce publish",
 		"package": "vsce package",
 		"chrome": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ./test-data",
-		"test": "webpack && cd client && tsc && vscode-test",
-		"pretest": "npm run clean",
+		"compile_test": "cd client && tsc",
+		"pretest": "npm run compile_test",
+		"test": "cd client && vscode-test",
 		"validate": "npm run test && npm run package"
 	},
 	"devDependencies": {
