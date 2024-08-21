@@ -42,13 +42,10 @@ const textdecoders: TextDecoder[] = [new TextDecoder('utf8', { fatal: true }), n
 const isWindows = process.platform === 'win32';
 
 export async function activate(context: ExtensionContext) {
-    console.log('Congratulations, your extension "ahk2" is now active!');
+    console.log('ahk2 activated');
 	/** Absolute path to `server.js` */
-	// .replace(/^.*[\\/]/, '') is used to get the last part of the path
-	const lastPart = __dirname.replace(/^.*[\\/]/, '');
-	console.log('lastPart:', lastPart);
-	console.log('__dirname:', __dirname);
-	const serverModule = context.asAbsolutePath(`server/${process.env.VSCODE_AHK_SERVER_PATH ?? lastPart}/server.js`);
+	const defaultServerModule = context.asAbsolutePath(`ahk2/server/dist/server.js`);
+	const serverModule = defaultServerModule ?? context.asAbsolutePath(process.env.VSCODE_AHK_SERVER_PATH ?? '');
 	console.log('serverModule:', serverModule);
 
 	// If the extension is launched in debug mode then the debug server options are used
@@ -118,7 +115,7 @@ export async function activate(context: ExtensionContext) {
 
 	// Start the client. This will also launch the server
 	client.start().then(() => {
-		console.log('Client started');
+		console.log('Language client started');
 		Object.entries(request_handlers).forEach(handler => client.onRequest(...handler));
 		onDidChangegetInterpreter();
 		if (window.activeTextEditor?.document.languageId === 'ahk2')
