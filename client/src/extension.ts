@@ -118,6 +118,7 @@ export async function activate(context: ExtensionContext) {
 
 	// Start the client. This will also launch the server
 	client.start().then(() => {
+		console.log('Client started');
 		Object.entries(request_handlers).forEach(handler => client.onRequest(...handler));
 		onDidChangegetInterpreter();
 		if (window.activeTextEditor?.document.languageId === 'ahk2')
