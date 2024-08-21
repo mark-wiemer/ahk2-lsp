@@ -31,7 +31,6 @@ commands['ahk2.resetinterpreterpath'] = (args: string[]) =>
 	setInterpreter((args[0]).replace(/^[A-Z]:/, m => m.toLowerCase()));
 
 connection.onInitialize(async params => {
-	console.log('AutoHotkey2 language server is now active!');
 	const capabilities = params.capabilities;
 	hasConfigurationCapability = !!(
 		capabilities.workspace && !!capabilities.workspace.configuration
