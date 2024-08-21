@@ -45,7 +45,11 @@ export async function activate(context: ExtensionContext) {
     console.log('Congratulations, your extension "ahk2" is now active!');
 	/** Absolute path to `server.js` */
 	// .replace(/^.*[\\/]/, '') is used to get the last part of the path
-	const serverModule = context.asAbsolutePath(`server/${process.env.VSCODE_AHK_SERVER_PATH ?? __dirname.replace(/^.*[\\/]/, '')}/server.js`);
+	const lastPart = __dirname.replace(/^.*[\\/]/, '');
+	console.log('lastPart:', lastPart);
+	console.log('__dirname:', __dirname);
+	const serverModule = context.asAbsolutePath(`server/${process.env.VSCODE_AHK_SERVER_PATH ?? lastPart}/server.js`);
+	console.log('serverModule:', serverModule);
 
 	// If the extension is launched in debug mode then the debug server options are used
 	// Otherwise the run options are used
