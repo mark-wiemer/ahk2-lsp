@@ -29,7 +29,8 @@
 			},
 			"outFiles": [
 				"${workspaceRoot}/client/dist/**/*.js"
-			]
+			],
+			"preLaunchTask": "npm: build:dev"
 		},
 		{
 			"type": "node",

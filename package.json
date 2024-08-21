@@ -30,7 +30,10 @@
 	"main": "./client/dist/extension",
 	"browser": "./client/dist/browserClientMain",
 	"scripts": {
+		"prebuild": "npm run clean",
 		"build": "webpack --mode production --devtool hidden-source-map",
+		"prebuild:dev": "npm run clean",
+		"build:dev": "webpack",
 		"chrome": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ./test-data",
 		"clean": "del-cli client/dist server/dist/*.js*",
 		"clean//": "Remove both the compiled extension and compiled test files",
