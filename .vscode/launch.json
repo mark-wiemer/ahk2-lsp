@@ -20,9 +20,7 @@
 			"name": "Launch Client",
 			"runtimeExecutable": "${execPath}",
 			"args": ["--extensionDevelopmentPath=${workspaceRoot}"],
-			"env": {
-				"VSCODE_AHK_SERVER_PATH": "../server/dist/server.js"
-			},
+			"env": { "VSCODE_AHK_SERVER_PATH": "server/dist/server.js" },
 			"outFiles": ["${workspaceRoot}/client/dist/**/*.js"],
 			"preLaunchTask": "npm: build:dev"
 		},
