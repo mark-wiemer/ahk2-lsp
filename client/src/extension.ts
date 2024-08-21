@@ -42,6 +42,7 @@ const textdecoders: TextDecoder[] = [new TextDecoder('utf8', { fatal: true }), n
 const isWindows = process.platform === 'win32';
 
 export async function activate(context: ExtensionContext) {
+    console.log('Congratulations, your extension "ahk2" is now active!');
 	/** Absolute path to `server.js` */
 	// .replace(/^.*[\\/]/, '') is used to get the last part of the path
 	const serverModule = context.asAbsolutePath(`server/${process.env.VSCODE_AHK_SERVER_PATH ?? __dirname.replace(/^.*[\\/]/, '')}/server.js`);
