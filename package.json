@@ -44,7 +44,7 @@
 		"compile//": "Compile the extension for packaging and publishing",
 		"eslint": "npm run eslint:files -- client server && echo No ESLint problems",
 		"eslint:files": "eslint --max-warnings=0",
-		"eslint:fix": "npm run eslint:files -- src --fix",
+		"eslint:fix": "npm run eslint:files -- client server --fix",
 		"format": "prettier --check .",
 		"format:fix": "prettier --write .",
 		"package": "vsce package",
