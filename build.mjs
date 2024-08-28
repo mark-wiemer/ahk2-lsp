@@ -15,3 +15,16 @@ build({
 	minify: isProd,
 	sourcemap: !isProd,
 });
+
+// Node client (not necessary for AHK++, but super fast)
+// https://esbuild.github.io/api
+build({
+	entryPoints: [path.join('./client/src/extension.ts')],
+	bundle: true,
+	outfile: path.join('./client/dist/extension.js'),
+	external: ['vscode'],
+	format: 'cjs',
+	platform: 'node',
+	minify: isProd,
+	sourcemap: !isProd,
+});
