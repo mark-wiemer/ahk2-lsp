@@ -51,45 +51,6 @@ const nodeClientConfig = /** @type WebpackConfig */ {
 	devtool: 'source-map',
 };
 
-const nodeServerConfig = /** @type WebpackConfig */ {
-	context: path.join(__dirname, 'server'),
-	mode: 'none',
-	target: 'node',
-	entry: {
-		server: './src/server.ts',
-	},
-	output: {
-		filename: '[name].js',
-		path: path.join(__dirname, 'server', 'dist'),
-		libraryTarget: 'commonjs',
-	},
-	resolve: {
-		mainFields: ['module', 'main'],
-		extensions: ['.ts', '.js'], // support ts-files and js-files
-		alias: {},
-	},
-	module: {
-		rules: [
-			{
-				test: /\.ts$/,
-				exclude: /node_modules/,
-				use: [
-					{
-						loader: 'ts-loader',
-					},
-				],
-			},
-		],
-	},
-	externals: {
-		vscode: 'commonjs vscode', // ignored because it doesn't exist
-	},
-	performance: {
-		hints: false,
-	},
-	devtool: 'source-map',
-};
-
 const browserClientConfig = /** @type WebpackConfig */ {
 	context: path.join(__dirname, 'client'),
 	mode: 'none',
@@ -178,9 +139,4 @@ const browserServerConfig = /** @type WebpackConfig */ {
 	devtool: 'source-map',
 };
 
-module.exports = [
-	nodeClientConfig,
-	nodeServerConfig,
-	browserClientConfig,
-	browserServerConfig,
-];
+module.exports = [nodeClientConfig, browserClientConfig, browserServerConfig];
