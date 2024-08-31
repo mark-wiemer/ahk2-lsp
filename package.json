@@ -257,13 +257,13 @@
 						"type": "string"
 					},
 					"uniqueItems": true,
-					"description": "%ahk2.files.exclude%"
+					"description": "%ahk++.config.v2.files.exclude%"
 				},
 				"ahk++.Files.ScanMaxDepth": {
 					"scope": "window",
 					"type": "integer",
 					"default": 2,
-					"description": "%ahk2.files.scanmaxdepth%"
+					"description": "%ahk++.config.v2.files.maxScanDepth%"
 				},
 				"ahk++.v2.formatter": {
 					"scope": "window",
@@ -370,7 +370,7 @@
 					"scope": "window",
 					"type": "string",
 					"default": "C:\\Program Files\\Autohotkey\\v2\\AutoHotkey.exe",
-					"markdownDescription": "%ahk2.interpreterpath%"
+					"markdownDescription": "%ahk++.config.v2.interpreterPath%"
 				},
 				"ahk++.SymbolFoldingFromOpenBrace": {
 					"scope": "window",
