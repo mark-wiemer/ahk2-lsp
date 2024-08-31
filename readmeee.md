@@ -216,7 +216,7 @@ node install.js
 			"schemes": ["file", "buffer", "res"],
 			"initializationOptions": {
 				"locale": "en-us", // or "zh-cn"
-				"AutoLibInclude": "Disabled", // or "Local" or "User and Standard" or "All"
+				"librarySuggestions": "Disabled", // or "Local" or "User and Standard" or "All"
 				"CommentTags": "^;;\\s*(?<tag>.+)",
 				"CompleteFunctionParens": false,
 				"Diagnostics": {
