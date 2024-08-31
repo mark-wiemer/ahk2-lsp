@@ -13,7 +13,6 @@ import { URI } from 'vscode-uri';
 import { get_ahkProvider } from './ahkProvider';
 import {
 	a_vars,
-	AHKLSSettings,
 	ahkpath_cur,
 	chinese_punctuations,
 	clearLibfuns,
@@ -69,6 +68,7 @@ import { PEFile, RESOURCE_TYPE, searchAndOpenPEFile } from './PEFile';
 import { resolvePath, runscript } from './scriptrunner';
 import { TextDecoder } from 'util';
 import { includeLocalLibrary, includeUserAndStandardLibrary } from './utils';
+import { AhkppConfig } from './config';
 
 const languageServer = 'ahk2-language-server';
 const documents = new TextDocuments(TextDocument);
@@ -148,7 +148,7 @@ connection.onInitialize(async (params) => {
 		};
 	}
 
-	let configs: AHKLSSettings | undefined;
+	let configs: AhkppConfig | undefined;
 	const env = process.env;
 	if (env.AHK2_LS_CONFIG)
 		try {
@@ -201,7 +201,7 @@ connection.onInitialized(() => {
 });
 
 connection.onDidChangeConfiguration(async (change) => {
-	let newset: AHKLSSettings | undefined = change?.settings;
+	let newset: AhkppConfig | undefined = change?.settings;
 	if (hasConfigurationCapability && !newset)
 		newset = await connection.workspace.getConfiguration('ahk++');
 	if (!newset) {
@@ -253,7 +253,7 @@ documents.onDidOpen((e) => {
 		});
 	}
 	doc.actived = true;
-	if (to_ahk2) doc.actionwhenv1 = 'Continue';
+	if (to_ahk2) doc.actionWhenV1Detected = 'Continue';
 	if (includeLocalLibrary(extsettings.v2.librarySuggestions))
 		parseproject(uri).then(
 			() =>

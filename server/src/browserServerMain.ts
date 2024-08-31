@@ -8,13 +8,14 @@ import {
 	InitializeResult, TextDocuments, TextDocumentSyncKind
 } from 'vscode-languageserver/browser';
 import {
-	AHKLSSettings, chinese_punctuations, colorPresentation, colorProvider, commands, completionProvider,
+	chinese_punctuations, colorPresentation, colorProvider, commands, completionProvider,
 	defintionProvider, documentFormatting, enumNames, executeCommandProvider, exportSymbols,
 	hoverProvider, initahk2cache, Lexer, lexers, loadahk2, loadlocalize, prepareRename, rangeFormatting,
 	referenceProvider, renameProvider, SemanticTokenModifiers, semanticTokensOnFull, semanticTokensOnRange,
 	SemanticTokenTypes, set_ahk_h, set_Connection, set_dirname, set_locale, set_version, set_WorkspaceFolders,
 	signatureProvider, symbolProvider, typeFormatting, updateSettings, workspaceSymbolProvider
 } from './common';
+import { AhkppConfig } from './config';
 
 const languageServer = 'ahk2-language-server';
 const messageReader = new BrowserMessageReader(self);
@@ -78,7 +79,7 @@ connection.onInitialize(params => {
 		result.capabilities.workspace = { workspaceFolders: { supported: true } };
 	}
 
-	const configs: AHKLSSettings = params.initializationOptions;
+	const configs: AhkppConfig = params.initializationOptions;
 	set_ahk_h(true);
 	set_locale(params.locale);
 	set_dirname(configs.extensionUri!);
@@ -108,7 +109,7 @@ connection.onInitialized(() => {
 });
 
 connection.onDidChangeConfiguration(async change => {
-	let newset: AHKLSSettings | undefined = change?.settings;
+	let newset: AhkppConfig | undefined = change?.settings;
 	if (hasConfigurationCapability && !newset)
 		newset = await connection.workspace.getConfiguration('ahk++');
 	if (!newset) {
@@ -127,7 +128,7 @@ documents.onDidOpen(e => {
 	else lexers[uri] = doc = new Lexer(e.document);
 	doc.actived = true;
 	if (to_ahk2)
-		doc.actionwhenv1 = 'Continue';
+		doc.actionWhenV1Detected = 'Continue';
 });
 
 documents.onDidClose(e => lexers[e.document.uri.toLowerCase()]?.close());

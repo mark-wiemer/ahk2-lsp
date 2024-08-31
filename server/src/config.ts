@@ -1,4 +1,12 @@
 /** Defined in package.json */
+export type ActionType =
+	| 'Continue'
+	| 'Warn'
+	| 'SkipLine'
+	| 'SwitchToV1'
+	| 'Stop';
+
+/** Defined in package.json */
 export enum ObjectOrArrayStyle {
 	Collapse = 'collapse',
 	Expand = 'expand',
@@ -34,6 +42,62 @@ export interface FormatterConfig {
 	wrapLineLength: number;
 }
 
+/** Values defined in package.json */
+export enum LibrarySuggestions {
+	Off = 'Off',
+	Local = 'Local',
+	UserAndStandard = 'User and Standard',
+	All = 'All',
+}
+
+/** Values defined in package.json */
+export enum CallWithoutParentheses {
+	Off = 'Off',
+	Parentheses = 'Parentheses',
+	On = 'On',
+}
+
+export interface AhkppConfig {
+	v2: {
+		actionWhenV1Detected: ActionType;
+		/** The regex denoting a custom symbol. Defaults to `;;` */
+		commentTagRegex?: string;
+		/** Whether to automatically insert parentheses on function call */
+		completeFunctionCalls: boolean;
+		/** Whether to suggest library functions */
+		diagnostics: {
+			classNonDynamicMemberCheck: boolean;
+			paramsCheck: boolean;
+		};
+		formatter: FormatterConfig;
+		librarySuggestions: LibrarySuggestions;
+		warn: {
+			/** Ref to a potentially-unset variable */
+			varUnset: boolean;
+			/** Undeclared local has same name as global */
+			localSameAsGlobal: boolean;
+			/** Function call without parentheses */
+			callWithoutParentheses: CallWithoutParentheses;
+		};
+	};
+	locale?: string;
+	commands?: string[];
+	extensionUri?: string;
+	CompletionCommitCharacters?: {
+		Class: string;
+		Function: string;
+	};
+	Files: {
+		Exclude: string[];
+		MaxDepth: number;
+	};
+	InterpreterPath: string;
+	GlobalStorage?: string;
+	Syntaxes?: string;
+	SymbolFoldingFromOpenBrace: boolean;
+	WorkingDirs: string[];
+}
+
 /**
  * Returns a formatter config built from the given config and defaults.
  * Defaults defined in package.json
@@ -60,5 +124,39 @@ export const newFormatterConfig = (
 	symbolWithSameCase: false,
 	whitespaceBeforeInlineComment: '',
 	wrapLineLength: 120,
+	...config,
+});
+
+// todo support deep partial
+export const newAhkppConfig = (
+	config: Partial<AhkppConfig> = {},
+): AhkppConfig => ({
+	v2: {
+		actionWhenV1Detected: 'Warn',
+		librarySuggestions: LibrarySuggestions.Off,
+		commentTagRegex: '^;;\\s*(.*)',
+		completeFunctionCalls: false,
+		diagnostics: {
+			classNonDynamicMemberCheck: true,
+			paramsCheck: true,
+		},
+		warn: {
+			varUnset: true,
+			localSameAsGlobal: false,
+			callWithoutParentheses: CallWithoutParentheses.Off,
+		},
+		formatter: newFormatterConfig(),
+	},
+	CompletionCommitCharacters: {
+		Class: '.(',
+		Function: '(',
+	},
+	Files: {
+		Exclude: [],
+		MaxDepth: 2,
+	},
+	InterpreterPath: 'C:\\Program Files\\AutoHotkey\\v2\\AutoHotkey.exe',
+	SymbolFoldingFromOpenBrace: false,
+	WorkingDirs: [],
 	...config,
 });

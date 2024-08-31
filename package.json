@@ -219,7 +219,7 @@
 					"default": "Off",
 					"description": "%ahk++.config.v2.warn.callWithoutParentheses%"
 				},
-				"ahk++.ActionWhenV1IsDetected": {
+				"ahk++.v2.actionWhenV1Detected": {
 					"scope": "window",
 					"type": "string",
 					"default": "Warn",
@@ -230,7 +230,7 @@
 						"SwitchToV1",
 						"SkipLine"
 					],
-					"description": "%ahk2.actionwhenv1isdetected%"
+					"description": "%ahk++.config.v2.actionWhenV1Detected%"
 				},
 				"ahk++.CompletionCommitCharacters": {
 					"scope": "window",

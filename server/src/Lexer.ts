@@ -21,12 +21,11 @@ import { URI } from 'vscode-uri';
 import { builtin_ahkv1_commands, builtin_variable, builtin_variable_h } from './constants';
 import { action, completionitem, diagnostic, warn } from './localize';
 import {
-	CallWithoutParentheses,
 	a_vars, ahk_version, ahkuris, ahkvars, alpha_3, connection, extsettings,
 	hoverCache, isBrowser, isahk2_h, lexers, libdirs, libfuncs, openAndParse, openFile,
 	restorePath, rootdir, setTextDocumentLanguage, symbolProvider, utils, workspaceFolders
 } from './common';
-import { newFormatterConfig, FormatterConfig, ObjectOrArrayStyle, BraceStyle } from './config';
+import { newFormatterConfig, FormatterConfig, ObjectOrArrayStyle, BraceStyle, ActionType, newAhkppConfig, CallWithoutParentheses } from './config';
 
 export interface ParamInfo {
 	offset: number
@@ -323,10 +322,8 @@ class ParseStopError {
 	}
 }
 
-export type ActionType = 'Continue' | 'Warn' | 'SkipLine' | 'SwitchToV1' | 'Stop';
-
 export class Lexer {
-	public actionwhenv1?: ActionType;
+	public actionWhenV1Detected: ActionType = newAhkppConfig().v2.actionWhenV1Detected;
 	public actived = false;
 	public beautify: (options: FormatterConfig, range?: Range) => string;
 	public checkmember: boolean | undefined;
@@ -1162,7 +1159,7 @@ export class Lexer {
 				this.diags = this.diagnostics.length, this.isparsed = true;
 				customblocks.region.forEach(o => this.addFoldingRange(o, parser_pos - 1, 'region'));
 				if (this.actived)
-					this.actionwhenv1 ??= 'Continue';
+					this.actionWhenV1Detected ??= 'Continue';
 			}
 		}
 
@@ -1178,7 +1175,7 @@ export class Lexer {
 			if (requirev2)
 				return false;
 			_this.maybev1 ??= maybev1 = 1;
-			switch (_this.actionwhenv1 ??= extsettings.ActionWhenV1IsDetected) {
+			switch (_this.actionWhenV1Detected ??= extsettings.v2.actionWhenV1Detected) {
 				case 'SkipLine': {
 					if (!allow_skip)
 						return true;
@@ -1232,8 +1229,8 @@ export class Lexer {
 						{ title: action.skipline(), action: 'SkipLine' },
 						{ title: action.stopparsing(), action: 'Stop' }
 					).then((reason?: { action: string }) => {
-						if ((_this.actionwhenv1 = (reason?.action ?? 'Continue') as ActionType) !== 'Stop')
-							if (_this.actionwhenv1 === 'SwitchToV1')
+						if ((_this.actionWhenV1Detected = (reason?.action ?? 'Continue') as ActionType) !== 'Stop')
+							if (_this.actionWhenV1Detected === 'SwitchToV1')
 								setTextDocumentLanguage(_this.document.uri);
 							else _this.update();
 					});

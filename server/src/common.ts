@@ -4,10 +4,10 @@ import { readdirSync, readFileSync, existsSync, statSync, promises as fs } from 
 import { Connection, MessageConnection } from 'vscode-languageserver';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { CompletionItem, CompletionItemKind, Hover, InsertTextFormat, Range, SymbolKind } from 'vscode-languageserver-types';
-import { AhkSymbol, ActionType, Lexer, setCommentTagRegex } from './Lexer';
+import { AhkSymbol, Lexer, setCommentTagRegex } from './Lexer';
 import { diagnostic } from './localize';
 import { isBrowser, jsDocTagNames } from './constants';
-import { FormatterConfig, newFormatterConfig } from './config';
+import { AhkppConfig, newAhkppConfig } from './config';
 export * from './codeActionProvider';
 export * from './colorProvider';
 export * from './commandProvider';
@@ -24,94 +24,10 @@ export * from './semanticTokensProvider';
 export * from './signatureProvider';
 export * from './symbolProvider';
 
-/** Values defined in package.json */
-export enum LibrarySuggestions {
-	Off = 'Off',
-	Local = 'Local',
-	UserAndStandard = 'User and Standard',
-	All = 'All'
-}
-
-/** Values defined in package.json */
-export enum CallWithoutParentheses {
-	Off = 'Off',
-	Parentheses = 'Parentheses',
-	On = 'On'
-}
-
-export interface AHKLSSettings {
-	v2: {
-		/** Whether to suggest library functions */
-		librarySuggestions: LibrarySuggestions
-		/** The regex denoting a custom symbol. Defaults to `;;` */
-		commentTagRegex?: string
-		/** Whether to automatically insert parentheses on function call */
-		completeFunctionCalls: boolean
-		diagnostics: {
-			classNonDynamicMemberCheck: boolean
-			paramsCheck: boolean
-		}
-		warn: {
-			/** Ref to a potentially-unset variable */
-			varUnset: boolean
-			/** Undeclared local has same name as global */
-			localSameAsGlobal: boolean
-			/** Function call without parentheses */
-			callWithoutParentheses: CallWithoutParentheses
-		}
-		formatter: FormatterConfig
-	}
-	locale?: string
-	commands?: string[]
-	extensionUri?: string
-	ActionWhenV1IsDetected: ActionType
-	CompletionCommitCharacters?: {
-		Class: string
-		Function: string
-	}
-	Files: {
-		Exclude: string[]
-		MaxDepth: number
-	}
-	InterpreterPath: string
-	GlobalStorage?: string
-	Syntaxes?: string
-	SymbolFoldingFromOpenBrace: boolean
-	WorkingDirs: string[]
-}
-
 export const winapis: string[] = [];
 export const lexers: { [uri: string]: Lexer } = {};
 export const alpha_3 = encode_version('2.1-alpha.3');
-export const extsettings: AHKLSSettings = {
-	v2: {
-		librarySuggestions: LibrarySuggestions.Off,
-		commentTagRegex: '^;;\\s*(.*)',
-		completeFunctionCalls: false,
-		diagnostics: {
-			classNonDynamicMemberCheck: true,
-			paramsCheck: true
-		},
-		warn: {
-			varUnset: true,
-			localSameAsGlobal: false,
-			callWithoutParentheses: CallWithoutParentheses.Off
-		},
-		formatter: newFormatterConfig(),
-	},
-	ActionWhenV1IsDetected: 'Warn',
-	CompletionCommitCharacters: {
-		Class: '.(',
-		Function: '('
-	},
-	Files: {
-		Exclude: [],
-		MaxDepth: 2
-	},
-	InterpreterPath: 'C:\\Program Files\\AutoHotkey\\v2\\AutoHotkey.exe',
-	SymbolFoldingFromOpenBrace: false,
-	WorkingDirs: []
-};
+export const extsettings: AhkppConfig = newAhkppConfig();
 export const utils = {
 	get_DllExport: (_paths: string[] | Set<string>, _onlyone = false) => Promise.resolve([] as string[]),
 	get_RCDATA: (_path?: string) => ({ uri: '', path: '' } as { uri: string, path: string, paths?: string[] } | undefined),
@@ -448,7 +364,7 @@ export function enum_ahkfiles(dirpath: string) {
 }
 
 /** Updates `extsettings` with the provided config values */
-export function updateSettings(configs: AHKLSSettings) {
+export function updateSettings(configs: AhkppConfig) {
 	try {
 		setCommentTagRegex(configs.v2.commentTagRegex!);
 	} catch (e) {
