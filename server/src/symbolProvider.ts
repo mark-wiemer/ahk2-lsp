@@ -54,7 +54,7 @@ export function symbolProvider(params: DocumentSymbolParams, token?: Cancellatio
 			result.push(v), converttype(v, v, islib || v === ahkvars[k]).definition = v;
 	}
 	flatTree(doc);
-	if (extsettings.Warn?.VarUnset)
+	if (extsettings.v2.warn.varUnset)
 		for (const [k, v] of unset_vars)
 			k.assigned || doc.diagnostics.push({ message: warn.varisunset(v.name), range: v.selectionRange, severity: DiagnosticSeverity.Warning });
 	if (doc.actived) {

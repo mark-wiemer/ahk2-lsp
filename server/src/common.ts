@@ -42,6 +42,10 @@ export interface AHKLSSettings {
 			classNonDynamicMemberCheck: boolean
 			paramsCheck: boolean
 		}
+		warn: {
+			/** Whether to warn about a ref to a potentially-unset variable */
+			varUnset: boolean
+		}
 	}
 	locale?: string
 	commands?: string[]
@@ -61,7 +65,6 @@ export interface AHKLSSettings {
 	Syntaxes?: string
 	SymbolFoldingFromOpenBrace: boolean
 	Warn: {
-		VarUnset: boolean
 		LocalSameAsGlobal: boolean
 		CallWithoutParentheses: boolean | /* Parentheses */ 1
 	}
@@ -80,6 +83,9 @@ export const extsettings: AHKLSSettings = {
 			classNonDynamicMemberCheck: true,
 			paramsCheck: true
 		},
+		warn: {
+			varUnset: true,
+		}
 	},
 	ActionWhenV1IsDetected: 'Warn',
 	CompletionCommitCharacters: {
@@ -94,7 +100,6 @@ export const extsettings: AHKLSSettings = {
 	InterpreterPath: 'C:\\Program Files\\AutoHotkey\\v2\\AutoHotkey.exe',
 	SymbolFoldingFromOpenBrace: false,
 	Warn: {
-		VarUnset: true,
 		LocalSameAsGlobal: false,
 		CallWithoutParentheses: false
 	},
