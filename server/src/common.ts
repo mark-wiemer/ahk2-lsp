@@ -447,7 +447,7 @@ export function enum_ahkfiles(dirpath: string) {
 }
 
 /** Updates `extsettings` with the provided config values */
-export function update_settings(configs: AHKLSSettings) {
+export function updateSettings(configs: AHKLSSettings) {
 	try {
 		setCommentTagRegex(configs.v2.commentTagRegex!);
 	} catch (e) {

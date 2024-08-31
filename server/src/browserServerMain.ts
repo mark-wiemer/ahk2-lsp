@@ -13,7 +13,7 @@ import {
 	hoverProvider, initahk2cache, Lexer, lexers, loadahk2, loadlocalize, prepareRename, rangeFormatting,
 	referenceProvider, renameProvider, SemanticTokenModifiers, semanticTokensOnFull, semanticTokensOnRange,
 	SemanticTokenTypes, set_ahk_h, set_Connection, set_dirname, set_locale, set_version, set_WorkspaceFolders,
-	signatureProvider, symbolProvider, typeFormatting, update_settings, workspaceSymbolProvider
+	signatureProvider, symbolProvider, typeFormatting, updateSettings, workspaceSymbolProvider
 } from './common';
 
 const languageServer = 'ahk2-language-server';
@@ -83,7 +83,7 @@ connection.onInitialize(params => {
 	set_locale(params.locale);
 	set_dirname(configs.extensionUri!);
 	loadlocalize();
-	update_settings(configs);
+	updateSettings(configs);
 	set_WorkspaceFolders(workspaceFolders);
 	set_version('3.0.0');
 	initahk2cache();
@@ -115,7 +115,7 @@ connection.onDidChangeConfiguration(async change => {
 		connection.window.showWarningMessage('Failed to obtain the configuration');
 		return;
 	}
-	update_settings(newset);
+	updateSettings(newset);
 	set_WorkspaceFolders(workspaceFolders);
 });
 

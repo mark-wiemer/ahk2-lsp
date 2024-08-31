@@ -60,7 +60,7 @@ import {
 	symbolProvider,
 	traverse_include,
 	typeFormatting,
-	update_settings,
+	updateSettings,
 	utils,
 	winapis,
 	workspaceSymbolProvider,
@@ -165,7 +165,7 @@ connection.onInitialize(async (params) => {
 	utils.get_ahkProvider = get_ahkProvider;
 	loadlocalize();
 	initahk2cache();
-	if (configs) update_settings(configs);
+	if (configs) updateSettings(configs);
 	if (
 		!(await setInterpreter(
 			resolvePath((extsettings.InterpreterPath ??= '')),
@@ -211,7 +211,7 @@ connection.onDidChangeConfiguration(async (change) => {
 		return;
 	}
 	const { v2: oldV2, InterpreterPath, Syntaxes } = extsettings;
-	update_settings(newset); // this updates `extsettings`
+	updateSettings(newset); // this updates `extsettings`
 	const { v2: newV2 } = extsettings;
 	set_WorkspaceFolders(workspaceFolders);
 	if (InterpreterPath !== extsettings.InterpreterPath) {
