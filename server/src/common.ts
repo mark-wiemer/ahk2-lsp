@@ -58,6 +58,7 @@ export interface AHKLSSettings {
 			/** Function call without parentheses */
 			callWithoutParentheses: CallWithoutParentheses
 		}
+		formatter: FormatOptions
 	}
 	locale?: string
 	commands?: string[]
@@ -71,7 +72,6 @@ export interface AHKLSSettings {
 		Exclude: string[]
 		MaxDepth: number
 	}
-	FormatOptions: FormatOptions
 	InterpreterPath: string
 	GlobalStorage?: string
 	Syntaxes?: string
@@ -95,7 +95,8 @@ export const extsettings: AHKLSSettings = {
 			varUnset: true,
 			localSameAsGlobal: false,
 			callWithoutParentheses: CallWithoutParentheses.Off
-		}
+		},
+		formatter: {},
 	},
 	ActionWhenV1IsDetected: 'Warn',
 	CompletionCommitCharacters: {
@@ -106,7 +107,6 @@ export const extsettings: AHKLSSettings = {
 		Exclude: [],
 		MaxDepth: 2
 	},
-	FormatOptions: {},
 	InterpreterPath: 'C:\\Program Files\\AutoHotkey\\v2\\AutoHotkey.exe',
 	SymbolFoldingFromOpenBrace: false,
 	WorkingDirs: []

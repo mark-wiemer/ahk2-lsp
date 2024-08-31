@@ -498,7 +498,7 @@ export async function completionProvider(params: CompletionParams, _token: Cance
 	}
 
 	let right_is_paren = '(['.includes(linetext[range.end.character] || '\0');
-	const join_c = extsettings.FormatOptions.brace_style === 0 ? '\n' : ' ';
+	const join_c = extsettings.v2.formatter.brace_style === 0 ? '\n' : ' ';
 
 	// fn|()=>...
 	if (symbol) {
@@ -620,7 +620,7 @@ export async function completionProvider(params: CompletionParams, _token: Cance
 	}
 
 	// keyword
-	const keyword_start_with_uppercase = extsettings.FormatOptions?.keyword_start_with_uppercase;
+	const keyword_start_with_uppercase = extsettings.v2.formatter.keyword_start_with_uppercase;
 	const addkeyword = keyword_start_with_uppercase ? function (it: CompletionItem) {
 		items.push(it = Object.assign({}, it));
 		it.insertText = (it.insertText ?? it.label).replace(/(?<=^(loop\s)?)[a-z]/g, m => m.toUpperCase());
@@ -635,7 +635,7 @@ export async function completionProvider(params: CompletionParams, _token: Cance
 		let uppercase = (s: string) => s, remove_indent = uppercase;
 		if (keyword_start_with_uppercase)
 			uppercase = (s: string) => s.replace(/\b[a-z](?=\w)/g, m => m.toUpperCase());
-		if (extsettings.FormatOptions?.switch_case_alignment)
+		if (extsettings.v2.formatter.switch_case_alignment)
 			remove_indent = (s: string) => s.replace(/^\t/gm, '');
 		for (const [label, arr] of [
 			['switch', ['switch ${1:[SwitchValue, CaseSense]}', remove_indent('{\n\tcase ${2:}:\n\t\t${3:}\n\tdefault:\n\t\t$0\n}')]],
