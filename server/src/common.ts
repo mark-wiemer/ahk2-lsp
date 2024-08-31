@@ -4,7 +4,7 @@ import { readdirSync, readFileSync, existsSync, statSync, promises as fs } from 
 import { Connection, MessageConnection } from 'vscode-languageserver';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { CompletionItem, CompletionItemKind, Hover, InsertTextFormat, Range, SymbolKind } from 'vscode-languageserver-types';
-import { AhkSymbol, ActionType, FormatOptions, Lexer, update_comment_tags } from './Lexer';
+import { AhkSymbol, ActionType, FormatOptions, Lexer, setCommentTagRegex } from './Lexer';
 import { diagnostic } from './localize';
 import { isBrowser, jsDocTagNames } from './constants';
 export * from './codeActionProvider';
@@ -34,12 +34,13 @@ export interface AHKLSSettings {
 	v2: {
 		/** Whether to suggest library functions */
 		librarySuggestions: LibIncludeType
+		/** The regex denoting a custom symbol. Defaults to `;;` */
+		commentTagRegex?: string
 	}
 	locale?: string
 	commands?: string[]
 	extensionUri?: string
 	ActionWhenV1IsDetected: ActionType
-	commentTagRegex?: string
 	CompleteFunctionParens: boolean
 	CompletionCommitCharacters?: {
 		Class: string
@@ -72,9 +73,9 @@ export const alpha_3 = encode_version('2.1-alpha.3');
 export const extsettings: AHKLSSettings = {
 	v2: {
 		librarySuggestions: 0,
+		commentTagRegex: '^;;\\s*(.*)',
 	},
 	ActionWhenV1IsDetected: 'Warn',
-	commentTagRegex: '^;;\\s*(.*)',
 	CompleteFunctionParens: false,
 	CompletionCommitCharacters: {
 		Class: '.(',
@@ -456,11 +457,10 @@ export function update_settings(configs: AHKLSSettings) {
 			// @ts-expect-error undefined not assignable to never
 			configs.FormatOptions[k] = { collapse: 2, expand: 1, none: 0 }[configs.FormatOptions[k] as string];
 	try {
-		update_comment_tags(configs.commentTagRegex!);
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	} catch (e: any) {
-		delete e.stack;
-		delete configs.commentTagRegex;
+		setCommentTagRegex(configs.v2.commentTagRegex!);
+	} catch (e: unknown) {
+		delete (e as {stack: unknown}).stack;
+		delete configs.v2.commentTagRegex;
 		console.log(e);
 	}
 	if (configs.WorkingDirs instanceof Array)

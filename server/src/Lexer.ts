@@ -7777,10 +7777,10 @@ export function is_line_continue(lk: Token, tk: Token, parent?: AhkSymbol): bool
 	}
 }
 
-export function update_comment_tags(regexp: string) {
+export function setCommentTagRegex(regex: string) {
 	const old = commentTagRegex;
 	try {
-		commentTagRegex = new RegExp(regexp, 'i');
+		commentTagRegex = new RegExp(regex, 'i');
 	} catch (e) {
 		commentTagRegex = old;
 		throw e;
