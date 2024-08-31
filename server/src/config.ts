@@ -73,6 +73,7 @@ export interface AhkppConfig {
 			paramsCheck: boolean;
 		};
 		formatter: FormatterConfig;
+		interpreterPath: string;
 		/** Suggest library functions */
 		librarySuggestions: LibrarySuggestions;
 		warn: {
@@ -91,7 +92,6 @@ export interface AhkppConfig {
 		Exclude: string[];
 		MaxDepth: number;
 	};
-	InterpreterPath: string;
 	GlobalStorage?: string;
 	Syntaxes?: string;
 	SymbolFoldingFromOpenBrace: boolean;
@@ -127,7 +127,6 @@ export const newFormatterConfig = (
 	...config,
 });
 
-// todo support deep partial
 export const newAhkppConfig = (
 	config: Partial<AhkppConfig> = {},
 ): AhkppConfig => ({
@@ -150,12 +149,12 @@ export const newAhkppConfig = (
 			callWithoutParentheses: CallWithoutParentheses.Off,
 		},
 		formatter: newFormatterConfig(),
+		interpreterPath: 'C:\\Program Files\\AutoHotkey\\v2\\AutoHotkey.exe',
 	},
 	Files: {
 		Exclude: [],
 		MaxDepth: 2,
 	},
-	InterpreterPath: 'C:\\Program Files\\AutoHotkey\\v2\\AutoHotkey.exe',
 	SymbolFoldingFromOpenBrace: false,
 	WorkingDirs: [],
 	...config,

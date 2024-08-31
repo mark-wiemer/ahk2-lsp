@@ -24,7 +24,7 @@
 	"ahk++.config.v2.warn.callWithoutParentheses": "Display warnings for each function or method call without parentheses",
 	"ahk++.config.v2.files.exclude": "Configure glob patterns for excluding files and folders when scanning ahk files.",
 	"ahk++.config.v2.files.maxScanDepth": "Controls the depth when scanning ahk files.",
-	"ahk++.config.v2.interpreterPath": "The path of the `AutoHotkey.exe` executable file. If `AutoHotkeyUX.exe` is selected, the script will be launched using UX Launcher.",
+	"ahk++.config.v2.file.interpreterPath": "The path of the `AutoHotkey.exe` executable file. If `AutoHotkeyUX.exe` is selected, the script will be launched using UX Launcher.",
 	"ahk++.config.v2.symbolFoldingFromOpenBrace": "Forced symbol folding starts at open brace",
 	"ahk++.config.v2.syntaxes": "Specifies the folder path to the `ahk2.json`, `*.snippet.json` and `ahk2.d.ahk` files used for IntelliSense.",
 	"ahk++.config.v2.workingDirectories": "Sets the working directory for the script"

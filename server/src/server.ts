@@ -78,7 +78,7 @@ let hasConfigurationCapability = false,
 	hasWorkspaceFolderCapability = false;
 let uri_switch_to_ahk2 = '';
 
-commands['ahk2.resetinterpreterpath'] = (args: string[]) =>
+commands['ahk++.v2.setIntepreterPath'] = (args: string[]) =>
 	setInterpreter(args[0].replace(/^[A-Z]:/, (m) => m.toLowerCase()));
 
 connection.onInitialize(async (params) => {
@@ -168,7 +168,7 @@ connection.onInitialize(async (params) => {
 	if (configs) updateSettings(configs);
 	if (
 		!(await setInterpreter(
-			resolvePath((ahkppConfig.InterpreterPath ??= '')),
+			resolvePath((ahkppConfig.v2.file.interpreterPath ??= '')),
 		))
 	)
 		patherr(setting.ahkpatherr());
@@ -201,28 +201,24 @@ connection.onInitialized(() => {
 });
 
 connection.onDidChangeConfiguration(async (change) => {
-	let newset: AhkppConfig | undefined = change?.settings;
-	if (hasConfigurationCapability && !newset)
-		newset = await connection.workspace.getConfiguration('ahk++');
-	if (!newset) {
-		connection.window.showWarningMessage(
-			'Failed to obtain the configuration',
-		);
+	let newAhkppConfig: AhkppConfig | undefined = change?.settings;
+	if (hasConfigurationCapability && !newAhkppConfig)
+		newAhkppConfig = await connection.workspace.getConfiguration('ahk++');
+	if (!newAhkppConfig) {
+		connection.window.showWarningMessage('Failed to obtain the AHK++ configuration');
 		return;
 	}
-	const { v2: oldV2, InterpreterPath, Syntaxes } = ahkppConfig;
-	updateSettings(newset); // this updates `extsettings`
+	const { v2: oldV2, Syntaxes } = ahkppConfig;
+	updateSettings(newAhkppConfig); // this updates `extsettings`
 	const { v2: newV2 } = ahkppConfig;
 	set_WorkspaceFolders(workspaceFolders);
-	if (InterpreterPath !== ahkppConfig.InterpreterPath) {
+	if (oldV2.interpreterPath !== newV2.interpreterPath) {
 		if (
 			await setInterpreter(
-				resolvePath((ahkppConfig.InterpreterPath ??= '')),
+				resolvePath((newV2.interpreterPath ??= '')),
 			)
 		)
-			connection.sendRequest('ahk2.updateStatusBar', [
-				ahkppConfig.InterpreterPath,
-			]);
+		connection.sendRequest('ahk2.updateStatusBar', [newV2.interpreterPath]);
 	}
 	if (oldV2.librarySuggestions !== newV2.librarySuggestions) {
 		if (includeUserAndStandardLibrary(newV2.librarySuggestions) && !includeUserAndStandardLibrary(oldV2.librarySuggestions))

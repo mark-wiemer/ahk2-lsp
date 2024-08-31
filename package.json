@@ -366,11 +366,11 @@
 					},
 					"default": {}
 				},
-				"ahk++.InterpreterPath": {
+				"ahk++.v2.file.interpreterPath": {
 					"scope": "window",
 					"type": "string",
-					"default": "C:\\Program Files\\Autohotkey\\v2\\AutoHotkey.exe",
-					"markdownDescription": "%ahk++.config.v2.interpreterPath%"
+					"default": "C:/Program Files/Autohotkey/v2/AutoHotkey.exe",
+					"markdownDescription": "%ahk++.config.v2.file.interpreterPath%"
 				},
 				"ahk++.SymbolFoldingFromOpenBrace": {
 					"scope": "window",
