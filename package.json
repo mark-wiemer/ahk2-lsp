@@ -147,9 +147,8 @@
 			}
 		],
 		"configuration": {
-			"title": "ahk++",
 			"properties": {
-				"ahk++.librarySuggestions": {
+				"ahk++.v2.librarySuggestions": {
 					"scope": "window",
 					"type": "string",
 					"enum": [
@@ -161,7 +160,7 @@
 					"default": "Disabled",
 					"description": "%ahk2.librarySuggestions%"
 				},
-				"ahk++.commentTagRegex": {
+				"ahk++.v2.commentTagRegex": {
 					"scope": "window",
 					"type": "string",
 					"default": "^;;\\s*(?<tag>.+)",
