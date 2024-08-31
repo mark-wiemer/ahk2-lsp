@@ -172,7 +172,7 @@
 					"default": false,
 					"markdownDescription": "%ahk++.completeFunctionCalls%"
 				},
-				"ahk++.DebugConfiguration": {
+				"ahk++.v2.debugConfiguration": {
 					"scope": "window",
 					"type": "object",
 					"default": {
@@ -182,7 +182,7 @@
 						"useDebugDirective": true,
 						"usePerfTips": true
 					},
-					"description": "%ahk2.debugconfiguration%"
+					"markdownDescription": "%ahk++.debugConfiguration%"
 				},
 				"ahk++.Diagnostics.ClassNonDynamicMemberCheck": {
 					"scope": "window",

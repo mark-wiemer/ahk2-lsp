@@ -153,7 +153,7 @@ export async function activate(context: ExtensionContext) {
 						configs = configs?.filter(it => it.request === config.request && it.type === config.type);
 						if (!config.__ahk2debug) {
 							// eslint-disable-next-line @typescript-eslint/no-explicit-any
-							const def = { ...ahkconfig.get('DebugConfiguration') as any };
+							const def = { ...ahkconfig.get('v2.debugConfiguration') as any };
 							delete def.request, delete def.type;
 							append_configs.push(def, configs?.filter(it =>
 								Object.entries(it).every(([k, v]) => equal(v, config[k]))
@@ -372,7 +372,7 @@ async function stopRunningScript() {
 async function beginDebug(extlist: string[], debugexts: { [type: string]: string }, params = false, attach = false) {
 	let extname: string | undefined;
 	const editor = window.activeTextEditor;
-	const config = { ...ahkconfig.get('DebugConfiguration'), request: 'launch', __ahk2debug: true } as DebugConfiguration;
+	const config = { ...ahkconfig.get('v2.debugConfiguration'), request: 'launch', __ahk2debug: true } as DebugConfiguration;
 	if (!extlist.length) {
 		window.showErrorMessage(zhcn ? '未找到debug扩展, 请先安装debug扩展!' : 'The debug extension was not found, please install the debug extension first!');
 		extname = await window.showQuickPick(['zero-plusplus.vscode-autohotkey-debug', 'helsmy.autohotkey-debug', 'mark-wiemer.vscode-autohotkey-plus-plus', 'cweijan.vscode-autohotkey-plus']);
