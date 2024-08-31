@@ -110,7 +110,7 @@ connection.onInitialized(() => {
 connection.onDidChangeConfiguration(async change => {
 	let newset: AHKLSSettings | undefined = change?.settings;
 	if (hasConfigurationCapability && !newset)
-		newset = await connection.workspace.getConfiguration('AutoHotkey2');
+		newset = await connection.workspace.getConfiguration('ahk++');
 	if (!newset) {
 		connection.window.showWarningMessage('Failed to obtain the configuration');
 		return;

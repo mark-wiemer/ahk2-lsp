@@ -202,8 +202,7 @@ connection.onInitialized(() => {
 connection.onDidChangeConfiguration(async (change) => {
 	let newset: AHKLSSettings | undefined = change?.settings;
 	if (hasConfigurationCapability && !newset)
-		// todo AutoHotkey2 config is provided by the ahk2 package.json
-		newset = await connection.workspace.getConfiguration('AutoHotkey2');
+		newset = await connection.workspace.getConfiguration('ahk++');
 	if (!newset) {
 		connection.window.showWarningMessage(
 			'Failed to obtain the configuration',

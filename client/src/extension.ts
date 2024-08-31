@@ -36,7 +36,7 @@ import { readdirSync, lstatSync, readlinkSync, unlinkSync, writeFileSync } from 
 
 let client: LanguageClient, outputchannel: OutputChannel, ahkStatusBarItem: StatusBarItem;
 const ahkprocesses = new Map<number, ChildProcess & { path?: string }>();
-const ahkconfig = workspace.getConfiguration('AutoHotkey2');
+const ahkconfig = workspace.getConfiguration('ahk++');
 let ahkpath_cur: string = ahkconfig.InterpreterPath, server_is_ready = false, zhcn = false;
 const textdecoders: TextDecoder[] = [new TextDecoder('utf8', { fatal: true }), new TextDecoder('utf-16le', { fatal: true })];
 const isWindows = process.platform === 'win32';
@@ -96,8 +96,8 @@ export async function activate(context: ExtensionContext) {
 	const clientOptions: LanguageClientOptions = {
 		documentSelector: [{ language: 'ahk2' }],
 		markdown: { isTrusted: true, supportHtml: true },
-		outputChannel: outputchannel = window.createOutputChannel('AutoHotkey2', '~ahk2-output'),
-		outputChannelName: 'AutoHotkey2',
+		outputChannel: outputchannel = window.createOutputChannel('ahk++', '~ahk2-output'),
+		outputChannelName: 'ahk++',
 		initializationOptions: {
 			commands: Object.keys(request_handlers),
 			GlobalStorage: context.globalStorageUri.fsPath,
@@ -106,10 +106,10 @@ export async function activate(context: ExtensionContext) {
 	};
 
 	if (ahkconfig.FormatOptions?.one_true_brace !== undefined)
-		window.showWarningMessage('configuration "AutoHotkey2.FormatOptions.one_true_brace" is deprecated!\nplease use "AutoHotkey2.FormatOptions.brace_style"');
+		window.showWarningMessage('configuration "ahk++.FormatOptions.one_true_brace" is deprecated!\nplease use "ahk++.FormatOptions.brace_style"');
 
 	// Create the language client and start the client.
-	client = new LanguageClient('AutoHotkey2', 'AutoHotkey2', serverOptions, clientOptions);
+	client = new LanguageClient('ahk++', 'ahk++', serverOptions, clientOptions);
 	zhcn = env.language.startsWith('zh-');
 	textdecoders.push(new TextDecoder(zhcn ? 'gbk' : 'windows-1252'));
 
@@ -190,7 +190,7 @@ export async function activate(context: ExtensionContext) {
 	commands.executeCommand('setContext', 'ahk2:isRunning', false);
 	ahkStatusBarItem = window.createStatusBarItem(StatusBarAlignment.Left, 75);
 	ahkStatusBarItem.command = 'ahk++.setV2Interpreter';
-	const ahkLanguageStatusItem = languages.createLanguageStatusItem('AutoHotkey2', { language: 'ahk2' });
+	const ahkLanguageStatusItem = languages.createLanguageStatusItem('ahk++', { language: 'ahk2' });
 	ahkLanguageStatusItem.text = '$(folder)syntaxes';
 	ahkLanguageStatusItem.command = { title: 'Select AHK Syntaxes', command: 'ahk++.selectSyntaxes' };
 	context.subscriptions.push(
