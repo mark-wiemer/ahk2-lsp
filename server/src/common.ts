@@ -37,7 +37,7 @@ export interface AHKLSSettings {
 	ActionWhenV1IsDetected: ActionType
 	/** Whether to suggest library functions */
 	librarySuggestions: LibIncludeType
-	CommentTags?: string
+	commentTagRegex?: string
 	CompleteFunctionParens: boolean
 	CompletionCommitCharacters?: {
 		Class: string
@@ -70,7 +70,7 @@ export const alpha_3 = encode_version('2.1-alpha.3');
 export const extsettings: AHKLSSettings = {
 	ActionWhenV1IsDetected: 'Warn',
 	librarySuggestions: 0,
-	CommentTags: '^;;\\s*(.*)',
+	commentTagRegex: '^;;\\s*(.*)',
 	CompleteFunctionParens: false,
 	CompletionCommitCharacters: {
 		Class: '.(',
@@ -452,11 +452,11 @@ export function update_settings(configs: AHKLSSettings) {
 			// @ts-expect-error undefined not assignable to never
 			configs.FormatOptions[k] = { collapse: 2, expand: 1, none: 0 }[configs.FormatOptions[k] as string];
 	try {
-		update_comment_tags(configs.CommentTags!);
+		update_comment_tags(configs.commentTagRegex!);
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	} catch (e: any) {
 		delete e.stack;
-		delete configs.CommentTags;
+		delete configs.commentTagRegex;
 		console.log(e);
 	}
 	if (configs.WorkingDirs instanceof Array)
