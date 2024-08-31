@@ -158,7 +158,7 @@
 						"All"
 					],
 					"default": "Disabled",
-					"description": "%ahk2.librarySuggestions%"
+					"description": "%ahk++.librarySuggestions%"
 				},
 				"ahk++.v2.commentTagRegex": {
 					"scope": "window",
