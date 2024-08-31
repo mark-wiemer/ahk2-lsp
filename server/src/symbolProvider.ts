@@ -40,7 +40,9 @@ export function symbolProvider(params: DocumentSymbolParams, token?: Cancellatio
 		return doc.symbolInformation;
 	if (ahkuris.winapi && !list.includes(ahkuris.winapi))
 		winapis = lexers[ahkuris.winapi]?.declaration ?? winapis;
-	const warnLocalSameAsGlobal = extsettings.Warn?.LocalSameAsGlobal;
+	connection.console.info('in symbol provider');
+	const warnLocalSameAsGlobal = extsettings.v2.warn.localSameAsGlobal;
+	connection.console.info('warnLocalSameAsGlobal: ' + warnLocalSameAsGlobal);
 	const result: AhkSymbol[] = [], unset_vars = new Map<Variable, Variable>();
 	const filter_types: SymbolKind[] = [SymbolKind.Method, SymbolKind.Property, SymbolKind.Class];
 	for (const [k, v] of Object.entries(doc.declaration)) {

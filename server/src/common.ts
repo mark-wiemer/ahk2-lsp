@@ -45,6 +45,7 @@ export interface AHKLSSettings {
 		warn: {
 			/** Whether to warn about a ref to a potentially-unset variable */
 			varUnset: boolean
+			localSameAsGlobal: boolean
 		}
 	}
 	locale?: string
@@ -65,7 +66,6 @@ export interface AHKLSSettings {
 	Syntaxes?: string
 	SymbolFoldingFromOpenBrace: boolean
 	Warn: {
-		LocalSameAsGlobal: boolean
 		CallWithoutParentheses: boolean | /* Parentheses */ 1
 	}
 	WorkingDirs: string[]
@@ -85,6 +85,7 @@ export const extsettings: AHKLSSettings = {
 		},
 		warn: {
 			varUnset: true,
+			localSameAsGlobal: false,
 		}
 	},
 	ActionWhenV1IsDetected: 'Warn',
@@ -100,7 +101,6 @@ export const extsettings: AHKLSSettings = {
 	InterpreterPath: 'C:\\Program Files\\AutoHotkey\\v2\\AutoHotkey.exe',
 	SymbolFoldingFromOpenBrace: false,
 	Warn: {
-		LocalSameAsGlobal: false,
 		CallWithoutParentheses: false
 	},
 	WorkingDirs: []
