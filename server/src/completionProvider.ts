@@ -14,6 +14,7 @@ import {
 	connection
 } from './common';
 import { includeLocalLibrary, includeUserAndStandardLibrary } from './utils';
+import { BraceStyle } from './config';
 
 export async function completionProvider(params: CompletionParams, _token: CancellationToken): Promise<Maybe<CompletionItem[]>> {
 	let { position, textDocument: { uri } } = params;
@@ -498,7 +499,7 @@ export async function completionProvider(params: CompletionParams, _token: Cance
 	}
 
 	let right_is_paren = '(['.includes(linetext[range.end.character] || '\0');
-	const join_c = extsettings.v2.formatter.braceStyle === 0 ? '\n' : ' ';
+	const join_c = extsettings.v2.formatter.braceStyle === BraceStyle.Allman ? '\n' : ' ';
 
 	// fn|()=>...
 	if (symbol) {
