@@ -209,7 +209,7 @@ connection.onDidChangeConfiguration(async (change) => {
 		);
 		return;
 	}
-	const { librarySuggestions, InterpreterPath, Syntaxes } = extsettings;
+	const { v2, InterpreterPath, Syntaxes } = extsettings;
 	update_settings(newset);
 	set_WorkspaceFolders(workspaceFolders);
 	if (InterpreterPath !== extsettings.InterpreterPath) {
@@ -222,10 +222,10 @@ connection.onDidChangeConfiguration(async (change) => {
 				extsettings.InterpreterPath,
 			]);
 	}
-	if (librarySuggestions !== extsettings.librarySuggestions) {
-		if (extsettings.librarySuggestions > 1 && librarySuggestions <= 1)
+	if (v2.librarySuggestions !== extsettings.v2.librarySuggestions) {
+		if (extsettings.v2.librarySuggestions > 1 && v2.librarySuggestions <= 1)
 			parseuserlibs();
-		if (extsettings.librarySuggestions & 1 && !(librarySuggestions & 1))
+		if (extsettings.v2.librarySuggestions & 1 && !(v2.librarySuggestions & 1))
 			documents.all().forEach((e) => parseproject(e.uri.toLowerCase()));
 	}
 	if (Syntaxes !== extsettings.Syntaxes) {
@@ -252,7 +252,7 @@ documents.onDidOpen((e) => {
 	}
 	doc.actived = true;
 	if (to_ahk2) doc.actionwhenv1 = 'Continue';
-	if (extsettings.librarySuggestions & 1)
+	if (extsettings.v2.librarySuggestions & 1)
 		parseproject(uri).then(
 			() =>
 				doc.last_diags &&
@@ -424,7 +424,7 @@ async function initpathenv(samefolder = false, retry = true): Promise<boolean> {
 		}
 	}
 	clearLibfuns();
-	if (extsettings.librarySuggestions > 1) parseuserlibs();
+	if (extsettings.v2.librarySuggestions > 1) parseuserlibs();
 	return true;
 	async function update_rcdata() {
 		const pe = new PEFile(ahkpath_cur);
@@ -490,7 +490,7 @@ async function changeInterpreter(oldpath: string, newpath: string) {
 		const doc = lexers[td.uri.toLowerCase()];
 		if (!doc) return;
 		doc.initLibDirs(doc.scriptdir);
-		if (extsettings.librarySuggestions & 1) parseproject(doc.uri);
+		if (extsettings.v2.librarySuggestions & 1) parseproject(doc.uri);
 	});
 	return true;
 }

@@ -24,19 +24,21 @@ export * from './signatureProvider';
 export * from './symbolProvider';
 
 enum LibIncludeType {
-	'Disabled',
-	'Local',
-	'User and Standard',
-	'All'
+	'Disabled' = 0,
+	'Local' = 1,
+	'User and Standard' = 2,
+	'All' = 3
 }
 
 export interface AHKLSSettings {
+	v2: {
+		/** Whether to suggest library functions */
+		librarySuggestions: LibIncludeType
+	}
 	locale?: string
 	commands?: string[]
 	extensionUri?: string
 	ActionWhenV1IsDetected: ActionType
-	/** Whether to suggest library functions */
-	librarySuggestions: LibIncludeType
 	commentTagRegex?: string
 	CompleteFunctionParens: boolean
 	CompletionCommitCharacters?: {
@@ -68,8 +70,10 @@ export const winapis: string[] = [];
 export const lexers: { [uri: string]: Lexer } = {};
 export const alpha_3 = encode_version('2.1-alpha.3');
 export const extsettings: AHKLSSettings = {
+	v2: {
+		librarySuggestions: 0,
+	},
 	ActionWhenV1IsDetected: 'Warn',
-	librarySuggestions: 0,
 	commentTagRegex: '^;;\\s*(.*)',
 	CompleteFunctionParens: false,
 	CompletionCommitCharacters: {
@@ -430,10 +434,10 @@ export function enum_ahkfiles(dirpath: string) {
 }
 
 export function update_settings(configs: AHKLSSettings) {
-	if (typeof configs.librarySuggestions === 'string')
-		configs.librarySuggestions = LibIncludeType[configs.librarySuggestions] as unknown as LibIncludeType;
-	else if (typeof configs.librarySuggestions === 'boolean')
-		configs.librarySuggestions = configs.librarySuggestions ? 3 : 0;
+	if (typeof configs.v2.librarySuggestions === 'string')
+		configs.v2.librarySuggestions = LibIncludeType[configs.v2.librarySuggestions] as unknown as LibIncludeType;
+	else if (typeof configs.v2.librarySuggestions === 'boolean')
+		configs.v2.librarySuggestions = configs.v2.librarySuggestions ? LibIncludeType.All : LibIncludeType.Disabled;
 	if (typeof configs.Warn?.CallWithoutParentheses === 'string')
 		configs.Warn.CallWithoutParentheses = { On: true, Off: false, Parentheses: 1 }[configs.Warn.CallWithoutParentheses];
 	if (typeof configs.FormatOptions?.brace_style === 'string')
