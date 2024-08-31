@@ -105,10 +105,6 @@ export async function activate(context: ExtensionContext) {
 		}
 	};
 
-	// todo remove deprecated option
-	if (ahkconfig.FormatOptions?.one_true_brace !== undefined)
-		window.showWarningMessage('configuration "ahk++.FormatOptions.one_true_brace" is deprecated!\nplease use "ahk++.FormatOptions.brace_style"');
-
 	// Create the language client and start the client.
 	client = new LanguageClient('ahk++', 'ahk++', serverOptions, clientOptions);
 	zhcn = env.language.startsWith('zh-');
