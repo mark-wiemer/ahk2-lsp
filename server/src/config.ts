@@ -42,7 +42,7 @@ export interface FormatterConfig {
 	wrapLineLength: number;
 }
 
-/** Values defined in package.json */
+/** Defined in package.json */
 export enum LibrarySuggestions {
 	Off = 'Off',
 	Local = 'Local',
@@ -50,7 +50,7 @@ export enum LibrarySuggestions {
 	All = 'All',
 }
 
-/** Values defined in package.json */
+/** Defined in package.json */
 export enum CallWithoutParentheses {
 	Off = 'Off',
 	Parentheses = 'Parentheses',
@@ -62,14 +62,18 @@ export interface AhkppConfig {
 		actionWhenV1Detected: ActionType;
 		/** The regex denoting a custom symbol. Defaults to `;;` */
 		commentTagRegex?: string;
-		/** Whether to automatically insert parentheses on function call */
+		/** Automatically insert parentheses on function call */
 		completeFunctionCalls: boolean;
-		/** Whether to suggest library functions */
+		completionCommitCharacters: {
+			Class: string;
+			Function: string;
+		};
 		diagnostics: {
 			classNonDynamicMemberCheck: boolean;
 			paramsCheck: boolean;
 		};
 		formatter: FormatterConfig;
+		/** Suggest library functions */
 		librarySuggestions: LibrarySuggestions;
 		warn: {
 			/** Ref to a potentially-unset variable */
@@ -83,10 +87,6 @@ export interface AhkppConfig {
 	locale?: string;
 	commands?: string[];
 	extensionUri?: string;
-	CompletionCommitCharacters?: {
-		Class: string;
-		Function: string;
-	};
 	Files: {
 		Exclude: string[];
 		MaxDepth: number;
@@ -132,10 +132,14 @@ export const newAhkppConfig = (
 	config: Partial<AhkppConfig> = {},
 ): AhkppConfig => ({
 	v2: {
-		actionWhenV1Detected: 'Warn',
+		actionWhenV1Detected: 'SwitchToV1',
 		librarySuggestions: LibrarySuggestions.Off,
 		commentTagRegex: '^;;\\s*(.*)',
 		completeFunctionCalls: false,
+		completionCommitCharacters: {
+			Class: '.(',
+			Function: '(',
+		},
 		diagnostics: {
 			classNonDynamicMemberCheck: true,
 			paramsCheck: true,
@@ -146,10 +150,6 @@ export const newAhkppConfig = (
 			callWithoutParentheses: CallWithoutParentheses.Off,
 		},
 		formatter: newFormatterConfig(),
-	},
-	CompletionCommitCharacters: {
-		Class: '.(',
-		Function: '(',
 	},
 	Files: {
 		Exclude: [],

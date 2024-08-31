@@ -20,7 +20,7 @@
 	"ahk++.config.v2.warn.varUnset": "Display a warning when referencing an unassigned variable. Changes take effect after restart.",
 
 	"ahk++.config.v2.actionWhenV1Detected": "Action when v1 script is detected",
-	"ahk2.completioncommitcharacters": "Characters which commit auto completion, such as `.(`",
+	"ahk++.config.v2.completionCommitCharacters": "Characters which commit auto-completion. Defaults to `.(`",
 	"ahk2.description": "Autohotkey2 Language Support using vscode-lsp",
 	"ahk++.config.v2.warn.callWithoutParentheses": "Display warnings for each function or method call without parentheses",
 	"ahk2.files.exclude": "Configure glob patterns for excluding files and folders when scanning ahk files.",
