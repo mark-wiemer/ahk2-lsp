@@ -35,7 +35,8 @@ export interface AHKLSSettings {
 	commands?: string[]
 	extensionUri?: string
 	ActionWhenV1IsDetected: ActionType
-	AutoLibInclude: LibIncludeType
+	/** Whether to suggest library functions */
+	librarySuggestions: LibIncludeType
 	CommentTags?: string
 	CompleteFunctionParens: boolean
 	CompletionCommitCharacters?: {
@@ -68,7 +69,7 @@ export const lexers: { [uri: string]: Lexer } = {};
 export const alpha_3 = encode_version('2.1-alpha.3');
 export const extsettings: AHKLSSettings = {
 	ActionWhenV1IsDetected: 'Warn',
-	AutoLibInclude: 0,
+	librarySuggestions: 0,
 	CommentTags: '^;;\\s*(.*)',
 	CompleteFunctionParens: false,
 	CompletionCommitCharacters: {
@@ -429,10 +430,10 @@ export function enum_ahkfiles(dirpath: string) {
 }
 
 export function update_settings(configs: AHKLSSettings) {
-	if (typeof configs.AutoLibInclude === 'string')
-		configs.AutoLibInclude = LibIncludeType[configs.AutoLibInclude] as unknown as LibIncludeType;
-	else if (typeof configs.AutoLibInclude === 'boolean')
-		configs.AutoLibInclude = configs.AutoLibInclude ? 3 : 0;
+	if (typeof configs.librarySuggestions === 'string')
+		configs.librarySuggestions = LibIncludeType[configs.librarySuggestions] as unknown as LibIncludeType;
+	else if (typeof configs.librarySuggestions === 'boolean')
+		configs.librarySuggestions = configs.librarySuggestions ? 3 : 0;
 	if (typeof configs.Warn?.CallWithoutParentheses === 'string')
 		configs.Warn.CallWithoutParentheses = { On: true, Off: false, Parentheses: 1 }[configs.Warn.CallWithoutParentheses];
 	if (typeof configs.FormatOptions?.brace_style === 'string')

@@ -683,15 +683,15 @@ export async function completionProvider(params: CompletionParams, _token: Cance
 	}
 
 	// auto-include
-	if (extsettings.AutoLibInclude) {
+	if (extsettings.librarySuggestions) {
 		const libdirs = doc.libdirs, caches: { [path: string]: TextEdit[] } = {};
 		let exportnum = 0, line = -1, first_is_comment: boolean | undefined, cm: Token;
 		let dir = doc.workspaceFolder;
 		dir = (dir ? URI.parse(dir).fsPath : doc.scriptdir).toLowerCase();
 		doc.includedir.forEach((v, k) => line = k);
 		for (const u in libfuncs) {
-			if (!list[u] && (path = libfuncs[u].fsPath) && ((extsettings.AutoLibInclude > 1 && libfuncs[u].islib) ||
-				((extsettings.AutoLibInclude & 1) && path.toLowerCase().startsWith(dir)))) {
+			if (!list[u] && (path = libfuncs[u].fsPath) && ((extsettings.librarySuggestions > 1 && libfuncs[u].islib) ||
+				((extsettings.librarySuggestions & 1) && path.toLowerCase().startsWith(dir)))) {
 				for (const it of libfuncs[u]) {
 					expg.test(l = it.name) && (vars[l.toUpperCase()] ??= (
 						cpitem = convertNodeCompletion(it), exportnum++,

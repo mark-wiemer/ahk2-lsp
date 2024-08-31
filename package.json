@@ -149,7 +149,7 @@
 		"configuration": {
 			"title": "ahk++",
 			"properties": {
-				"ahk++.AutoLibInclude": {
+				"ahk++.librarySuggestions": {
 					"scope": "window",
 					"type": "string",
 					"enum": [
