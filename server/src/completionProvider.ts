@@ -10,8 +10,10 @@ import {
 	a_vars, ahkuris, ahkvars, allIdentifierChar, completionItemCache, completionitem,
 	decltype_expr, dllcalltpe, extsettings, find_class, find_symbol, find_symbols, get_detail,
 	generate_fn_comment, get_callinfo, get_class_constructor, get_class_member, get_class_members,
-	isBrowser, lexers, libfuncs, make_search_re, sendAhkRequest, utils, winapis
+	isBrowser, lexers, libfuncs, make_search_re, sendAhkRequest, utils, winapis,
+	connection
 } from './common';
+import { includeLocalLibrary, includeUserAndStandardLibrary } from './utils';
 
 export async function completionProvider(params: CompletionParams, _token: CancellationToken): Promise<Maybe<CompletionItem[]>> {
 	let { position, textDocument: { uri } } = params;
@@ -682,16 +684,21 @@ export async function completionProvider(params: CompletionParams, _token: Cance
 		});
 	}
 
-	// auto-include
+	// library suggestions
 	if (extsettings.v2.librarySuggestions) {
+		const librarySuggestions = extsettings.v2.librarySuggestions;
 		const libdirs = doc.libdirs, caches: { [path: string]: TextEdit[] } = {};
 		let exportnum = 0, line = -1, first_is_comment: boolean | undefined, cm: Token;
 		let dir = doc.workspaceFolder;
 		dir = (dir ? URI.parse(dir).fsPath : doc.scriptdir).toLowerCase();
 		doc.includedir.forEach((v, k) => line = k);
 		for (const u in libfuncs) {
-			if (!list[u] && (path = libfuncs[u].fsPath) && ((extsettings.v2.librarySuggestions > 1 && libfuncs[u].islib) ||
-				((extsettings.v2.librarySuggestions & 1) && path.toLowerCase().startsWith(dir)))) {
+			if (
+				!list[u] && (path = libfuncs[u].fsPath)
+				&& (
+					(includeUserAndStandardLibrary(librarySuggestions) && libfuncs[u].islib)
+					|| (includeLocalLibrary(librarySuggestions) && path.toLowerCase().startsWith(dir)))
+			) {
 				for (const it of libfuncs[u]) {
 					expg.test(l = it.name) && (vars[l.toUpperCase()] ??= (
 						cpitem = convertNodeCompletion(it), exportnum++,

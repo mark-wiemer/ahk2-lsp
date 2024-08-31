@@ -68,6 +68,7 @@ import {
 import { PEFile, RESOURCE_TYPE, searchAndOpenPEFile } from './PEFile';
 import { resolvePath, runscript } from './scriptrunner';
 import { TextDecoder } from 'util';
+import { includeLocalLibrary, includeUserAndStandardLibrary } from './utils';
 
 const languageServer = 'ahk2-language-server';
 const documents = new TextDocuments(TextDocument);
@@ -209,8 +210,9 @@ connection.onDidChangeConfiguration(async (change) => {
 		);
 		return;
 	}
-	const { v2, InterpreterPath, Syntaxes } = extsettings;
-	update_settings(newset);
+	const { v2: oldV2, InterpreterPath, Syntaxes } = extsettings;
+	update_settings(newset); // this updates `extsettings`
+	const { v2: newV2 } = extsettings;
 	set_WorkspaceFolders(workspaceFolders);
 	if (InterpreterPath !== extsettings.InterpreterPath) {
 		if (
@@ -222,10 +224,10 @@ connection.onDidChangeConfiguration(async (change) => {
 				extsettings.InterpreterPath,
 			]);
 	}
-	if (v2.librarySuggestions !== extsettings.v2.librarySuggestions) {
-		if (extsettings.v2.librarySuggestions > 1 && v2.librarySuggestions <= 1)
+	if (oldV2.librarySuggestions !== newV2.librarySuggestions) {
+		if (includeUserAndStandardLibrary(newV2.librarySuggestions) && !includeUserAndStandardLibrary(oldV2.librarySuggestions))
 			parseuserlibs();
-		if (extsettings.v2.librarySuggestions & 1 && !(v2.librarySuggestions & 1))
+		if (includeLocalLibrary(newV2.librarySuggestions) && !includeLocalLibrary(oldV2.librarySuggestions))
 			documents.all().forEach((e) => parseproject(e.uri.toLowerCase()));
 	}
 	if (Syntaxes !== extsettings.Syntaxes) {
@@ -252,7 +254,7 @@ documents.onDidOpen((e) => {
 	}
 	doc.actived = true;
 	if (to_ahk2) doc.actionwhenv1 = 'Continue';
-	if (extsettings.v2.librarySuggestions & 1)
+	if (includeLocalLibrary(extsettings.v2.librarySuggestions))
 		parseproject(uri).then(
 			() =>
 				doc.last_diags &&
@@ -424,7 +426,7 @@ async function initpathenv(samefolder = false, retry = true): Promise<boolean> {
 		}
 	}
 	clearLibfuns();
-	if (extsettings.v2.librarySuggestions > 1) parseuserlibs();
+	if (includeUserAndStandardLibrary(extsettings.v2.librarySuggestions)) parseuserlibs();
 	return true;
 	async function update_rcdata() {
 		const pe = new PEFile(ahkpath_cur);
@@ -490,7 +492,7 @@ async function changeInterpreter(oldpath: string, newpath: string) {
 		const doc = lexers[td.uri.toLowerCase()];
 		if (!doc) return;
 		doc.initLibDirs(doc.scriptdir);
-		if (extsettings.v2.librarySuggestions & 1) parseproject(doc.uri);
+		if (includeLocalLibrary(extsettings.v2.librarySuggestions)) parseproject(doc.uri);
 	});
 	return true;
 }

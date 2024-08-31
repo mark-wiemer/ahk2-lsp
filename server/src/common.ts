@@ -23,17 +23,25 @@ export * from './semanticTokensProvider';
 export * from './signatureProvider';
 export * from './symbolProvider';
 
-enum LibIncludeType {
-	'Disabled' = 0,
-	'Local' = 1,
-	'User and Standard' = 2,
-	'All' = 3
+/** Values defined in package.json */
+export enum LibrarySuggestions {
+	Off = 'Off',
+	Local = 'Local',
+	UserAndStandard = 'User and Standard',
+	All = 'All'
+}
+
+/** Values defined in package.json */
+export enum CallWithoutParentheses {
+	Off = 'Off',
+	Parentheses = 'Parentheses',
+	On = 'On'
 }
 
 export interface AHKLSSettings {
 	v2: {
 		/** Whether to suggest library functions */
-		librarySuggestions: LibIncludeType
+		librarySuggestions: LibrarySuggestions
 		/** The regex denoting a custom symbol. Defaults to `;;` */
 		commentTagRegex?: string
 		/** Whether to automatically insert parentheses on function call */
@@ -43,9 +51,12 @@ export interface AHKLSSettings {
 			paramsCheck: boolean
 		}
 		warn: {
-			/** Whether to warn about a ref to a potentially-unset variable */
+			/** Ref to a potentially-unset variable */
 			varUnset: boolean
+			/** Undeclared local has same name as global */
 			localSameAsGlobal: boolean
+			/** Function call without parentheses */
+			callWithoutParentheses: CallWithoutParentheses
 		}
 	}
 	locale?: string
@@ -65,9 +76,6 @@ export interface AHKLSSettings {
 	GlobalStorage?: string
 	Syntaxes?: string
 	SymbolFoldingFromOpenBrace: boolean
-	Warn: {
-		CallWithoutParentheses: boolean | /* Parentheses */ 1
-	}
 	WorkingDirs: string[]
 }
 
@@ -76,7 +84,7 @@ export const lexers: { [uri: string]: Lexer } = {};
 export const alpha_3 = encode_version('2.1-alpha.3');
 export const extsettings: AHKLSSettings = {
 	v2: {
-		librarySuggestions: 0,
+		librarySuggestions: LibrarySuggestions.Off,
 		commentTagRegex: '^;;\\s*(.*)',
 		completeFunctionCalls: false,
 		diagnostics: {
@@ -86,6 +94,7 @@ export const extsettings: AHKLSSettings = {
 		warn: {
 			varUnset: true,
 			localSameAsGlobal: false,
+			callWithoutParentheses: CallWithoutParentheses.Off
 		}
 	},
 	ActionWhenV1IsDetected: 'Warn',
@@ -100,9 +109,6 @@ export const extsettings: AHKLSSettings = {
 	FormatOptions: {},
 	InterpreterPath: 'C:\\Program Files\\AutoHotkey\\v2\\AutoHotkey.exe',
 	SymbolFoldingFromOpenBrace: false,
-	Warn: {
-		CallWithoutParentheses: false
-	},
 	WorkingDirs: []
 };
 export const utils = {
@@ -440,6 +446,7 @@ export function enum_ahkfiles(dirpath: string) {
 	}
 }
 
+/** Updates `extsettings` with the provided config values */
 export function update_settings(configs: AHKLSSettings) {
 	try {
 		setCommentTagRegex(configs.v2.commentTagRegex!);
