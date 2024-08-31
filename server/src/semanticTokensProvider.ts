@@ -130,7 +130,6 @@ function resolveSemanticType(name: string, tk: Token, doc: Lexer) {
 								cls_add_prop(curclass, tk.content, tk.offset);
 							} else if ((memscache.get(curclass) as _Flag)?.['#checkmember'] !== false)
 								((curclass.undefined ??= {})[tk.content.toUpperCase()] ??= []).push(tk);
-							// doc.addDiagnostic(diagnostic.maybehavenotmember(curclass.name, tk.content), tk.offset, tk.length, 2);
 						}
 				}
 			}
