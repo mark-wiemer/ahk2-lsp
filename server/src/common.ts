@@ -38,6 +38,10 @@ export interface AHKLSSettings {
 		commentTagRegex?: string
 		/** Whether to automatically insert parentheses on function call */
 		completeFunctionCalls: boolean
+		diagnostics: {
+			classNonDynamicMemberCheck: boolean
+			paramsCheck: boolean
+		}
 	}
 	locale?: string
 	commands?: string[]
@@ -46,10 +50,6 @@ export interface AHKLSSettings {
 	CompletionCommitCharacters?: {
 		Class: string
 		Function: string
-	}
-	Diagnostics: {
-		ClassNonDynamicMemberCheck: boolean
-		ParamsCheck: boolean
 	}
 	Files: {
 		Exclude: string[]
@@ -76,15 +76,15 @@ export const extsettings: AHKLSSettings = {
 		librarySuggestions: 0,
 		commentTagRegex: '^;;\\s*(.*)',
 		completeFunctionCalls: false,
+		diagnostics: {
+			classNonDynamicMemberCheck: true,
+			paramsCheck: true
+		},
 	},
 	ActionWhenV1IsDetected: 'Warn',
 	CompletionCommitCharacters: {
 		Class: '.(',
 		Function: '('
-	},
-	Diagnostics: {
-		ClassNonDynamicMemberCheck: true,
-		ParamsCheck: true
 	},
 	Files: {
 		Exclude: [],

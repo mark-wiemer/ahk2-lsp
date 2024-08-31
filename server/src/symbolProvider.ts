@@ -290,7 +290,7 @@ function get_func_param_count(fn: FuncNode) {
 export function checkParams(doc: Lexer, node: FuncNode, info: CallSite) {
 	const paraminfo = info.paraminfo;
 	let is_cls: boolean, params;
-	if (!paraminfo || !extsettings.Diagnostics.ParamsCheck) return;
+	if (!paraminfo || !extsettings.v2.diagnostics.paramsCheck) return;
 	if ((is_cls = node?.kind === SymbolKind.Class))
 		node = get_class_constructor(node as unknown as ClassNode) as FuncNode;
 	if (!(params = node?.params)) return;
