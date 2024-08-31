@@ -42,11 +42,9 @@ const textdecoders: TextDecoder[] = [new TextDecoder('utf8', { fatal: true }), n
 const isWindows = process.platform === 'win32';
 
 export async function activate(context: ExtensionContext) {
-    console.log('ahk2 activated');
 	/** Absolute path to `server.js` */
 	const defaultServerModule = context.asAbsolutePath(`ahk2/server/dist/server.js`);
 	const serverModule = process.env.VSCODE_AHK_SERVER_PATH ? context.asAbsolutePath(process.env.VSCODE_AHK_SERVER_PATH) : defaultServerModule;
-	console.log('serverModule:', serverModule);
 
 	// If the extension is launched in debug mode then the debug server options are used
 	// Otherwise the run options are used
