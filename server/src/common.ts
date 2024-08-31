@@ -441,33 +441,12 @@ export function enum_ahkfiles(dirpath: string) {
 }
 
 export function update_settings(configs: AHKLSSettings) {
-	if (typeof configs.v2.librarySuggestions === 'string')
-		configs.v2.librarySuggestions = LibIncludeType[configs.v2.librarySuggestions] as unknown as LibIncludeType;
-	else if (typeof configs.v2.librarySuggestions === 'boolean')
-		configs.v2.librarySuggestions = configs.v2.librarySuggestions ? LibIncludeType.All : LibIncludeType.Disabled;
-	if (typeof configs.Warn?.CallWithoutParentheses === 'string')
-		configs.Warn.CallWithoutParentheses = { On: true, Off: false, Parentheses: 1 }[configs.Warn.CallWithoutParentheses];
-	if (typeof configs.FormatOptions?.brace_style === 'string')
-		switch (configs.FormatOptions.brace_style) {
-			case '0':
-			case 'Allman': configs.FormatOptions.brace_style = 0; break;
-			case '1':
-			case 'One True Brace': configs.FormatOptions.brace_style = 1; break;
-			case '-1':
-			case 'One True Brace Variant': configs.FormatOptions.brace_style = -1; break;
-			default: delete configs.FormatOptions.brace_style; break;
-		}
-	for (const k of ['array_style', 'object_style'] as Array<keyof FormatOptions>)
-		if (typeof configs.FormatOptions?.[k] === 'string')
-			// todo fix update_settings
-			// @ts-expect-error undefined not assignable to never
-			configs.FormatOptions[k] = { collapse: 2, expand: 1, none: 0 }[configs.FormatOptions[k] as string];
 	try {
 		setCommentTagRegex(configs.v2.commentTagRegex!);
-	} catch (e: unknown) {
-		delete (e as {stack: unknown}).stack;
+	} catch (e) {
+		delete (e as { stack: unknown }).stack;
 		delete configs.v2.commentTagRegex;
-		console.log(e);
+		connection.console.error(e as string);
 	}
 	if (configs.WorkingDirs instanceof Array)
 		configs.WorkingDirs = configs.WorkingDirs.map(dir =>
