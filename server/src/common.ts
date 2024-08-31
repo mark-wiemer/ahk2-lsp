@@ -36,12 +36,13 @@ export interface AHKLSSettings {
 		librarySuggestions: LibIncludeType
 		/** The regex denoting a custom symbol. Defaults to `;;` */
 		commentTagRegex?: string
+		/** Whether to automatically insert parentheses on function call */
+		completeFunctionCalls: boolean
 	}
 	locale?: string
 	commands?: string[]
 	extensionUri?: string
 	ActionWhenV1IsDetected: ActionType
-	CompleteFunctionParens: boolean
 	CompletionCommitCharacters?: {
 		Class: string
 		Function: string
@@ -74,9 +75,9 @@ export const extsettings: AHKLSSettings = {
 	v2: {
 		librarySuggestions: 0,
 		commentTagRegex: '^;;\\s*(.*)',
+		completeFunctionCalls: false,
 	},
 	ActionWhenV1IsDetected: 'Warn',
-	CompleteFunctionParens: false,
 	CompletionCommitCharacters: {
 		Class: '.(',
 		Function: '('

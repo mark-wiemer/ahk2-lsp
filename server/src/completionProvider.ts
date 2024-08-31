@@ -918,7 +918,7 @@ export async function completionProvider(params: CompletionParams, _token: Cance
 			// fall through
 			case SymbolKind.Function:
 				ci.kind = info.kind === SymbolKind.Method ? CompletionItemKind.Method : CompletionItemKind.Function;
-				if (extsettings.CompleteFunctionParens) {
+				if (extsettings.v2.completeFunctionCalls) {
 					const fn = info as FuncNode;
 					if (right_is_paren)
 						ci.command = { title: 'cursorRight', command: 'cursorRight' };
