@@ -26,7 +26,7 @@ import {
 	enum_ahkfiles,
 	executeCommandProvider,
 	exportSymbols,
-	extsettings,
+	ahkppConfig,
 	hoverProvider,
 	initahk2cache,
 	isahk2_h,
@@ -168,7 +168,7 @@ connection.onInitialize(async (params) => {
 	if (configs) updateSettings(configs);
 	if (
 		!(await setInterpreter(
-			resolvePath((extsettings.InterpreterPath ??= '')),
+			resolvePath((ahkppConfig.InterpreterPath ??= '')),
 		))
 	)
 		patherr(setting.ahkpatherr());
@@ -210,18 +210,18 @@ connection.onDidChangeConfiguration(async (change) => {
 		);
 		return;
 	}
-	const { v2: oldV2, InterpreterPath, Syntaxes } = extsettings;
+	const { v2: oldV2, InterpreterPath, Syntaxes } = ahkppConfig;
 	updateSettings(newset); // this updates `extsettings`
-	const { v2: newV2 } = extsettings;
+	const { v2: newV2 } = ahkppConfig;
 	set_WorkspaceFolders(workspaceFolders);
-	if (InterpreterPath !== extsettings.InterpreterPath) {
+	if (InterpreterPath !== ahkppConfig.InterpreterPath) {
 		if (
 			await setInterpreter(
-				resolvePath((extsettings.InterpreterPath ??= '')),
+				resolvePath((ahkppConfig.InterpreterPath ??= '')),
 			)
 		)
 			connection.sendRequest('ahk2.updateStatusBar', [
-				extsettings.InterpreterPath,
+				ahkppConfig.InterpreterPath,
 			]);
 	}
 	if (oldV2.librarySuggestions !== newV2.librarySuggestions) {
@@ -230,7 +230,7 @@ connection.onDidChangeConfiguration(async (change) => {
 		if (includeLocalLibrary(newV2.librarySuggestions) && !includeLocalLibrary(oldV2.librarySuggestions))
 			documents.all().forEach((e) => parseproject(e.uri.toLowerCase()));
 	}
-	if (Syntaxes !== extsettings.Syntaxes) {
+	if (Syntaxes !== ahkppConfig.Syntaxes) {
 		initahk2cache();
 		loadahk2();
 		if (isahk2_h) {
@@ -254,7 +254,7 @@ documents.onDidOpen((e) => {
 	}
 	doc.actived = true;
 	if (to_ahk2) doc.actionWhenV1Detected = 'Continue';
-	if (includeLocalLibrary(extsettings.v2.librarySuggestions))
+	if (includeLocalLibrary(ahkppConfig.v2.librarySuggestions))
 		parseproject(uri).then(
 			() =>
 				doc.last_diags &&
@@ -325,7 +325,7 @@ documents.listen(connection);
 connection.listen();
 
 async function patherr(msg: string) {
-	if (!extsettings.commands?.includes('ahk2.executeCommand'))
+	if (!ahkppConfig.commands?.includes('ahk2.executeCommand'))
 		return connection.window.showErrorMessage(msg);
 	if (
 		await connection.window.showErrorMessage(msg, {
@@ -426,7 +426,7 @@ async function initpathenv(samefolder = false, retry = true): Promise<boolean> {
 		}
 	}
 	clearLibfuns();
-	if (includeUserAndStandardLibrary(extsettings.v2.librarySuggestions)) parseuserlibs();
+	if (includeUserAndStandardLibrary(ahkppConfig.v2.librarySuggestions)) parseuserlibs();
 	return true;
 	async function update_rcdata() {
 		const pe = new PEFile(ahkpath_cur);
@@ -492,7 +492,7 @@ async function changeInterpreter(oldpath: string, newpath: string) {
 		const doc = lexers[td.uri.toLowerCase()];
 		if (!doc) return;
 		doc.initLibDirs(doc.scriptdir);
-		if (includeLocalLibrary(extsettings.v2.librarySuggestions)) parseproject(doc.uri);
+		if (includeLocalLibrary(ahkppConfig.v2.librarySuggestions)) parseproject(doc.uri);
 	});
 	return true;
 }

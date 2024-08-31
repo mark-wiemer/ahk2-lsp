@@ -8,7 +8,7 @@ import { URI } from 'vscode-uri';
 import {
 	$DIRPATH, $DLLFUNC, $FILEPATH, ANY, AhkSymbol, ClassNode, FuncNode, Maybe, Property, STRING, SemanticTokenTypes, Token, Variable,
 	a_vars, ahkuris, ahkvars, allIdentifierChar, completionItemCache, completionitem,
-	decltype_expr, dllcalltpe, extsettings, find_class, find_symbol, find_symbols, get_detail,
+	decltype_expr, dllcalltpe, ahkppConfig, find_class, find_symbol, find_symbols, get_detail,
 	generate_fn_comment, get_callinfo, get_class_constructor, get_class_member, get_class_members,
 	isBrowser, lexers, libfuncs, make_search_re, sendAhkRequest, utils, winapis,
 	connection
@@ -81,7 +81,7 @@ export async function completionProvider(params: CompletionParams, _token: Cance
 	}
 	//#endregion
 
-	const commitCharacters = Object.fromEntries(Object.entries(extsettings.CompletionCommitCharacters ?? {})
+	const commitCharacters = Object.fromEntries(Object.entries(ahkppConfig.v2.completionCommitCharacters)
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		.map((v: any) => (v[1] = (v[1] || undefined)?.split(''), v)));
 	// eslint-disable-next-line prefer-const
@@ -499,7 +499,7 @@ export async function completionProvider(params: CompletionParams, _token: Cance
 	}
 
 	let right_is_paren = '(['.includes(linetext[range.end.character] || '\0');
-	const join_c = extsettings.v2.formatter.braceStyle === BraceStyle.Allman ? '\n' : ' ';
+	const join_c = ahkppConfig.v2.formatter.braceStyle === BraceStyle.Allman ? '\n' : ' ';
 
 	// fn|()=>...
 	if (symbol) {
@@ -621,7 +621,7 @@ export async function completionProvider(params: CompletionParams, _token: Cance
 	}
 
 	// keyword
-	const keywordStartWithUppercase = extsettings.v2.formatter.keywordStartWithUppercase;
+	const keywordStartWithUppercase = ahkppConfig.v2.formatter.keywordStartWithUppercase;
 	const addkeyword = keywordStartWithUppercase ? function (it: CompletionItem) {
 		items.push(it = Object.assign({}, it));
 		it.insertText = (it.insertText ?? it.label).replace(/(?<=^(loop\s)?)[a-z]/g, m => m.toUpperCase());
@@ -636,7 +636,7 @@ export async function completionProvider(params: CompletionParams, _token: Cance
 		let uppercase = (s: string) => s, remove_indent = uppercase;
 		if (keywordStartWithUppercase)
 			uppercase = (s: string) => s.replace(/\b[a-z](?=\w)/g, m => m.toUpperCase());
-		if (extsettings.v2.formatter.switchCaseAlignment)
+		if (ahkppConfig.v2.formatter.switchCaseAlignment)
 			remove_indent = (s: string) => s.replace(/^\t/gm, '');
 		for (const [label, arr] of [
 			['switch', ['switch ${1:[SwitchValue, CaseSense]}', remove_indent('{\n\tcase ${2:}:\n\t\t${3:}\n\tdefault:\n\t\t$0\n}')]],
@@ -686,8 +686,8 @@ export async function completionProvider(params: CompletionParams, _token: Cance
 	}
 
 	// library suggestions
-	if (extsettings.v2.librarySuggestions) {
-		const librarySuggestions = extsettings.v2.librarySuggestions;
+	if (ahkppConfig.v2.librarySuggestions) {
+		const librarySuggestions = ahkppConfig.v2.librarySuggestions;
 		const libdirs = doc.libdirs, caches: { [path: string]: TextEdit[] } = {};
 		let exportnum = 0, line = -1, first_is_comment: boolean | undefined, cm: Token;
 		let dir = doc.workspaceFolder;
@@ -926,7 +926,7 @@ export async function completionProvider(params: CompletionParams, _token: Cance
 			// fall through
 			case SymbolKind.Function:
 				ci.kind = info.kind === SymbolKind.Method ? CompletionItemKind.Method : CompletionItemKind.Function;
-				if (extsettings.v2.completeFunctionCalls) {
+				if (ahkppConfig.v2.completeFunctionCalls) {
 					const fn = info as FuncNode;
 					if (right_is_paren)
 						ci.command = { title: 'cursorRight', command: 'cursorRight' };
