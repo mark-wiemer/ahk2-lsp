@@ -4,9 +4,10 @@ import { readdirSync, readFileSync, existsSync, statSync, promises as fs } from 
 import { Connection, MessageConnection } from 'vscode-languageserver';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { CompletionItem, CompletionItemKind, Hover, InsertTextFormat, Range, SymbolKind } from 'vscode-languageserver-types';
-import { AhkSymbol, ActionType, FormatOptions, Lexer, setCommentTagRegex } from './Lexer';
+import { AhkSymbol, ActionType, Lexer, setCommentTagRegex } from './Lexer';
 import { diagnostic } from './localize';
 import { isBrowser, jsDocTagNames } from './constants';
+import { FormatterConfig, newFormatterConfig } from './config';
 export * from './codeActionProvider';
 export * from './colorProvider';
 export * from './commandProvider';
@@ -58,7 +59,7 @@ export interface AHKLSSettings {
 			/** Function call without parentheses */
 			callWithoutParentheses: CallWithoutParentheses
 		}
-		formatter: FormatOptions
+		formatter: FormatterConfig
 	}
 	locale?: string
 	commands?: string[]
@@ -96,7 +97,7 @@ export const extsettings: AHKLSSettings = {
 			localSameAsGlobal: false,
 			callWithoutParentheses: CallWithoutParentheses.Off
 		},
-		formatter: {},
+		formatter: newFormatterConfig(),
 	},
 	ActionWhenV1IsDetected: 'Warn',
 	CompletionCommitCharacters: {
