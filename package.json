@@ -46,6 +46,7 @@
 		"format": "prettier --check .",
 		"format:fix": "prettier --write .",
 		"lint": "npm run format && npm run eslint && npm run sort-package-json",
+		"lint:ci": "npm run eslint && npm run sort-package-json",
 		"sort-package-json": "sort-package-json --check",
 		"sort-package-json:fix": "sort-package-json",
 		"test": "npm run test-unit",
@@ -53,6 +54,7 @@
 		"test-unit": "cd client && vscode-test",
 		"test//": "Run unit tests, not grammar tests",
 		"validate": "npm run lint && npm run test",
+		"validate:ci": "npm run lint:ci && npm run test",
 		"watch": "tsc -b -w"
 	},
 	"prettier": {
