@@ -379,7 +379,7 @@ export function updateAhkppConfig(newConfig: AhkppConfig) {
 	else newConfig.v2.general.workingDirectories = [];
 	scanExclude = {};
 	const file: RegExp[] = [], folder: RegExp[] = [];
-	for (const s of newConfig.v2.file.exclude ?? [])
+	for (const s of newConfig.v2.exclude ?? [])
 		try {
 			(/[\\/]$/.test(s) ? folder : file).push(glob2regexp(s));
 		} catch (e) {

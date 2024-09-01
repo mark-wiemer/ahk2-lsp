@@ -79,9 +79,9 @@ export interface AhkppConfig {
 			classNonDynamicMemberCheck: boolean;
 			paramsCheck: boolean;
 		};
+		/** Glob pattern of files to ignore */
+		exclude: string[];
 		file: {
-			/** Glob pattern of files to ignore */
-			exclude: string[];
 			/** Path to the AHK v2 intepreter */
 			interpreterPath: string;
 			/** Depth of folders to scan for IntelliSense */
@@ -154,18 +154,18 @@ export const newAhkppConfig = (
 			classNonDynamicMemberCheck: true,
 			paramsCheck: true,
 		},
-		warn: {
-			varUnset: true,
-			localSameAsGlobal: false,
-			callWithoutParentheses: CallWithoutParentheses.Off,
-		},
+		exclude: [],
 		file: {
-			exclude: [],
 			interpreterPath:
 				'C:\\Program Files\\AutoHotkey\\v2\\AutoHotkey.exe',
 			maxScanDepth: 2,
 		},
 		formatter: newFormatterConfig(),
+		warn: {
+			varUnset: true,
+			localSameAsGlobal: false,
+			callWithoutParentheses: CallWithoutParentheses.Off,
+		},
 	},
 	...config,
 });
