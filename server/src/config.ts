@@ -73,7 +73,6 @@ export interface AhkppConfig {
             librarySuggestions: LibrarySuggestions;
             symbolFoldingFromOpenBrace: boolean;
             syntaxes: string;
-            workingDirectories: string[];
         };
         diagnostics: {
             classNonDynamicMemberCheck: boolean;
@@ -97,6 +96,8 @@ export interface AhkppConfig {
             /** Function call without parentheses */
             callWithoutParentheses: CallWithoutParentheses;
         };
+        /** Directories containing AHK files that can be #included */
+        workingDirectories: string[];
     };
     locale?: string;
     commands?: string[];
@@ -148,7 +149,6 @@ export const newAhkppConfig = (
             librarySuggestions: LibrarySuggestions.Off,
             symbolFoldingFromOpenBrace: false,
             syntaxes: '',
-            workingDirectories: [],
         },
         diagnostics: {
             classNonDynamicMemberCheck: true,
@@ -166,6 +166,7 @@ export const newAhkppConfig = (
             localSameAsGlobal: false,
             callWithoutParentheses: CallWithoutParentheses.Off,
         },
+        workingDirectories: [],
     },
     ...config,
 });

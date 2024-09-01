@@ -6209,23 +6209,23 @@ export class Lexer {
 	public initLibDirs(dir?: string) {
 		if (isBrowser)
 			return;
-		let workfolder: string;
+		let workDir: string;
 		if (!dir) {
-			for (workfolder of ahkppConfig.v2.general.workingDirectories)
-				if (this.uri.startsWith(workfolder)) {
-					dir = restorePath(URI.parse(workfolder).fsPath.replace(/[\\/]$/, ''));
+			for (workDir of ahkppConfig.v2.workingDirectories)
+				if (this.uri.startsWith(workDir)) {
+					dir = restorePath(URI.parse(workDir).fsPath.replace(/[\\/]$/, ''));
 					break;
 				}
 		}
 		if (dir)
 			this.scriptdir = dir;
-		else if ((workfolder = resolve()).toLowerCase() !== this.scriptpath.toLowerCase()
-			&& workfolder.toLowerCase() !== process.argv0.toLowerCase()
-			&& this.scriptpath.toLowerCase().startsWith(workfolder.toLowerCase())
+		else if ((workDir = resolve()).toLowerCase() !== this.scriptpath.toLowerCase()
+			&& workDir.toLowerCase() !== process.argv0.toLowerCase()
+			&& this.scriptpath.toLowerCase().startsWith(workDir.toLowerCase())
 			&& !/\\lib(\\.+)?$/i.test(this.scriptpath)) {
 			if (existsSync(this.scriptpath + '\\Lib') && statSync(this.scriptpath + '\\Lib').isDirectory())
 				this.scriptdir = this.scriptpath;
-			else this.scriptdir = workfolder;
+			else this.scriptdir = workDir;
 		} else this.scriptdir = this.scriptpath.replace(/\\Lib(\\.+)?$/i, '');
 		this.libdirs = [dir = this.scriptdir + '\\Lib\\'];
 		dir = dir.toLowerCase();

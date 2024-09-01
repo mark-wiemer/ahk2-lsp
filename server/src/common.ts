@@ -372,11 +372,11 @@ export function updateAhkppConfig(newConfig: AhkppConfig) {
 		delete newConfig.v2.general.commentTagRegex;
 		connection.console.error(e as string);
 	}
-	if (newConfig.v2.general.workingDirectories instanceof Array)
-		newConfig.v2.general.workingDirectories = newConfig.v2.general.workingDirectories.map(dir =>
+	if (newConfig.v2.workingDirectories instanceof Array)
+		newConfig.v2.workingDirectories = newConfig.v2.workingDirectories.map(dir =>
 			(dir = URI.file(dir.includes(':') ? dir : resolve(dir)).toString().toLowerCase())
 				.endsWith('/') ? dir : dir + '/');
-	else newConfig.v2.general.workingDirectories = [];
+	else newConfig.v2.workingDirectories = [];
 	scanExclude = {};
 	const file: RegExp[] = [], folder: RegExp[] = [];
 	for (const s of newConfig.v2.exclude ?? [])
@@ -439,7 +439,7 @@ export function set_version(version: string) { ahk_version = encode_version(vers
 export function set_WorkspaceFolders(folders: Set<string>) {
 	const old = workspaceFolders;
 	workspaceFolders = [...folders];
-	ahkppConfig.v2.general.workingDirectories.forEach(dir => { if (!folders.has(dir)) workspaceFolders.push(dir) });
+	ahkppConfig.v2.workingDirectories.forEach(dir => { if (!folders.has(dir)) workspaceFolders.push(dir) });
 	workspaceFolders.sort().reverse();
 	if (old.length === workspaceFolders.length &&
 		!old.some((v, i) => workspaceFolders[i] !== v))
