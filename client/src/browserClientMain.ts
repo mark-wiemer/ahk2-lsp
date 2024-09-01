@@ -54,13 +54,13 @@ export function activate(context: ExtensionContext) {
 		'ahk2.getWorkspaceFileContent': async (params: string[]) => (await workspace.openTextDocument(Uri.parse(params[0]))).getText()
 	};
 
-	client = new LanguageClient('ahk++', 'ahk++', {
+	client = new LanguageClient('AHK++', 'AHK++', {
 		documentSelector: [{ language: 'ahk2' }],
 		markdown: { isTrusted: true, supportHtml: true },
 		initializationOptions: {
 			extensionUri: context.extensionUri.toString(),
 			commands: Object.keys(request_handlers),
-			...JSON.parse(JSON.stringify(workspace.getConfiguration('ahk++')))
+			...JSON.parse(JSON.stringify(workspace.getConfiguration('AHK++')))
 		}
 	}, new Worker(serverMain.toString()));
 

@@ -111,7 +111,7 @@ connection.onInitialized(() => {
 connection.onDidChangeConfiguration(async change => {
 	let newAhkppConfig: AhkppConfig | undefined = change?.settings;
 	if (hasConfigurationCapability && !newAhkppConfig)
-		newAhkppConfig = await connection.workspace.getConfiguration('ahk++');
+		newAhkppConfig = await connection.workspace.getConfiguration('AHK++');
 	if (!newAhkppConfig) {
 		connection.window.showWarningMessage('Failed to obtain the configuration');
 		return;

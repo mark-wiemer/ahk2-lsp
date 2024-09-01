@@ -36,7 +36,7 @@ import { readdirSync, lstatSync, readlinkSync, unlinkSync, writeFileSync } from 
 
 let client: LanguageClient, outputchannel: OutputChannel, ahkStatusBarItem: StatusBarItem;
 const ahkprocesses = new Map<number, ChildProcess & { path?: string }>();
-const ahkppConfig = workspace.getConfiguration('ahk++');
+const ahkppConfig = workspace.getConfiguration('AHK++');
 let ahkpath_cur: string = ahkppConfig.v2.file.interpreterPath, server_is_ready = false, zhcn = false;
 const textdecoders: TextDecoder[] = [new TextDecoder('utf8', { fatal: true }), new TextDecoder('utf-16le', { fatal: true })];
 const isWindows = process.platform === 'win32';
@@ -94,8 +94,8 @@ export async function activate(context: ExtensionContext) {
 	const clientOptions: LanguageClientOptions = {
 		documentSelector: [{ language: 'ahk2' }],
 		markdown: { isTrusted: true, supportHtml: true },
-		outputChannel: outputchannel = window.createOutputChannel('ahk++', '~ahk2-output'),
-		outputChannelName: 'ahk++',
+		outputChannel: outputchannel = window.createOutputChannel('AHK++', '~ahk2-output'),
+		outputChannelName: 'AHK++',
 		initializationOptions: {
 			commands: Object.keys(request_handlers),
 			GlobalStorage: context.globalStorageUri.fsPath,
@@ -104,7 +104,7 @@ export async function activate(context: ExtensionContext) {
 	};
 
 	// Create the language client and start the client.
-	client = new LanguageClient('ahk++', 'ahk++', serverOptions, clientOptions);
+	client = new LanguageClient('AHK++', 'AHK++', serverOptions, clientOptions);
 	zhcn = env.language.startsWith('zh-');
 	textdecoders.push(new TextDecoder(zhcn ? 'gbk' : 'windows-1252'));
 
