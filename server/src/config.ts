@@ -61,7 +61,7 @@ export enum CfgKey {
     ActionWhenV1Detected = 'v2.general.actionWhenV1Detected',
     CommentTagRegex = 'v2.general.commentTagRegex', // still used directly in some places
     CompleteFunctionCalls = 'v2.general.completeFunctionCalls',
-    CompletionCommitCharacters = 'v2.general.completionCommitCharacters',
+    CompletionCommitCharacters = 'v2.completionCommitCharacters',
     LibrarySuggestions = 'v2.general.librarySuggestions',
     SymbolFoldingFromOpenBrace = 'v2.general.symbolFoldingFromOpenBrace',
     Syntaxes = 'v2.general.syntaxes',
@@ -90,12 +90,12 @@ export interface AhkppConfig {
             commentTagRegex?: string;
             /** Automatically insert parentheses on function call */
             completeFunctionCalls: boolean;
-            completionCommitCharacters: CompletionCommitCharacters;
             /** Suggest library functions */
             librarySuggestions: LibrarySuggestions;
             symbolFoldingFromOpenBrace: boolean;
             syntaxes: string;
         };
+        completionCommitCharacters: CompletionCommitCharacters;
         diagnostics: {
             classNonDynamicMemberCheck: boolean;
             paramsCheck: boolean;
@@ -164,13 +164,13 @@ export const newAhkppConfig = (
             actionWhenV1Detected: 'SwitchToV1',
             commentTagRegex: '^;;\\s*(.*)',
             completeFunctionCalls: false,
-            completionCommitCharacters: {
-                Class: '.(',
-                Function: '(',
-            },
             librarySuggestions: LibrarySuggestions.Off,
             symbolFoldingFromOpenBrace: false,
             syntaxes: '',
+        },
+        completionCommitCharacters: {
+            Class: '.(',
+            Function: '(',
         },
         diagnostics: {
             classNonDynamicMemberCheck: true,
