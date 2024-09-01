@@ -66,7 +66,6 @@
 		],
 		"commands": [
 			{
-				"enablement": "!isWeb",
 				"command": "ahk++.debugAttach",
 				"title": "%ahk++.command.debugAttach%",
 				"category": "AHK++"
@@ -97,13 +96,13 @@
 				"category": "AHK++"
 			},
 			{
-				"enablement": "editorLangId == ahk2 && !isWeb",
+				"enablement": "editorLangId == ahk2",
 				"command": "ahk++.runSelection",
 				"title": "%ahk++.command.runSelection%",
 				"category": "AHK++"
 			},
 			{
-				"enablement": "editorLangId == ahk2 && !isWeb",
+				"enablement": "editorLangId == ahk2",
 				"command": "ahk++.stop",
 				"title": "%ahk++.command.stop%",
 				"icon": "$(stop)",
@@ -134,7 +133,7 @@
 				"category": "AHK++"
 			},
 			{
-				"enablement": "editorLangId == ahk2 && !isWeb",
+				"enablement": "editorLangId == ahk2",
 				"command": "ahk++.selectSyntaxes",
 				"title": "Select AHK Syntaxes",
 				"category": "AHK++"
@@ -427,22 +426,22 @@
 			{
 				"command": "ahk++.run",
 				"key": "ctrl+f5",
-				"when": "editorLangId == ahk2 && !isWeb && !editorHasSelection"
+				"when": "editorLangId == ahk2 && !editorHasSelection"
 			},
 			{
 				"command": "ahk++.runSelection",
 				"key": "ctrl+f5",
-				"when": "editorLangId == ahk2 && !isWeb && editorHasSelection"
+				"when": "editorLangId == ahk2 && editorHasSelection"
 			},
 			{
 				"command": "ahk++.debugParams",
 				"key": "shift+f5",
-				"when": "editorLangId == ahk2 && !isWeb"
+				"when": "editorLangId == ahk2"
 			},
 			{
 				"command": "ahk++.stop",
 				"key": "ctrl+f6",
-				"when": "editorLangId == ahk2 && !isWeb && ahk2:isRunning"
+				"when": "editorLangId == ahk2 && ahk2:isRunning"
 			}
 		],
 		"languages": [
@@ -477,27 +476,27 @@
 		"menus": {
 			"editor/context": [
 				{
-					"when": "editorLangId == ahk2 && !isWeb",
+					"when": "editorLangId == ahk2",
 					"command": "ahk++.debugAttach",
 					"group": "navigation@2"
 				},
 				{
-					"when": "editorLangId == ahk2 && !isWeb",
+					"when": "editorLangId == ahk2",
 					"command": "ahk++.debugParams",
 					"group": "navigation@2"
 				},
 				{
-					"when": "editorLangId == ahk2 && !isWeb && editorHasSelection",
+					"when": "editorLangId == ahk2 && editorHasSelection",
 					"command": "ahk++.runSelection",
 					"group": "navigation@0"
 				},
 				{
-					"when": "editorLangId == ahk2 && !isWeb && !editorHasSelection",
+					"when": "editorLangId == ahk2 && !editorHasSelection",
 					"command": "ahk++.run",
 					"group": "navigation@0"
 				},
 				{
-					"when": "editorLangId == ahk2 && !isWeb && ahk2:isRunning",
+					"when": "editorLangId == ahk2 && ahk2:isRunning",
 					"command": "ahk++.stop",
 					"group": "navigation@0"
 				},
