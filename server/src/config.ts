@@ -57,6 +57,31 @@ export enum CallWithoutParentheses {
     On = 'On',
 }
 
+export enum CfgKey {
+    ActionWhenV1Detected = 'v2.general.actionWhenV1Detected',
+    CommentTagRegex = 'v2.general.commentTagRegex', // still used directly in some places
+    CompleteFunctionCalls = 'v2.general.completeFunctionCalls',
+    CompletionCommitCharacters = 'v2.general.completionCommitCharacters',
+    LibrarySuggestions = 'v2.general.librarySuggestions',
+    SymbolFoldingFromOpenBrace = 'v2.general.symbolFoldingFromOpenBrace',
+    Syntaxes = 'v2.general.syntaxes',
+    ClassNonDynamicMemberCheck = 'v2.diagnostics.classNonDynamicMemberCheck',
+    ParamsCheck = 'v2.diagnostics.paramsCheck',
+    Exclude = 'v2.exclude', // still used directly in some places
+    InterpreterPath = 'v2.file.interpreterPath',
+    MaxScanDepth = 'v2.file.maxScanDepth',
+    Formatter = 'v2.formatter',
+    VarUnset = 'v2.warn.varUnset',
+    LocalSameAsGlobal = 'v2.warn.localSameAsGlobal',
+    CallWithoutParentheses = 'v2.warn.callWithoutParentheses',
+    WorkingDirectories = 'v2.workingDirectories', // still used directly in some places
+}
+
+export interface CompletionCommitCharacters {
+    Class: string;
+    Function: string;
+}
+
 export interface AhkppConfig {
     v2: {
         general: {
@@ -65,10 +90,7 @@ export interface AhkppConfig {
             commentTagRegex?: string;
             /** Automatically insert parentheses on function call */
             completeFunctionCalls: boolean;
-            completionCommitCharacters: {
-                Class: string;
-                Function: string;
-            };
+            completionCommitCharacters: CompletionCommitCharacters;
             /** Suggest library functions */
             librarySuggestions: LibrarySuggestions;
             symbolFoldingFromOpenBrace: boolean;
@@ -170,3 +192,14 @@ export const newAhkppConfig = (
     },
     ...config,
 });
+
+/** Gets a single config value from the given config */
+export const getCfg = <T>(config: AhkppConfig, key: CfgKey): T => {
+    const keyPath = key.split('.');
+    /** ConfigKey values are guaranteed to work ;) */
+    let value: any = config;
+    for (const k of keyPath) {
+        value = value[k];
+    }
+    return value;
+};

@@ -68,7 +68,7 @@ import { PEFile, RESOURCE_TYPE, searchAndOpenPEFile } from './PEFile';
 import { resolvePath, runscript } from './scriptrunner';
 import { TextDecoder } from 'util';
 import { includeLocalLibrary, includeUserAndStandardLibrary } from './utils';
-import { AhkppConfig } from './config';
+import { AhkppConfig, CfgKey, getCfg, LibrarySuggestions } from './config';
 
 const languageServer = 'ahk2-language-server';
 const documents = new TextDocuments(TextDocument);
@@ -208,25 +208,26 @@ connection.onDidChangeConfiguration(async (change) => {
 		connection.window.showWarningMessage('Failed to obtain the AHK++ configuration');
 		return;
 	}
-	const { v2: oldV2 } = ahkppConfig;
+	const oldCfg = ahkppConfig;
 	updateAhkppConfig(newAhkppConfig);
-	const { v2: newV2 } = ahkppConfig;
+	const newCfg = ahkppConfig;
 	set_WorkspaceFolders(workspaceFolders);
-	if (oldV2.file.interpreterPath !== newV2.file.interpreterPath) {
-		if (
-			await setInterpreter(
-				resolvePath((newV2.file.interpreterPath ??= '')),
-			)
-		)
-		connection.sendRequest('ahk2.updateStatusBar', [newV2.file.interpreterPath]);
+
+	const newInterpreterPath: string = getCfg(newCfg, CfgKey.InterpreterPath);
+	if (getCfg(oldCfg, CfgKey.InterpreterPath) !== newInterpreterPath) {
+		if (await setInterpreter(resolvePath(newInterpreterPath)))
+			connection.sendRequest('ahk2.updateStatusBar', [newInterpreterPath]);
 	}
-	if (oldV2.general.librarySuggestions !== newV2.general.librarySuggestions) {
-		if (includeUserAndStandardLibrary(newV2.general.librarySuggestions) && !includeUserAndStandardLibrary(oldV2.general.librarySuggestions))
+
+	const oldLibSuggestions: LibrarySuggestions = getCfg(oldCfg, CfgKey.LibrarySuggestions);
+	const newLibSuggestions: LibrarySuggestions = getCfg(newCfg, CfgKey.LibrarySuggestions);
+	if (oldLibSuggestions !== newLibSuggestions) {
+		if (includeUserAndStandardLibrary(newLibSuggestions) && !includeUserAndStandardLibrary(oldLibSuggestions))
 			parseuserlibs();
-		if (includeLocalLibrary(newV2.general.librarySuggestions) && !includeLocalLibrary(oldV2.general.librarySuggestions))
+		if (includeLocalLibrary(newLibSuggestions) && !includeLocalLibrary(oldLibSuggestions))
 			documents.all().forEach((e) => parseproject(e.uri.toLowerCase()));
 	}
-	if (oldV2.general.syntaxes !== newV2.general.syntaxes) {
+	if (getCfg(oldCfg, CfgKey.Syntaxes) !== getCfg(newCfg, CfgKey.Syntaxes)) {
 		initahk2cache();
 		loadahk2();
 		if (isahk2_h) {

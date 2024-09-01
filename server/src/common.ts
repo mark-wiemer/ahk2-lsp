@@ -7,7 +7,7 @@ import { CompletionItem, CompletionItemKind, Hover, InsertTextFormat, Range, Sym
 import { AhkSymbol, Lexer, setCommentTagRegex } from './Lexer';
 import { diagnostic } from './localize';
 import { isBrowser, jsDocTagNames } from './constants';
-import { AhkppConfig, newAhkppConfig } from './config';
+import { AhkppConfig, CfgKey, getCfg, newAhkppConfig } from './config';
 export * from './codeActionProvider';
 export * from './colorProvider';
 export * from './commandProvider';
@@ -205,7 +205,9 @@ export function loadahk2(filename = 'ahk2', d = 3) {
 		if ((data = getwebfile(file + '.json')))
 			build_item_cache(JSON.parse(data.text));
 	} else {
-		const syntaxes = ahkppConfig.v2.general.syntaxes && existsSync(ahkppConfig.v2.general.syntaxes) ? ahkppConfig.v2.general.syntaxes : '';
+		const cfgSyntaxes: string = getCfg(ahkppConfig, CfgKey.Syntaxes);
+		/** The validated syntax path. Empty string if config syntax path failed to validate. */
+		const syntaxes = cfgSyntaxes && existsSync(cfgSyntaxes) ? cfgSyntaxes : '';
 		const file2 = syntaxes ? `${syntaxes}/<>/${filename}` : file;
 		let td: TextDocument | undefined;
 		if ((path = getfilepath('.d.ahk')) && (td = openFile(restorePath(path)))) {
@@ -342,7 +344,7 @@ export function loadahk2(filename = 'ahk2', d = 3) {
 
 let scanExclude: { file?: RegExp[], folder?: RegExp[] } = {};
 export function enum_ahkfiles(dirpath: string) {
-	const maxScanDepth = ahkppConfig.v2.file.maxScanDepth;
+	const maxScanDepth = getCfg<number>(ahkppConfig, CfgKey.MaxScanDepth);
 	const { file: fileExclude, folder: folderExclude } = scanExclude;
 	return enumfile(restorePath(dirpath), 0);
 	async function* enumfile(dirpath: string, depth: number): AsyncGenerator<string> {
@@ -366,20 +368,18 @@ export function enum_ahkfiles(dirpath: string) {
 /** Updates `extsettings` with the provided config values */
 export function updateAhkppConfig(newConfig: AhkppConfig) {
 	try {
-		setCommentTagRegex(newConfig.v2.general.commentTagRegex!);
+		setCommentTagRegex(getCfg(newConfig, CfgKey.CommentTagRegex));
 	} catch (e) {
 		delete (e as { stack: unknown }).stack;
 		delete newConfig.v2.general.commentTagRegex;
 		connection.console.error(e as string);
 	}
-	if (newConfig.v2.workingDirectories instanceof Array)
-		newConfig.v2.workingDirectories = newConfig.v2.workingDirectories.map(dir =>
-			(dir = URI.file(dir.includes(':') ? dir : resolve(dir)).toString().toLowerCase())
-				.endsWith('/') ? dir : dir + '/');
-	else newConfig.v2.workingDirectories = [];
+	newConfig.v2.workingDirectories = newConfig.v2.workingDirectories.map(dir =>
+		(dir = URI.file(dir.includes(':') ? dir : resolve(dir)).toString().toLowerCase())
+			.endsWith('/') ? dir : dir + '/');
 	scanExclude = {};
 	const file: RegExp[] = [], folder: RegExp[] = [];
-	for (const s of newConfig.v2.exclude ?? [])
+	for (const s of getCfg<string[]>(newConfig, CfgKey.Exclude) ?? [])
 		try {
 			(/[\\/]$/.test(s) ? folder : file).push(glob2regexp(s));
 		} catch (e) {
