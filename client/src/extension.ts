@@ -37,7 +37,7 @@ import { readdirSync, lstatSync, readlinkSync, unlinkSync, writeFileSync } from 
 let client: LanguageClient, outputchannel: OutputChannel, ahkStatusBarItem: StatusBarItem;
 const ahkprocesses = new Map<number, ChildProcess & { path?: string }>();
 const ahkppConfig = workspace.getConfiguration('AHK++');
-let ahkpath_cur: string = ahkppConfig.v2.file.interpreterPath, server_is_ready = false, zhcn = false;
+let v2Interpreter: string = ahkppConfig.v2.file.interpreterPath, server_is_ready = false, zhcn = false;
 const textdecoders: TextDecoder[] = [new TextDecoder('utf8', { fatal: true }), new TextDecoder('utf-16le', { fatal: true })];
 const isWindows = process.platform === 'win32';
 
@@ -85,7 +85,7 @@ export async function activate(context: ExtensionContext) {
 			it && languages.setTextDocumentLanguage(it, lang);
 		},
 		'ahk2.updateStatusBar': async (params: [string]) => {
-			ahkpath_cur = params[0];
+			v2Interpreter = params[0];
 			onDidChangegetInterpreter();
 		}
 	};
@@ -167,7 +167,7 @@ export async function activate(context: ExtensionContext) {
 							append_configs.push(configs.find(it => it.name === config.name) ?? configs[0]);
 						Object.assign(config, ...append_configs);
 						if (!config.runtime && (!config.runtime_v2 || config.type !== 'autohotkey')) {
-							config.runtime = resolvePath(ahkpath_cur, folder?.uri.fsPath);
+							config.runtime = resolvePath(v2Interpreter, folder?.uri.fsPath);
 							if (ahkStatusBarItem.text.endsWith('[UIAccess]'))
 								config.useUIAVersion = true;
 						}
@@ -274,9 +274,9 @@ function decode(buf: Buffer) {
 }
 
 function runScript(textEditor: TextEditor, selection = false) {
-	const executePath = resolvePath(ahkpath_cur, workspace.getWorkspaceFolder(textEditor.document.uri)?.uri.fsPath);
+	const executePath = resolvePath(v2Interpreter, workspace.getWorkspaceFolder(textEditor.document.uri)?.uri.fsPath);
 	if (!executePath) {
-		const s = ahkpath_cur || 'AutoHotkey.exe';
+		const s = v2Interpreter || 'AutoHotkey.exe';
 		window.showErrorMessage(zhcn ? `"${s}"未找到!` : `"${s}" not find!`, 'Select Interpreter')
 			.then(r => r && setInterpreter());
 		return;
@@ -399,7 +399,7 @@ async function beginDebug(extlist: string[], debugexts: { [type: string]: string
 async function setInterpreter() {
 	// eslint-disable-next-line prefer-const
 	let index = -1, { path: ahkpath, from } = getInterpreterPath();
-	const list: QuickPickItem[] = [], _ = (ahkpath = resolvePath(ahkpath_cur || ahkpath, undefined, false)).toLowerCase();
+	const list: QuickPickItem[] = [], _ = (ahkpath = resolvePath(v2Interpreter || ahkpath, undefined, false)).toLowerCase();
 	const pick = window.createQuickPick();
 	let it: QuickPickItem, active: QuickPickItem | undefined, sel: QuickPickItem = { label: '' };
 	if (zhcn) {
@@ -413,7 +413,7 @@ async function setInterpreter() {
 		await addpath(resolve(ahkpath, '..'), _.includes('autohotkey') ? 20 : 5);
 	if (!_.includes('c:\\program files\\autohotkey\\'))
 		await addpath('C:\\Program Files\\AutoHotkey\\', 20);
-	index = list.map(it => it.detail?.toLowerCase()).indexOf((ahkpath_cur || ahkpath).toLowerCase());
+	index = list.map(it => it.detail?.toLowerCase()).indexOf((v2Interpreter || ahkpath).toLowerCase());
 	if (index !== -1)
 		active = list[index];
 
@@ -421,7 +421,7 @@ async function setInterpreter() {
 	pick.title = zhcn ? '选择解释器' : 'Select Interpreter';
 	if (active)
 		pick.activeItems = [active];
-	pick.placeholder = (zhcn ? '当前: ' : 'Current: ') + ahkpath_cur;
+	pick.placeholder = (zhcn ? '当前: ' : 'Current: ') + v2Interpreter;
 	pick.show();
 	pick.onDidAccept(async () => {
 		if (pick.selectedItems[0] === list[0]) {
@@ -446,11 +446,11 @@ async function setInterpreter() {
 		}
 		pick.dispose();
 		if (sel.detail) {
-			ahkStatusBarItem.tooltip = ahkpath_cur = sel.detail;
-			ahkppConfig.update('v2.file.interpreterPath', ahkpath_cur, from);
-			ahkStatusBarItem.text = sel.label ||= (await getAHKversion([ahkpath_cur]))[0];
+			ahkStatusBarItem.tooltip = v2Interpreter = sel.detail;
+			ahkppConfig.update('v2.file.interpreterPath', v2Interpreter, from);
+			ahkStatusBarItem.text = sel.label ||= (await getAHKversion([v2Interpreter]))[0];
 			if (server_is_ready)
-				commands.executeCommand('ahk++.v2.setIntepreterPath', ahkpath_cur);
+				commands.executeCommand('ahk++.v2.setIntepreterPath', v2Interpreter);
 		}
 	});
 	pick.onDidHide(() => pick.dispose());
@@ -516,7 +516,7 @@ function getInterpreterPath() {
 async function onDidChangegetInterpreter() {
 	const uri = window.activeTextEditor?.document.uri;
 	const ws = uri ? workspace.getWorkspaceFolder(uri)?.uri.fsPath : undefined;
-	let ahkPath = resolvePath(ahkpath_cur, ws, false);
+	let ahkPath = resolvePath(v2Interpreter, ws, false);
 	if (ahkPath.toLowerCase().endsWith('.exe') && existsSync(ahkPath)) {
 		// ahkStatusBarItem.tooltip is the current saved interpreter path
 		if (ahkPath !== ahkStatusBarItem.tooltip) {
