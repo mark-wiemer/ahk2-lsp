@@ -1,115 +1,115 @@
 {
-    "name": "vscode-autohotkey2-lsp",
-    "displayName": "AutoHotkey v2 Language Support",
-    "version": "2.4.9",
-    "description": "AutoHotkey v2 language support, forked from thqby's extension",
-    "categories": [
-        "Debuggers",
-        "Formatters",
-        "Programming Languages",
-        "Snippets"
-    ],
-    "keywords": [
-        "vscode",
-        "autohotkey",
-        "ahk",
-        "ahk2",
-        "ahk v2"
-    ],
-    "homepage": "https://github.com/mark-wiemer-org/vscode-autohotkey2-lsp/blob/main/README.md",
-    "bugs": {
-        "url": "https://github.com/mark-wiemer-org/vscode-autohotkey2-lsp/issues"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/mark-wiemer-org/vscode-autohotkey2-lsp"
-    },
-    "license": "LGPLv3.0",
-    "author": "thqby and Mark Wiemer",
-    "publisher": "mark-wiemer",
-    "main": "./client/dist/extension",
-    "scripts": {
-        "build": "node build.mjs --mode=production",
-        "prebuild:dev": "npm run clean",
-        "build:dev": "node build.mjs",
-        "build:old": "webpack",
-        "chrome": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ./test-data",
-        "clean": "del-cli client/dist server/dist/*.js*",
-        "clean//": "Remove both the compiled extension and compiled test files",
-        "compile-cli": "webpack --config webpack.config.cli.js --mode production --devtool hidden-source-map",
-        "compile-ts": "cd client && tsc && cd ../server && tsc",
-        "compile-ts//": "Compile TS files",
-        "compile//": "Compile the extension for packaging and publishing",
-        "eslint": "npm run eslint:files -- client server && echo No ESLint problems",
-        "eslint:files": "eslint --max-warnings=0",
-        "eslint:fix": "npm run eslint:files -- client server --fix",
-        "format": "prettier --check .",
-        "format:fix": "prettier --write .",
-        "lint": "npm run eslint && npm run sort-package-json",
-        "package": "vsce package",
-        "sort-package-json": "sort-package-json --check",
-        "sort-package-json:fix": "sort-package-json",
-        "test": "npm run test-grammar && npm run test-unit",
-        "test-grammar": "vscode-tmgrammar-snap syntaxes/samples/*.{ahk1,ahk2}",
-        "pretest-unit": "npm run compile-ts",
-        "test-unit": "cd client && vscode-test",
-        "test//": "Run unit tests, not grammar tests",
-        "validate": "npm run lint && npm run test && npm run package",
-        "vscode:prepublish": "npm run build:old",
-        "watch": "tsc -b -w"
-    },
-    "prettier": {
-        "singleQuote": true,
-        "tabWidth": 4,
-        "trailingComma": "all",
-        "useTabs": false,
-        "overrides": [
-            {
-                "files": [
-                    "*.yml",
-                    "*.yaml"
-                ],
-                "options": {
-                    "tabWidth": 2
-                }
-            }
-        ]
-    },
-    "dependencies": {
-        "vscode-languageclient": "^9.0.1",
-        "vscode-languageserver": "^9.0.1",
-        "vscode-languageserver-textdocument": "^1.0.11",
-        "vscode-uri": "^3.0.8"
-    },
-    "devDependencies": {
-        "@eslint/js": "^9.4.0",
-        "@types/node": "^20.16.0",
-        "@types/sinon": "^17.0.3",
-        "@types/vscode": "^1.82.0",
-        "@vscode/test-cli": "^0.0.10",
-        "@vscode/test-electron": "^2.4.1",
-        "@vscode/test-web": "^0.0.56",
-        "@vscode/vsce": "^3.0.0",
-        "del-cli": "^5.1.0",
-        "esbuild": "^0.23.1",
-        "eslint": "^9.4.0",
-        "globals": "^15.4.0",
-        "mocha": "^10.7.0",
-        "path-browserify": "^1.0.1",
-        "prettier": "3.3.3",
-        "sinon": "^18.0.0",
-        "sort-package-json": "^2.10.0",
-        "ts-loader": "^9.4.0",
-        "typescript": "^5.3.2",
-        "typescript-eslint": "^7.12.0",
-        "vscode-tmgrammar-test": "^0.1.3",
-        "webpack": "^5.74.0",
-        "webpack-cli": "^4.10.0"
-    },
-    "engines": {
-        "vscode": "^1.82.0"
-    },
-    "overrides": {
-        "eslint": "^9.4.0"
-    }
+	"name": "vscode-autohotkey2-lsp",
+	"displayName": "AutoHotkey v2 Language Support",
+	"version": "2.4.9",
+	"description": "AutoHotkey v2 language support, forked from thqby's extension",
+	"categories": [
+		"Debuggers",
+		"Formatters",
+		"Programming Languages",
+		"Snippets"
+	],
+	"keywords": [
+		"vscode",
+		"autohotkey",
+		"ahk",
+		"ahk2",
+		"ahk v2"
+	],
+	"homepage": "https://github.com/mark-wiemer-org/vscode-autohotkey2-lsp/blob/main/README.md",
+	"bugs": {
+		"url": "https://github.com/mark-wiemer-org/vscode-autohotkey2-lsp/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/mark-wiemer-org/vscode-autohotkey2-lsp"
+	},
+	"license": "LGPLv3.0",
+	"author": "thqby and Mark Wiemer",
+	"publisher": "mark-wiemer",
+	"main": "./client/dist/extension",
+	"scripts": {
+		"build": "node build.mjs --mode=production",
+		"prebuild:dev": "npm run clean",
+		"build:dev": "node build.mjs",
+		"build:old": "webpack",
+		"chrome": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ./test-data",
+		"clean": "del-cli client/dist server/dist/*.js*",
+		"clean//": "Remove both the compiled extension and compiled test files",
+		"compile-cli": "webpack --config webpack.config.cli.js --mode production --devtool hidden-source-map",
+		"compile-ts": "cd client && tsc && cd ../server && tsc",
+		"compile-ts//": "Compile TS files",
+		"compile//": "Compile the extension for packaging and publishing",
+		"eslint": "npm run eslint:files -- client server && echo No ESLint problems",
+		"eslint:files": "eslint --max-warnings=0",
+		"eslint:fix": "npm run eslint:files -- client server --fix",
+		"format": "prettier --check .",
+		"format:fix": "prettier --write .",
+		"lint": "npm run eslint && npm run sort-package-json",
+		"package": "vsce package",
+		"sort-package-json": "sort-package-json --check",
+		"sort-package-json:fix": "sort-package-json",
+		"test": "npm run test-grammar && npm run test-unit",
+		"test-grammar": "vscode-tmgrammar-snap syntaxes/samples/*.{ahk1,ahk2}",
+		"pretest-unit": "npm run compile-ts",
+		"test-unit": "cd client && vscode-test",
+		"test//": "Run unit tests, not grammar tests",
+		"validate": "npm run lint && npm run test && npm run package",
+		"vscode:prepublish": "npm run build:old",
+		"watch": "tsc -b -w"
+	},
+	"prettier": {
+		"singleQuote": true,
+		"tabWidth": 4,
+		"trailingComma": "all",
+		"useTabs": true,
+		"overrides": [
+			{
+				"files": [
+					"*.yml",
+					"*.yaml"
+				],
+				"options": {
+					"tabWidth": 2
+				}
+			}
+		]
+	},
+	"dependencies": {
+		"vscode-languageclient": "^9.0.1",
+		"vscode-languageserver": "^9.0.1",
+		"vscode-languageserver-textdocument": "^1.0.11",
+		"vscode-uri": "^3.0.8"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.4.0",
+		"@types/node": "^20.16.0",
+		"@types/sinon": "^17.0.3",
+		"@types/vscode": "^1.82.0",
+		"@vscode/test-cli": "^0.0.10",
+		"@vscode/test-electron": "^2.4.1",
+		"@vscode/test-web": "^0.0.56",
+		"@vscode/vsce": "^3.0.0",
+		"del-cli": "^5.1.0",
+		"esbuild": "^0.23.1",
+		"eslint": "^9.4.0",
+		"globals": "^15.4.0",
+		"mocha": "^10.7.0",
+		"path-browserify": "^1.0.1",
+		"prettier": "3.3.3",
+		"sinon": "^18.0.0",
+		"sort-package-json": "^2.10.0",
+		"ts-loader": "^9.4.0",
+		"typescript": "^5.3.2",
+		"typescript-eslint": "^7.12.0",
+		"vscode-tmgrammar-test": "^0.1.3",
+		"webpack": "^5.74.0",
+		"webpack-cli": "^4.10.0"
+	},
+	"engines": {
+		"vscode": "^1.82.0"
+	},
+	"overrides": {
+		"eslint": "^9.4.0"
+	}
 }

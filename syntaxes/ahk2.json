@@ -1,1013 +1,1013 @@
 {
-    "directives": [
-        {
-            "body": "#ClipboardTimeout ${0:Milliseconds}",
-            "description": "Set time between retrying the clipboard in milliseconds. 0 = try once, -1 = try indefinitely, omit = default search restored.",
-            "prefix": "#ClipboardTimeout"
-        },
-        {
-            "body": "#DllLoad",
-            "description": "Load the DLL or EXE file before the script starts executing or omit to to reset default search strategy.",
-            "syntax": "#DllLoad [FileOrDirName]"
-        },
-        {
-            "body": "#ErrorStdOut ${1|'CP0','UTF-8','UTF-16','CP###'|}",
-            "description": "Send any syntax errors that prevent the script from running to stderr instead of displaying a dialog box.",
-            "prefix": "#ErrorStdOut",
-            "syntax": "#ErrorStdOut [Encoding]"
-        },
-        {
-            "body": "#HotIf",
-            "description": "Create context-sensitive hotkeys and hotstrings that are enabled when the criteria is true. Use #HotIf to reset criteria.",
-            "syntax": "HotIf [Expression]"
-        },
-        {
-            "body": "#HotIf WinActive('$0')",
-            "description": "Create context-sensitive hotkeys and hotstrings that work when the specified window is active. Use #HotIf to reset criteria.",
-            "prefix": "#HotIfWinActive"
-        },
-        {
-            "body": "#HotIf WinExist('$0')",
-            "description": "Create context-sensitive hotkeys and hotstrings that work when the specified window exists. Use #HotIf to reset criteria.",
-            "prefix": "#HotIfWinExist"
-        },
-        {
-            "body": "#HotIfTimeout ${0:Timeout}",
-            "description": "Max time spent evaluating #HotIf criteria. Default is 1000.",
-            "prefix": "#HotIfTimeout"
-        },
-        {
-            "body": "#Hotstring ${1|NoMouse,EndChars |}",
-            "description": "```ahk2\n#Hotstring EndChars NewChars\n#Hotstring NewOptions\n```\nChange the default options for hotstrings or their ending char.\n```ahk2\n#Hotstring NoMouse\n```\nPrevents mouse clicks from resetting the hotstring recognizer.",
-            "prefix": "#Hotstring",
-            "syntax": ""
-        },
-        {
-            "body": "#Include ${0:File_Dir_Or_LibName}",
-            "description": "File contents are inserted here when script runs, but not if already included earlier.",
-            "prefix": "#Include"
-        },
-        {
-            "body": "#IncludeAgain ${0:File_Or_Dir}",
-            "description": "File contents are inserted here when script runs, even if inserted before.",
-            "prefix": "#IncludeAgain"
-        },
-        {
-            "body": "#InputLevel ${0:0_to_100}",
-            "description": "Set Input Level of any subsequently created hotkeys/hotstrings. Omit for 0.",
-            "prefix": "#InputLevel"
-        },
-        {
-            "body": "#MaxThreads ${0:1_to_255}",
-            "description": "Sets the maximum number of simultaneous threads. Default is 10.",
-            "prefix": "#MaxThreads"
-        },
-        {
-            "body": "#MaxThreadsBuffer ${1|true,false|}",
-            "description": "Set if hotkeys are buffered or ignored when max threads reached. Default and omit value is 1.",
-            "prefix": "#MaxThreadsBuffer"
-        },
-        {
-            "body": "#MaxThreadsPerHotkey ${0:1_to_255}",
-            "description": "Set the maximum number of threads that can exist simultaneously for each hotkey or hotstring.",
-            "prefix": "#MaxThreadsPerHotkey"
-        },
-        {
-            "body": "#NoTrayIcon",
-            "description": "Disables the showing of a tray icon."
-        },
-        {
-            "body": "#Requires AutoHotkey${1| , >, >=, <, <=, =|}v2.${2:0}${3| , 32-bit, 64-bit|}",
-            "description": "The required version of AutoHotkey for the script to run otherwise script s and quits.",
-            "prefix": "#Requires",
-            "syntax": "#Requires Requirement"
-        },
-        {
-            "body": "#SingleInstance ${1|Force,Ignore,Prompt,Off|}",
-            "description": "Determine whether the script is allowed to run again when it is already running.",
-            "prefix": "#SingleInstance"
-        },
-        {
-            "body": "#SuspendExempt ${1|true,false|}",
-            "description": "Sets if subsequent hotkeys and hotstrings are marked as exempt from Suspend().",
-            "prefix": "#SuspendExempt"
-        },
-        {
-            "body": "#UseHook ${1|true,false|}",
-            "description": "Force the use of the hook with some/all hotkeys.",
-            "prefix": "#UseHook"
-        },
-        {
-            "body": "#Warn ${1|All,VarUnset,LocalSameAsGlobal,Unreachable|}, ${2|MsgBox,StdOut,OutputDebug,Off|}",
-            "description": "Enable or disable warnings for certain critera. Can catch multiple types of s.",
-            "prefix": "#Warn"
-        },
-        {
-            "body": "#WinActivateForce",
-            "description": "Use forceful activation by default instead of gentle activation first."
-        },
-        {
-            "body": ";@Ahk2Exe-${1|IgnoreBegin,IgnoreEnd|}",
-            "description": "You can delete code fragments from compiled scripts by wrapping them in instructions.",
-            "prefix": "@Ahk2Exe-Ignore"
-        },
-        {
-            "body": "/*@Ahk2Exe-Keep",
-            "description": "Marked code snippets are only executed in the compiled script.",
-            "prefix": "@Ahk2Exe-Keep"
-        },
-        {
-            "body": ";@Ahk2Exe-AddResource ${2:FileName}${1| , RT_BITMAP, RT_MENU, RT_DIALOG, RT_STRING, RT_ACCELERATORS, RT_RCDATA, RT_MESSAGETABLE, RT_GROUP_CURSOR, RT_GROUP_ICON, RT_HTML, RT_MANIFEST|}",
-            "description": "Add resources to the compiled executable file.",
-            "prefix": "@Ahk2Exe-AddResource"
-        },
-        {
-            "body": ";@Ahk2Exe-Base ${0:[Path\\]Name [, [Exe_path\\][Name], Codepage]}",
-            "description": "Specify the binary version of AutoHotkey to be included in the generated .exe file.",
-            "prefix": "@Ahk2Exe-Base"
-        },
-        {
-            "body": ";@Ahk2Exe-ConsoleApp",
-            "description": "Change the executable subsystem to console mode.",
-            "prefix": "@Ahk2Exe-ConsoleApp"
-        },
-        {
-            "body": ";@Ahk2Exe-Cont ${0:Text}",
-            "description": "Specify a continuation line for the previous instruction. This allows a long line of instructions to be formatted for easy reading in the source code.",
-            "prefix": "@Ahk2Exe-Cont"
-        },
-        {
-            "body": ";@Ahk2Exe-Debug ${0:Text}",
-            "description": "Display msgbox with supporting text for debugging.",
-            "prefix": "@Ahk2Exe-Debug"
-        },
-        {
-            "body": ";@Ahk2Exe-ExeName ${0:[Path\\]Name}",
-            "description": "Specify the location and name of the generated .exe file.",
-            "prefix": "@Ahk2Exe-ExeName"
-        },
-        {
-            "body": ";@Ahk2Exe-Let ${0:Name = Value [, NameN = ValueN]}",
-            "description": "Create (or modify) one or more user variables, these variables can be accessed through %U_Name%, similar to built-in variables (see above).",
-            "prefix": "@Ahk2Exe-Let"
-        },
-        {
-            "body": ";@Ahk2Exe-Obey ${0:Name}, ${2:CmdOrExp [, Extra]}",
-            "description": "Execute a command or expression independent of AutoHotkey, and the result is U_Name.",
-            "prefix": "@Ahk2Exe-Obey"
-        },
-        {
-            "body": ";@Ahk2Exe-PostExec ${0:Program [parameters] [, When]}",
-            "description": "Specify the program to be executed before (or after) any compression program applied to the .exe file after successful compilation.",
-            "prefix": "@Ahk2Exe-PostExec"
-        },
-        {
-            "body": ";@Ahk2Exe-SetMainIcon ${0:[IcoFile]}",
-            "description": "Overwrite the custom EXE icon used for compilation.",
-            "prefix": "@Ahk2Exe-SetMainIcon"
-        },
-        {
-            "body": ";@Ahk2Exe-SetCompanyName ${0:CompanyName}",
-            "description": "Changes the company name.",
-            "prefix": "@Ahk2Exe-SetCompanyName"
-        },
-        {
-            "body": ";@Ahk2Exe-SetCopyright ${0:CopyrightInfo}",
-            "description": "Changes the legal copyright information.",
-            "prefix": "@Ahk2Exe-SetCopyright"
-        },
-        {
-            "body": ";@Ahk2Exe-SetDescription ${0:Description}",
-            "description": "Changes the file description and changes script's name in Task Manager under \"Processes\".",
-            "prefix": "@Ahk2Exe-SetDescription"
-        },
-        {
-            "body": ";@Ahk2Exe-SetFileVersion ${0:Version}",
-            "description": "Changes the file version, in both text and raw binary format.",
-            "prefix": "@Ahk2Exe-SetFileVersion"
-        },
-        {
-            "body": ";@Ahk2Exe-SetInternalName ${0:InternalName}",
-            "description": "Changes the internal name.",
-            "prefix": "@Ahk2Exe-SetInternalName"
-        },
-        {
-            "body": ";@Ahk2Exe-SetLanguage ${0:0x0409}",
-            "description": "Changes the language code. Must include 0x prefix.",
-            "prefix": "@Ahk2Exe-SetLanguage"
-        },
-        {
-            "body": ";@Ahk2Exe-SetLegalTrademarks ${0:Trademark}",
-            "description": "Changes the legal trademarks information.",
-            "prefix": "@Ahk2Exe-SetLegalTrademarks"
-        },
-        {
-            "body": ";@Ahk2Exe-SetName ${0:Name}",
-            "description": "Changes the product name and the internal name.",
-            "prefix": "@Ahk2Exe-SetName"
-        },
-        {
-            "body": ";@Ahk2Exe-SetOrigFilename ${0:OriginalFilename}",
-            "description": "Changes the original filename information.",
-            "prefix": "@Ahk2Exe-SetOrigFilename"
-        },
-        {
-            "body": ";@Ahk2Exe-SetProductName ${0:ProductName}",
-            "description": "Changes the product name.",
-            "prefix": "@Ahk2Exe-SetProductName"
-        },
-        {
-            "body": ";@Ahk2Exe-SetProductVersion ${0:Version}",
-            "description": "Changes the product version, in both text and raw binary format.",
-            "prefix": "@Ahk2Exe-SetProductVersion"
-        },
-        {
-            "body": ";@Ahk2Exe-SetVersion ${0:Version}",
-            "description": "Changes the file version and the product version, in both text and raw binary format.",
-            "prefix": "@Ahk2Exe-SetVersion"
-        },
-        {
-            "body": ";@Ahk2Exe-UpdateManifest ${1|0,1,2|}${2| ,[\\, Name\\, Version\\, UIAccess]|}",
-            "description": "Changes details in the .exe's manifest. This directive is for specialised use only.",
-            "prefix": "@Ahk2Exe-UpdateManifest"
-        },
-        {
-            "body": ";@Ahk2Exe-UseResourceLang ${0:0x0409}",
-            "description": "Changes the resource language used by ;@Ahk2Exe-AddResource.",
-            "prefix": "@Ahk2Exe-UseResourceLang"
-        }
-    ],
-    "keywords": [
-        {
-            "body": "and",
-            "description": "`(x and y)` Both items must be true. Same as: `&&`"
-        },
-        {
-            "body": "as"
-        },
-        {
-            "body": "in"
-        },
-        {
-            "body": "is",
-            "description": "`(Var is Type)` Compare value to a class type. String, Array, etc."
-        },
-        {
-            "body": "not",
-            "description": "`(not Expression)` Item must not be true. Same as: `!`."
-        },
-        {
-            "body": "or",
-            "description": "`(x or y)` One or other must be true. Same as: `||`."
-        },
-        {
-            "body": "break",
-            "description": "End any [Loop/While/For] loop immediately.",
-            "syntax": "break [LoopLabel]\nbreak('Label')"
-        },
-        {
-            "body": "catch",
-            "description": "Specify the code to be executed when an exception is raised during the execution of the try statement.",
-            "syntax": "catch [ErrorClass] [as OutputVar] {\n\tStatements\n}"
-        },
-        {
-            "body": "continue",
-            "description": "Skip the rest of the current iteration of the loop statement, and then start a new loop.",
-            "syntax": "continue [LoopLabel]\ncontinue('Label')"
-        },
-        {
-            "body": "else if ",
-            "description": "Adds another decision to check if prior were false.",
-            "prefix": "elif"
-        },
-        {
-            "body": "else",
-            "description": "Specifies one or more statements to execute if the associated statement's body did not execute.\nThe condition for an Else statement executing depends on the associated statement:\n- If expression: The expression evaluated to false.\n- For, Loop (any kind), While: The loop had zero iterations.\n- Loop Read: As above, but the presence of Else also prevents an error from being thrown if the file or path is not found. Therefore, Else executes if the file is empty or does not exist.\n- Try...Catch: No exception was thrown within the Try block."
-        },
-        {
-            "body": "finally",
-            "description": "Code block to run after a try/catch has completed."
-        },
-        {
-            "body": "for $1 in $0",
-            "description": "Repeat a series of functions for each key-value pair in the object.",
-            "prefix": "for",
-            "syntax": "for value1 [, value2...] in Expression"
-        },
-        {
-            "body": "global",
-            "description": "Mark a variable or function as global so it can be changed from inside a function or method.",
-            "syntax": "global [Var]"
-        },
-        {
-            "body": "goto",
-            "description": "Jump to the specified label and continue execution.",
-            "syntax": "goto Label\ngoto('Label')"
-        },
-        {
-            "body": "if ",
-            "description": "Specify one or more statements to be executed when the expression evaluates to true.",
-            "syntax": "if Expression"
-        },
-        {
-            "body": "loop files ${0:FilePattern [, Mode]}",
-            "description": "Loop through a directory. MODES: D=Get Directories, F=Get Files, R=Recurse",
-            "prefix": "loop files"
-        },
-        {
-            "body": "loop parse ${0:String [, Delimiters|'CSV', OmitChars]}",
-            "description": "Loop through a string by substrings. String is parsed by each char if no Delimiter is provided.",
-            "prefix": "loop parse"
-        },
-        {
-            "body": "loop read ${0:InputFile [, OutputFile]}",
-            "description": "Retrieve the lines in the text file, one line at a time.",
-            "prefix": "loop read"
-        },
-        {
-            "body": "loop reg ${0:KeyName [, Mode]}",
-            "description": "Retrieve the contents of the specified registry subkey. Modes: K=Key, V=Value, R=Recurse",
-            "prefix": "loop reg"
-        },
-        {
-            "body": "loop",
-            "description": "Repeat a series of functions: you can specify a number representing the number of repetitions or until a break is encountered.",
-            "syntax": "loop [Count]"
-        },
-        {
-            "body": "local ${0:Var}",
-            "description": "Sets a variable or all function variables to local scope, causing them to be private to the function. Local variables can be the same as globals.",
-            "prefix": "local"
-        },
-        {
-            "body": "case $1:",
-            "description": "One or more values to compare against the Switch value or evaluate if no value is provided.",
-            "prefix": "case",
-            "syntax": "case ExpressionOrValue:"
-        },
-        {
-            "body": "default:",
-            "description": "The default code block to run if no Switch cases match.",
-            "prefix": "default"
-        },
-        {
-            "body": "return",
-            "description": "Return the flow of code to the original caller, along with an optional return value.",
-            "syntax": "return [Expression]"
-        },
-        {
-            "body": "static",
-            "description": "A static variable or function persists through the life of the script and does not get erased at the end of a function call.",
-            "syntax": "static [Var]\nstatic Method()\nstatic Property"
-        },
-        {
-            "body": "throw",
-            "description": "Indicates that an error has occurred. The signal can be caught by a try-catch statement.",
-            "syntax": "throw Expression"
-        },
-        {
-            "body": "try",
-            "description": "Guards one or more statements against runtime errors and values thrown by the Throw statement."
-        },
-        {
-            "body": "until ",
-            "description": "Apply the condition to the continuation of the loop or for loop.",
-            "syntax": "until Expression"
-        },
-        {
-            "body": "while ",
-            "description": "While expression evaluates to true, continue to run code block",
-            "syntax": "while Expression"
-        }
-    ],
-    "options": {
-        "ahk_criteria": [
-            {
-                "body": "ahk_class",
-                "description": "ahk_class is used to match one or more windows using the class name of the application."
-            },
-            {
-                "body": "ahk_exe",
-                "description": "ahk_exe is used to match one or more windows using the exe name of the process that owns the window."
-            },
-            {
-                "body": "ahk_group",
-                "description": "ahk_group is used to match a group of one or more windows that have been previously defined using GroupAdd()."
-            },
-            {
-                "body": "ahk_id",
-                "description": "ahk_id is used to match a window using the window's unique ID (HWND). This number is not static and changes every time the application is launched."
-            },
-            {
-                "body": "ahk_pid",
-                "description": "ahk_pid is used to match one or more windows using the process ID of that application. This number is not static and changes every time the application is launched."
-            }
-        ],
-        "hotstring": [
-            {
-                "body": "*",
-                "description": "An ending character (e.g. `Space`, `.`, or `Enter`) is not required to trigger the hotstring. For example:\n```ahk2\n:*:j@::jsmith@somedomain.com\n```"
-            },
-            {
-                "body": "?",
-                "description": "The hotstring will be triggered even when it is inside another word; that is, when the character typed immediately before it is alphanumeric. For example, if `:?:al::airline` is a hotstring, typing \"practical \" would produce \"practicairline \". Use `?0` to turn this option back off."
-            },
-            {
-                "body": "B0",
-                "description": "Automatic backspacing is not done to erase the abbreviation you type. Use a plain `B` to turn backspacing back on after it was previously turned off. A script may also do its own backspacing via {bs 5}, which sends `Backspace` five times. Similarly, it may send `←` five times via {left 5}. For example, the following hotstring produces \"<em></em>\" and moves the caret 5 places to the left (so that it's between the tags):\n```ahk2\n:*b0:<em>::</em>{left 5}\n```"
-            },
-            {
-                "body": "C",
-                "description": "Case-sensitive: When you type an abbreviation, it must exactly match the case defined in the script. Use `C0` to turn case sensitivity back off."
-            },
-            {
-                "body": "C1",
-                "description": "Do not conform to typed case. Use this option to make auto-replace hotstrings case-insensitive and prevent them from conforming to the case of the characters you actually type. Case-conforming hotstrings (which are the default) produce their replacement text in all caps if you type the abbreviation in all caps. If you type the first letter in caps, the first letter of the replacement will also be capitalized (if it is a letter). If you type the case in any other way, the replacement is sent exactly as defined."
-            },
-            {
-                "body": "Kn",
-                "description": "Key-delay: This rarely-used option sets the delay between keystrokes produced by auto-backspacing or auto-replacement. Specify the new delay for n; for example, specify `k10` to have a 10 ms delay and `k-1` to have no delay."
-            },
-            {
-                "body": "O",
-                "description": "Omit the ending character of auto-replace hotstrings when the replacement is produced. This is useful when you want a hotstring to be kept unambiguous by still requiring an ending character, but don't actually want the ending character to be shown on the screen. Use `O0` to turn this option back off."
-            },
-            {
-                "body": "Pn",
-                "description": "The priority of the hotstring (e.g. `P1`). This rarely-used option has no effect on auto-replace hotstrings."
-            },
-            {
-                "body": "R",
-                "description": "Send the replacement text raw; that is, without translating `{Enter}` to `Enter`, `^c` to `Ctrl+C`, etc. Use `R0` to turn this option back off, or override it with `T`."
-            },
-            {
-                "body": "S",
-                "description": "Specify the letter `S` to make the hotstring exempt from Suspend. Specify `S0` to remove the exemption, allowing the hotstring to be suspended."
-            },
-            {
-                "body": "SI",
-                "description": "SendInput"
-            },
-            {
-                "body": "SP",
-                "description": "SendPlay"
-            },
-            {
-                "body": "SE",
-                "description": "SendEvent"
-            },
-            {
-                "body": "T",
-                "description": "Send the replacement text using Text mode. Use `T0` or `R0` to turn this option back off, or override it with R."
-            },
-            {
-                "body": "X",
-                "description": "Instead of replacement text, the hotstring accepts a function call or expression to execute."
-            },
-            {
-                "body": "Z",
-                "description": "This rarely-used option resets the hotstring recognizer after each triggering of the hotstring. In other words, the script will begin waiting for an entirely new hotstring, eliminating from consideration anything you previously typed. This can prevent unwanted triggerings of hotstrings."
-            }
-        ]
-    },
-    "texts": [
-        {
-            "body": "AlwaysOnTop",
-            "description": "Keep the window above all other windows."
-        },
-        {
-            "body": "AutoSize",
-            "description": "Resize the window to only accommodate its currently visible controls. This is useful for adjusting the window size after adding new controls or adjusting the size of existing controls, hiding or unhiding them."
-        },
-        {
-            "body": "Border",
-            "description": "Provide a thin border around the control. Most controls do not need this because they already have a type-specific border. When adding a border to an existing control, you may need to increase the width and height of the control by 1 Pixels."
-        },
-        {
-            "body": "Caption",
-            "description": "Provide title bar and thick window border/edge."
-        },
-        {
-            "body": "Center",
-            "description": "Center the text of the control within its available width."
-        },
-        {
-            "body": "DropFiles",
-            "description": "Start when a file/folder is dragged and dropped onto the window as part of a drag-and-drop operation (but if this callback is already running, the drag-and-drop event will be ignored)."
-        }
-    ],
-    "keys": [
-        {
-            "body": "Alt"
-        },
-        {
-            "body": "AltTab",
-            "description": "If the alt-tab menu is visible, then move forward in the menu. Otherwise, display the menu (only when the hotkey is two keys connected by'&'; otherwise, it does nothing)."
-        },
-        {
-            "body": "AltTabAndMenu",
-            "description": "If the alt-tab menu is visible, move forward. Otherwise, display the menu."
-        },
-        {
-            "body": "AltTabMenu",
-            "description": "Show or hide the alt-tab menu."
-        },
-        {
-            "body": "AltTabMenuDismiss",
-            "description": "Close the Alt-tab menu."
-        },
-        {
-            "body": "AppsKey",
-            "description": "Activates the right-click context menu."
-        },
-        {
-            "body": "BackSpace"
-        },
-        {
-            "body": "BS",
-            "description": "Short version of Backspace."
-        },
-        {
-            "body": "Browser_Back",
-            "description": "Back"
-        },
-        {
-            "body": "Browser_Favorites",
-            "description": "Favorites"
-        },
-        {
-            "body": "Browser_Forward",
-            "description": "Forward"
-        },
-        {
-            "body": "Browser_Home",
-            "description": "Homepage"
-        },
-        {
-            "body": "Browser_Refresh",
-            "description": "Refresh"
-        },
-        {
-            "body": "Browser_Search",
-            "description": "Search"
-        },
-        {
-            "body": "Browser_Stop",
-            "description": "Stop"
-        },
-        {
-            "body": "CapsLock"
-        },
-        {
-            "body": "Control"
-        },
-        {
-            "body": "Ctrl"
-        },
-        {
-            "body": "CtrlBreak",
-            "description": "Ctrl+Pause or Ctrl+ScrollLock"
-        },
-        {
-            "body": "Del",
-            "description": "Short version of Delete."
-        },
-        {
-            "body": "Delete"
-        },
-        {
-            "body": "Down"
-        },
-        {
-            "body": "End"
-        },
-        {
-            "body": "Enter"
-        },
-        {
-            "body": "Esc",
-            "description": "Short version of Escape."
-        },
-        {
-            "body": "Escape"
-        },
-        {
-            "body": "F1"
-        },
-        {
-            "body": "F10"
-        },
-        {
-            "body": "F11"
-        },
-        {
-            "body": "F12"
-        },
-        {
-            "body": "F13"
-        },
-        {
-            "body": "F14"
-        },
-        {
-            "body": "F15"
-        },
-        {
-            "body": "F16"
-        },
-        {
-            "body": "F17"
-        },
-        {
-            "body": "F18"
-        },
-        {
-            "body": "F19"
-        },
-        {
-            "body": "F2"
-        },
-        {
-            "body": "F20"
-        },
-        {
-            "body": "F21"
-        },
-        {
-            "body": "F22"
-        },
-        {
-            "body": "F23"
-        },
-        {
-            "body": "F24"
-        },
-        {
-            "body": "F3"
-        },
-        {
-            "body": "F4"
-        },
-        {
-            "body": "F5"
-        },
-        {
-            "body": "F6"
-        },
-        {
-            "body": "F7"
-        },
-        {
-            "body": "F8"
-        },
-        {
-            "body": "F9"
-        },
-        {
-            "body": "Home"
-        },
-        {
-            "body": "Ins",
-            "description": "Short version of Insert."
-        },
-        {
-            "body": "Insert"
-        },
-        {
-            "body": "Joy1"
-        },
-        {
-            "body": "Joy10"
-        },
-        {
-            "body": "Joy11"
-        },
-        {
-            "body": "Joy12"
-        },
-        {
-            "body": "Joy13"
-        },
-        {
-            "body": "Joy14"
-        },
-        {
-            "body": "Joy15"
-        },
-        {
-            "body": "Joy16"
-        },
-        {
-            "body": "Joy17"
-        },
-        {
-            "body": "Joy18"
-        },
-        {
-            "body": "Joy19"
-        },
-        {
-            "body": "Joy2"
-        },
-        {
-            "body": "Joy20"
-        },
-        {
-            "body": "Joy21"
-        },
-        {
-            "body": "Joy22"
-        },
-        {
-            "body": "Joy23"
-        },
-        {
-            "body": "Joy24"
-        },
-        {
-            "body": "Joy25"
-        },
-        {
-            "body": "Joy26"
-        },
-        {
-            "body": "Joy27"
-        },
-        {
-            "body": "Joy28"
-        },
-        {
-            "body": "Joy29"
-        },
-        {
-            "body": "Joy3"
-        },
-        {
-            "body": "Joy30"
-        },
-        {
-            "body": "Joy31"
-        },
-        {
-            "body": "Joy32"
-        },
-        {
-            "body": "Joy4"
-        },
-        {
-            "body": "Joy5"
-        },
-        {
-            "body": "Joy6"
-        },
-        {
-            "body": "Joy7"
-        },
-        {
-            "body": "Joy8"
-        },
-        {
-            "body": "Joy9"
-        },
-        {
-            "body": "JoyAxes"
-        },
-        {
-            "body": "JoyButtons"
-        },
-        {
-            "body": "JoyInfo"
-        },
-        {
-            "body": "JoyName"
-        },
-        {
-            "body": "JoyPOV"
-        },
-        {
-            "body": "JoyR"
-        },
-        {
-            "body": "JoyU"
-        },
-        {
-            "body": "JoyV"
-        },
-        {
-            "body": "JoyX"
-        },
-        {
-            "body": "JoyY"
-        },
-        {
-            "body": "JoyZ"
-        },
-        {
-            "body": "LAlt"
-        },
-        {
-            "body": "Launch_App1"
-        },
-        {
-            "body": "Launch_App2"
-        },
-        {
-            "body": "Launch_Mail"
-        },
-        {
-            "body": "Launch_Media"
-        },
-        {
-            "body": "LButton"
-        },
-        {
-            "body": "LControl"
-        },
-        {
-            "body": "LCtrl"
-        },
-        {
-            "body": "Left"
-        },
-        {
-            "body": "LShift"
-        },
-        {
-            "body": "LWin"
-        },
-        {
-            "body": "MButton"
-        },
-        {
-            "body": "Media_Next"
-        },
-        {
-            "body": "Media_Play_Pause"
-        },
-        {
-            "body": "Media_Prev"
-        },
-        {
-            "body": "Media_Stop"
-        },
-        {
-            "body": "NumLock"
-        },
-        {
-            "body": "Numpad0"
-        },
-        {
-            "body": "Numpad1"
-        },
-        {
-            "body": "Numpad2"
-        },
-        {
-            "body": "Numpad3"
-        },
-        {
-            "body": "Numpad4"
-        },
-        {
-            "body": "Numpad5"
-        },
-        {
-            "body": "Numpad6"
-        },
-        {
-            "body": "Numpad7"
-        },
-        {
-            "body": "Numpad8"
-        },
-        {
-            "body": "Numpad9"
-        },
-        {
-            "body": "NumpadAdd"
-        },
-        {
-            "body": "NumpadClear"
-        },
-        {
-            "body": "NumpadDel"
-        },
-        {
-            "body": "NumpadDiv"
-        },
-        {
-            "body": "NumpadDot"
-        },
-        {
-            "body": "NumpadDown"
-        },
-        {
-            "body": "NumpadEnd"
-        },
-        {
-            "body": "NumpadEnter"
-        },
-        {
-            "body": "NumpadHome"
-        },
-        {
-            "body": "NumpadIns"
-        },
-        {
-            "body": "NumpadLeft"
-        },
-        {
-            "body": "NumpadMult"
-        },
-        {
-            "body": "NumpadPgdn"
-        },
-        {
-            "body": "NumpadPgup"
-        },
-        {
-            "body": "NumpadRight"
-        },
-        {
-            "body": "NumpadSub"
-        },
-        {
-            "body": "NumpadUp"
-        },
-        {
-            "body": "PgDn"
-        },
-        {
-            "body": "PgUp"
-        },
-        {
-            "body": "PrintScreen"
-        },
-        {
-            "body": "RAlt"
-        },
-        {
-            "body": "RButton"
-        },
-        {
-            "body": "RControl"
-        },
-        {
-            "body": "RCtrl"
-        },
-        {
-            "body": "Right"
-        },
-        {
-            "body": "RShift"
-        },
-        {
-            "body": "RWin"
-        },
-        {
-            "body": "ScrollLock"
-        },
-        {
-            "body": "Shift"
-        },
-        {
-            "body": "ShiftAltTab"
-        },
-        {
-            "body": "Space"
-        },
-        {
-            "body": "Tab"
-        },
-        {
-            "body": "Up"
-        },
-        {
-            "body": "Volume_Down"
-        },
-        {
-            "body": "Volume_Mute"
-        },
-        {
-            "body": "Volume_Up"
-        },
-        {
-            "body": "WheelDown"
-        },
-        {
-            "body": "WheelLeft"
-        },
-        {
-            "body": "WheelRight"
-        },
-        {
-            "body": "WheelUp"
-        },
-        {
-            "body": "XButton1"
-        },
-        {
-            "body": "XButton2"
-        }
-    ]
+	"directives": [
+		{
+			"body": "#ClipboardTimeout ${0:Milliseconds}",
+			"description": "Set time between retrying the clipboard in milliseconds. 0 = try once, -1 = try indefinitely, omit = default search restored.",
+			"prefix": "#ClipboardTimeout"
+		},
+		{
+			"body": "#DllLoad",
+			"description": "Load the DLL or EXE file before the script starts executing or omit to to reset default search strategy.",
+			"syntax": "#DllLoad [FileOrDirName]"
+		},
+		{
+			"body": "#ErrorStdOut ${1|'CP0','UTF-8','UTF-16','CP###'|}",
+			"description": "Send any syntax errors that prevent the script from running to stderr instead of displaying a dialog box.",
+			"prefix": "#ErrorStdOut",
+			"syntax": "#ErrorStdOut [Encoding]"
+		},
+		{
+			"body": "#HotIf",
+			"description": "Create context-sensitive hotkeys and hotstrings that are enabled when the criteria is true. Use #HotIf to reset criteria.",
+			"syntax": "HotIf [Expression]"
+		},
+		{
+			"body": "#HotIf WinActive('$0')",
+			"description": "Create context-sensitive hotkeys and hotstrings that work when the specified window is active. Use #HotIf to reset criteria.",
+			"prefix": "#HotIfWinActive"
+		},
+		{
+			"body": "#HotIf WinExist('$0')",
+			"description": "Create context-sensitive hotkeys and hotstrings that work when the specified window exists. Use #HotIf to reset criteria.",
+			"prefix": "#HotIfWinExist"
+		},
+		{
+			"body": "#HotIfTimeout ${0:Timeout}",
+			"description": "Max time spent evaluating #HotIf criteria. Default is 1000.",
+			"prefix": "#HotIfTimeout"
+		},
+		{
+			"body": "#Hotstring ${1|NoMouse,EndChars |}",
+			"description": "```ahk2\n#Hotstring EndChars NewChars\n#Hotstring NewOptions\n```\nChange the default options for hotstrings or their ending char.\n```ahk2\n#Hotstring NoMouse\n```\nPrevents mouse clicks from resetting the hotstring recognizer.",
+			"prefix": "#Hotstring",
+			"syntax": ""
+		},
+		{
+			"body": "#Include ${0:File_Dir_Or_LibName}",
+			"description": "File contents are inserted here when script runs, but not if already included earlier.",
+			"prefix": "#Include"
+		},
+		{
+			"body": "#IncludeAgain ${0:File_Or_Dir}",
+			"description": "File contents are inserted here when script runs, even if inserted before.",
+			"prefix": "#IncludeAgain"
+		},
+		{
+			"body": "#InputLevel ${0:0_to_100}",
+			"description": "Set Input Level of any subsequently created hotkeys/hotstrings. Omit for 0.",
+			"prefix": "#InputLevel"
+		},
+		{
+			"body": "#MaxThreads ${0:1_to_255}",
+			"description": "Sets the maximum number of simultaneous threads. Default is 10.",
+			"prefix": "#MaxThreads"
+		},
+		{
+			"body": "#MaxThreadsBuffer ${1|true,false|}",
+			"description": "Set if hotkeys are buffered or ignored when max threads reached. Default and omit value is 1.",
+			"prefix": "#MaxThreadsBuffer"
+		},
+		{
+			"body": "#MaxThreadsPerHotkey ${0:1_to_255}",
+			"description": "Set the maximum number of threads that can exist simultaneously for each hotkey or hotstring.",
+			"prefix": "#MaxThreadsPerHotkey"
+		},
+		{
+			"body": "#NoTrayIcon",
+			"description": "Disables the showing of a tray icon."
+		},
+		{
+			"body": "#Requires AutoHotkey${1| , >, >=, <, <=, =|}v2.${2:0}${3| , 32-bit, 64-bit|}",
+			"description": "The required version of AutoHotkey for the script to run otherwise script s and quits.",
+			"prefix": "#Requires",
+			"syntax": "#Requires Requirement"
+		},
+		{
+			"body": "#SingleInstance ${1|Force,Ignore,Prompt,Off|}",
+			"description": "Determine whether the script is allowed to run again when it is already running.",
+			"prefix": "#SingleInstance"
+		},
+		{
+			"body": "#SuspendExempt ${1|true,false|}",
+			"description": "Sets if subsequent hotkeys and hotstrings are marked as exempt from Suspend().",
+			"prefix": "#SuspendExempt"
+		},
+		{
+			"body": "#UseHook ${1|true,false|}",
+			"description": "Force the use of the hook with some/all hotkeys.",
+			"prefix": "#UseHook"
+		},
+		{
+			"body": "#Warn ${1|All,VarUnset,LocalSameAsGlobal,Unreachable|}, ${2|MsgBox,StdOut,OutputDebug,Off|}",
+			"description": "Enable or disable warnings for certain critera. Can catch multiple types of s.",
+			"prefix": "#Warn"
+		},
+		{
+			"body": "#WinActivateForce",
+			"description": "Use forceful activation by default instead of gentle activation first."
+		},
+		{
+			"body": ";@Ahk2Exe-${1|IgnoreBegin,IgnoreEnd|}",
+			"description": "You can delete code fragments from compiled scripts by wrapping them in instructions.",
+			"prefix": "@Ahk2Exe-Ignore"
+		},
+		{
+			"body": "/*@Ahk2Exe-Keep",
+			"description": "Marked code snippets are only executed in the compiled script.",
+			"prefix": "@Ahk2Exe-Keep"
+		},
+		{
+			"body": ";@Ahk2Exe-AddResource ${2:FileName}${1| , RT_BITMAP, RT_MENU, RT_DIALOG, RT_STRING, RT_ACCELERATORS, RT_RCDATA, RT_MESSAGETABLE, RT_GROUP_CURSOR, RT_GROUP_ICON, RT_HTML, RT_MANIFEST|}",
+			"description": "Add resources to the compiled executable file.",
+			"prefix": "@Ahk2Exe-AddResource"
+		},
+		{
+			"body": ";@Ahk2Exe-Base ${0:[Path\\]Name [, [Exe_path\\][Name], Codepage]}",
+			"description": "Specify the binary version of AutoHotkey to be included in the generated .exe file.",
+			"prefix": "@Ahk2Exe-Base"
+		},
+		{
+			"body": ";@Ahk2Exe-ConsoleApp",
+			"description": "Change the executable subsystem to console mode.",
+			"prefix": "@Ahk2Exe-ConsoleApp"
+		},
+		{
+			"body": ";@Ahk2Exe-Cont ${0:Text}",
+			"description": "Specify a continuation line for the previous instruction. This allows a long line of instructions to be formatted for easy reading in the source code.",
+			"prefix": "@Ahk2Exe-Cont"
+		},
+		{
+			"body": ";@Ahk2Exe-Debug ${0:Text}",
+			"description": "Display msgbox with supporting text for debugging.",
+			"prefix": "@Ahk2Exe-Debug"
+		},
+		{
+			"body": ";@Ahk2Exe-ExeName ${0:[Path\\]Name}",
+			"description": "Specify the location and name of the generated .exe file.",
+			"prefix": "@Ahk2Exe-ExeName"
+		},
+		{
+			"body": ";@Ahk2Exe-Let ${0:Name = Value [, NameN = ValueN]}",
+			"description": "Create (or modify) one or more user variables, these variables can be accessed through %U_Name%, similar to built-in variables (see above).",
+			"prefix": "@Ahk2Exe-Let"
+		},
+		{
+			"body": ";@Ahk2Exe-Obey ${0:Name}, ${2:CmdOrExp [, Extra]}",
+			"description": "Execute a command or expression independent of AutoHotkey, and the result is U_Name.",
+			"prefix": "@Ahk2Exe-Obey"
+		},
+		{
+			"body": ";@Ahk2Exe-PostExec ${0:Program [parameters] [, When]}",
+			"description": "Specify the program to be executed before (or after) any compression program applied to the .exe file after successful compilation.",
+			"prefix": "@Ahk2Exe-PostExec"
+		},
+		{
+			"body": ";@Ahk2Exe-SetMainIcon ${0:[IcoFile]}",
+			"description": "Overwrite the custom EXE icon used for compilation.",
+			"prefix": "@Ahk2Exe-SetMainIcon"
+		},
+		{
+			"body": ";@Ahk2Exe-SetCompanyName ${0:CompanyName}",
+			"description": "Changes the company name.",
+			"prefix": "@Ahk2Exe-SetCompanyName"
+		},
+		{
+			"body": ";@Ahk2Exe-SetCopyright ${0:CopyrightInfo}",
+			"description": "Changes the legal copyright information.",
+			"prefix": "@Ahk2Exe-SetCopyright"
+		},
+		{
+			"body": ";@Ahk2Exe-SetDescription ${0:Description}",
+			"description": "Changes the file description and changes script's name in Task Manager under \"Processes\".",
+			"prefix": "@Ahk2Exe-SetDescription"
+		},
+		{
+			"body": ";@Ahk2Exe-SetFileVersion ${0:Version}",
+			"description": "Changes the file version, in both text and raw binary format.",
+			"prefix": "@Ahk2Exe-SetFileVersion"
+		},
+		{
+			"body": ";@Ahk2Exe-SetInternalName ${0:InternalName}",
+			"description": "Changes the internal name.",
+			"prefix": "@Ahk2Exe-SetInternalName"
+		},
+		{
+			"body": ";@Ahk2Exe-SetLanguage ${0:0x0409}",
+			"description": "Changes the language code. Must include 0x prefix.",
+			"prefix": "@Ahk2Exe-SetLanguage"
+		},
+		{
+			"body": ";@Ahk2Exe-SetLegalTrademarks ${0:Trademark}",
+			"description": "Changes the legal trademarks information.",
+			"prefix": "@Ahk2Exe-SetLegalTrademarks"
+		},
+		{
+			"body": ";@Ahk2Exe-SetName ${0:Name}",
+			"description": "Changes the product name and the internal name.",
+			"prefix": "@Ahk2Exe-SetName"
+		},
+		{
+			"body": ";@Ahk2Exe-SetOrigFilename ${0:OriginalFilename}",
+			"description": "Changes the original filename information.",
+			"prefix": "@Ahk2Exe-SetOrigFilename"
+		},
+		{
+			"body": ";@Ahk2Exe-SetProductName ${0:ProductName}",
+			"description": "Changes the product name.",
+			"prefix": "@Ahk2Exe-SetProductName"
+		},
+		{
+			"body": ";@Ahk2Exe-SetProductVersion ${0:Version}",
+			"description": "Changes the product version, in both text and raw binary format.",
+			"prefix": "@Ahk2Exe-SetProductVersion"
+		},
+		{
+			"body": ";@Ahk2Exe-SetVersion ${0:Version}",
+			"description": "Changes the file version and the product version, in both text and raw binary format.",
+			"prefix": "@Ahk2Exe-SetVersion"
+		},
+		{
+			"body": ";@Ahk2Exe-UpdateManifest ${1|0,1,2|}${2| ,[\\, Name\\, Version\\, UIAccess]|}",
+			"description": "Changes details in the .exe's manifest. This directive is for specialised use only.",
+			"prefix": "@Ahk2Exe-UpdateManifest"
+		},
+		{
+			"body": ";@Ahk2Exe-UseResourceLang ${0:0x0409}",
+			"description": "Changes the resource language used by ;@Ahk2Exe-AddResource.",
+			"prefix": "@Ahk2Exe-UseResourceLang"
+		}
+	],
+	"keywords": [
+		{
+			"body": "and",
+			"description": "`(x and y)` Both items must be true. Same as: `&&`"
+		},
+		{
+			"body": "as"
+		},
+		{
+			"body": "in"
+		},
+		{
+			"body": "is",
+			"description": "`(Var is Type)` Compare value to a class type. String, Array, etc."
+		},
+		{
+			"body": "not",
+			"description": "`(not Expression)` Item must not be true. Same as: `!`."
+		},
+		{
+			"body": "or",
+			"description": "`(x or y)` One or other must be true. Same as: `||`."
+		},
+		{
+			"body": "break",
+			"description": "End any [Loop/While/For] loop immediately.",
+			"syntax": "break [LoopLabel]\nbreak('Label')"
+		},
+		{
+			"body": "catch",
+			"description": "Specify the code to be executed when an exception is raised during the execution of the try statement.",
+			"syntax": "catch [ErrorClass] [as OutputVar] {\n\tStatements\n}"
+		},
+		{
+			"body": "continue",
+			"description": "Skip the rest of the current iteration of the loop statement, and then start a new loop.",
+			"syntax": "continue [LoopLabel]\ncontinue('Label')"
+		},
+		{
+			"body": "else if ",
+			"description": "Adds another decision to check if prior were false.",
+			"prefix": "elif"
+		},
+		{
+			"body": "else",
+			"description": "Specifies one or more statements to execute if the associated statement's body did not execute.\nThe condition for an Else statement executing depends on the associated statement:\n- If expression: The expression evaluated to false.\n- For, Loop (any kind), While: The loop had zero iterations.\n- Loop Read: As above, but the presence of Else also prevents an error from being thrown if the file or path is not found. Therefore, Else executes if the file is empty or does not exist.\n- Try...Catch: No exception was thrown within the Try block."
+		},
+		{
+			"body": "finally",
+			"description": "Code block to run after a try/catch has completed."
+		},
+		{
+			"body": "for $1 in $0",
+			"description": "Repeat a series of functions for each key-value pair in the object.",
+			"prefix": "for",
+			"syntax": "for value1 [, value2...] in Expression"
+		},
+		{
+			"body": "global",
+			"description": "Mark a variable or function as global so it can be changed from inside a function or method.",
+			"syntax": "global [Var]"
+		},
+		{
+			"body": "goto",
+			"description": "Jump to the specified label and continue execution.",
+			"syntax": "goto Label\ngoto('Label')"
+		},
+		{
+			"body": "if ",
+			"description": "Specify one or more statements to be executed when the expression evaluates to true.",
+			"syntax": "if Expression"
+		},
+		{
+			"body": "loop files ${0:FilePattern [, Mode]}",
+			"description": "Loop through a directory. MODES: D=Get Directories, F=Get Files, R=Recurse",
+			"prefix": "loop files"
+		},
+		{
+			"body": "loop parse ${0:String [, Delimiters|'CSV', OmitChars]}",
+			"description": "Loop through a string by substrings. String is parsed by each char if no Delimiter is provided.",
+			"prefix": "loop parse"
+		},
+		{
+			"body": "loop read ${0:InputFile [, OutputFile]}",
+			"description": "Retrieve the lines in the text file, one line at a time.",
+			"prefix": "loop read"
+		},
+		{
+			"body": "loop reg ${0:KeyName [, Mode]}",
+			"description": "Retrieve the contents of the specified registry subkey. Modes: K=Key, V=Value, R=Recurse",
+			"prefix": "loop reg"
+		},
+		{
+			"body": "loop",
+			"description": "Repeat a series of functions: you can specify a number representing the number of repetitions or until a break is encountered.",
+			"syntax": "loop [Count]"
+		},
+		{
+			"body": "local ${0:Var}",
+			"description": "Sets a variable or all function variables to local scope, causing them to be private to the function. Local variables can be the same as globals.",
+			"prefix": "local"
+		},
+		{
+			"body": "case $1:",
+			"description": "One or more values to compare against the Switch value or evaluate if no value is provided.",
+			"prefix": "case",
+			"syntax": "case ExpressionOrValue:"
+		},
+		{
+			"body": "default:",
+			"description": "The default code block to run if no Switch cases match.",
+			"prefix": "default"
+		},
+		{
+			"body": "return",
+			"description": "Return the flow of code to the original caller, along with an optional return value.",
+			"syntax": "return [Expression]"
+		},
+		{
+			"body": "static",
+			"description": "A static variable or function persists through the life of the script and does not get erased at the end of a function call.",
+			"syntax": "static [Var]\nstatic Method()\nstatic Property"
+		},
+		{
+			"body": "throw",
+			"description": "Indicates that an error has occurred. The signal can be caught by a try-catch statement.",
+			"syntax": "throw Expression"
+		},
+		{
+			"body": "try",
+			"description": "Guards one or more statements against runtime errors and values thrown by the Throw statement."
+		},
+		{
+			"body": "until ",
+			"description": "Apply the condition to the continuation of the loop or for loop.",
+			"syntax": "until Expression"
+		},
+		{
+			"body": "while ",
+			"description": "While expression evaluates to true, continue to run code block",
+			"syntax": "while Expression"
+		}
+	],
+	"options": {
+		"ahk_criteria": [
+			{
+				"body": "ahk_class",
+				"description": "ahk_class is used to match one or more windows using the class name of the application."
+			},
+			{
+				"body": "ahk_exe",
+				"description": "ahk_exe is used to match one or more windows using the exe name of the process that owns the window."
+			},
+			{
+				"body": "ahk_group",
+				"description": "ahk_group is used to match a group of one or more windows that have been previously defined using GroupAdd()."
+			},
+			{
+				"body": "ahk_id",
+				"description": "ahk_id is used to match a window using the window's unique ID (HWND). This number is not static and changes every time the application is launched."
+			},
+			{
+				"body": "ahk_pid",
+				"description": "ahk_pid is used to match one or more windows using the process ID of that application. This number is not static and changes every time the application is launched."
+			}
+		],
+		"hotstring": [
+			{
+				"body": "*",
+				"description": "An ending character (e.g. `Space`, `.`, or `Enter`) is not required to trigger the hotstring. For example:\n```ahk2\n:*:j@::jsmith@somedomain.com\n```"
+			},
+			{
+				"body": "?",
+				"description": "The hotstring will be triggered even when it is inside another word; that is, when the character typed immediately before it is alphanumeric. For example, if `:?:al::airline` is a hotstring, typing \"practical \" would produce \"practicairline \". Use `?0` to turn this option back off."
+			},
+			{
+				"body": "B0",
+				"description": "Automatic backspacing is not done to erase the abbreviation you type. Use a plain `B` to turn backspacing back on after it was previously turned off. A script may also do its own backspacing via {bs 5}, which sends `Backspace` five times. Similarly, it may send `←` five times via {left 5}. For example, the following hotstring produces \"<em></em>\" and moves the caret 5 places to the left (so that it's between the tags):\n```ahk2\n:*b0:<em>::</em>{left 5}\n```"
+			},
+			{
+				"body": "C",
+				"description": "Case-sensitive: When you type an abbreviation, it must exactly match the case defined in the script. Use `C0` to turn case sensitivity back off."
+			},
+			{
+				"body": "C1",
+				"description": "Do not conform to typed case. Use this option to make auto-replace hotstrings case-insensitive and prevent them from conforming to the case of the characters you actually type. Case-conforming hotstrings (which are the default) produce their replacement text in all caps if you type the abbreviation in all caps. If you type the first letter in caps, the first letter of the replacement will also be capitalized (if it is a letter). If you type the case in any other way, the replacement is sent exactly as defined."
+			},
+			{
+				"body": "Kn",
+				"description": "Key-delay: This rarely-used option sets the delay between keystrokes produced by auto-backspacing or auto-replacement. Specify the new delay for n; for example, specify `k10` to have a 10 ms delay and `k-1` to have no delay."
+			},
+			{
+				"body": "O",
+				"description": "Omit the ending character of auto-replace hotstrings when the replacement is produced. This is useful when you want a hotstring to be kept unambiguous by still requiring an ending character, but don't actually want the ending character to be shown on the screen. Use `O0` to turn this option back off."
+			},
+			{
+				"body": "Pn",
+				"description": "The priority of the hotstring (e.g. `P1`). This rarely-used option has no effect on auto-replace hotstrings."
+			},
+			{
+				"body": "R",
+				"description": "Send the replacement text raw; that is, without translating `{Enter}` to `Enter`, `^c` to `Ctrl+C`, etc. Use `R0` to turn this option back off, or override it with `T`."
+			},
+			{
+				"body": "S",
+				"description": "Specify the letter `S` to make the hotstring exempt from Suspend. Specify `S0` to remove the exemption, allowing the hotstring to be suspended."
+			},
+			{
+				"body": "SI",
+				"description": "SendInput"
+			},
+			{
+				"body": "SP",
+				"description": "SendPlay"
+			},
+			{
+				"body": "SE",
+				"description": "SendEvent"
+			},
+			{
+				"body": "T",
+				"description": "Send the replacement text using Text mode. Use `T0` or `R0` to turn this option back off, or override it with R."
+			},
+			{
+				"body": "X",
+				"description": "Instead of replacement text, the hotstring accepts a function call or expression to execute."
+			},
+			{
+				"body": "Z",
+				"description": "This rarely-used option resets the hotstring recognizer after each triggering of the hotstring. In other words, the script will begin waiting for an entirely new hotstring, eliminating from consideration anything you previously typed. This can prevent unwanted triggerings of hotstrings."
+			}
+		]
+	},
+	"texts": [
+		{
+			"body": "AlwaysOnTop",
+			"description": "Keep the window above all other windows."
+		},
+		{
+			"body": "AutoSize",
+			"description": "Resize the window to only accommodate its currently visible controls. This is useful for adjusting the window size after adding new controls or adjusting the size of existing controls, hiding or unhiding them."
+		},
+		{
+			"body": "Border",
+			"description": "Provide a thin border around the control. Most controls do not need this because they already have a type-specific border. When adding a border to an existing control, you may need to increase the width and height of the control by 1 Pixels."
+		},
+		{
+			"body": "Caption",
+			"description": "Provide title bar and thick window border/edge."
+		},
+		{
+			"body": "Center",
+			"description": "Center the text of the control within its available width."
+		},
+		{
+			"body": "DropFiles",
+			"description": "Start when a file/folder is dragged and dropped onto the window as part of a drag-and-drop operation (but if this callback is already running, the drag-and-drop event will be ignored)."
+		}
+	],
+	"keys": [
+		{
+			"body": "Alt"
+		},
+		{
+			"body": "AltTab",
+			"description": "If the alt-tab menu is visible, then move forward in the menu. Otherwise, display the menu (only when the hotkey is two keys connected by'&'; otherwise, it does nothing)."
+		},
+		{
+			"body": "AltTabAndMenu",
+			"description": "If the alt-tab menu is visible, move forward. Otherwise, display the menu."
+		},
+		{
+			"body": "AltTabMenu",
+			"description": "Show or hide the alt-tab menu."
+		},
+		{
+			"body": "AltTabMenuDismiss",
+			"description": "Close the Alt-tab menu."
+		},
+		{
+			"body": "AppsKey",
+			"description": "Activates the right-click context menu."
+		},
+		{
+			"body": "BackSpace"
+		},
+		{
+			"body": "BS",
+			"description": "Short version of Backspace."
+		},
+		{
+			"body": "Browser_Back",
+			"description": "Back"
+		},
+		{
+			"body": "Browser_Favorites",
+			"description": "Favorites"
+		},
+		{
+			"body": "Browser_Forward",
+			"description": "Forward"
+		},
+		{
+			"body": "Browser_Home",
+			"description": "Homepage"
+		},
+		{
+			"body": "Browser_Refresh",
+			"description": "Refresh"
+		},
+		{
+			"body": "Browser_Search",
+			"description": "Search"
+		},
+		{
+			"body": "Browser_Stop",
+			"description": "Stop"
+		},
+		{
+			"body": "CapsLock"
+		},
+		{
+			"body": "Control"
+		},
+		{
+			"body": "Ctrl"
+		},
+		{
+			"body": "CtrlBreak",
+			"description": "Ctrl+Pause or Ctrl+ScrollLock"
+		},
+		{
+			"body": "Del",
+			"description": "Short version of Delete."
+		},
+		{
+			"body": "Delete"
+		},
+		{
+			"body": "Down"
+		},
+		{
+			"body": "End"
+		},
+		{
+			"body": "Enter"
+		},
+		{
+			"body": "Esc",
+			"description": "Short version of Escape."
+		},
+		{
+			"body": "Escape"
+		},
+		{
+			"body": "F1"
+		},
+		{
+			"body": "F10"
+		},
+		{
+			"body": "F11"
+		},
+		{
+			"body": "F12"
+		},
+		{
+			"body": "F13"
+		},
+		{
+			"body": "F14"
+		},
+		{
+			"body": "F15"
+		},
+		{
+			"body": "F16"
+		},
+		{
+			"body": "F17"
+		},
+		{
+			"body": "F18"
+		},
+		{
+			"body": "F19"
+		},
+		{
+			"body": "F2"
+		},
+		{
+			"body": "F20"
+		},
+		{
+			"body": "F21"
+		},
+		{
+			"body": "F22"
+		},
+		{
+			"body": "F23"
+		},
+		{
+			"body": "F24"
+		},
+		{
+			"body": "F3"
+		},
+		{
+			"body": "F4"
+		},
+		{
+			"body": "F5"
+		},
+		{
+			"body": "F6"
+		},
+		{
+			"body": "F7"
+		},
+		{
+			"body": "F8"
+		},
+		{
+			"body": "F9"
+		},
+		{
+			"body": "Home"
+		},
+		{
+			"body": "Ins",
+			"description": "Short version of Insert."
+		},
+		{
+			"body": "Insert"
+		},
+		{
+			"body": "Joy1"
+		},
+		{
+			"body": "Joy10"
+		},
+		{
+			"body": "Joy11"
+		},
+		{
+			"body": "Joy12"
+		},
+		{
+			"body": "Joy13"
+		},
+		{
+			"body": "Joy14"
+		},
+		{
+			"body": "Joy15"
+		},
+		{
+			"body": "Joy16"
+		},
+		{
+			"body": "Joy17"
+		},
+		{
+			"body": "Joy18"
+		},
+		{
+			"body": "Joy19"
+		},
+		{
+			"body": "Joy2"
+		},
+		{
+			"body": "Joy20"
+		},
+		{
+			"body": "Joy21"
+		},
+		{
+			"body": "Joy22"
+		},
+		{
+			"body": "Joy23"
+		},
+		{
+			"body": "Joy24"
+		},
+		{
+			"body": "Joy25"
+		},
+		{
+			"body": "Joy26"
+		},
+		{
+			"body": "Joy27"
+		},
+		{
+			"body": "Joy28"
+		},
+		{
+			"body": "Joy29"
+		},
+		{
+			"body": "Joy3"
+		},
+		{
+			"body": "Joy30"
+		},
+		{
+			"body": "Joy31"
+		},
+		{
+			"body": "Joy32"
+		},
+		{
+			"body": "Joy4"
+		},
+		{
+			"body": "Joy5"
+		},
+		{
+			"body": "Joy6"
+		},
+		{
+			"body": "Joy7"
+		},
+		{
+			"body": "Joy8"
+		},
+		{
+			"body": "Joy9"
+		},
+		{
+			"body": "JoyAxes"
+		},
+		{
+			"body": "JoyButtons"
+		},
+		{
+			"body": "JoyInfo"
+		},
+		{
+			"body": "JoyName"
+		},
+		{
+			"body": "JoyPOV"
+		},
+		{
+			"body": "JoyR"
+		},
+		{
+			"body": "JoyU"
+		},
+		{
+			"body": "JoyV"
+		},
+		{
+			"body": "JoyX"
+		},
+		{
+			"body": "JoyY"
+		},
+		{
+			"body": "JoyZ"
+		},
+		{
+			"body": "LAlt"
+		},
+		{
+			"body": "Launch_App1"
+		},
+		{
+			"body": "Launch_App2"
+		},
+		{
+			"body": "Launch_Mail"
+		},
+		{
+			"body": "Launch_Media"
+		},
+		{
+			"body": "LButton"
+		},
+		{
+			"body": "LControl"
+		},
+		{
+			"body": "LCtrl"
+		},
+		{
+			"body": "Left"
+		},
+		{
+			"body": "LShift"
+		},
+		{
+			"body": "LWin"
+		},
+		{
+			"body": "MButton"
+		},
+		{
+			"body": "Media_Next"
+		},
+		{
+			"body": "Media_Play_Pause"
+		},
+		{
+			"body": "Media_Prev"
+		},
+		{
+			"body": "Media_Stop"
+		},
+		{
+			"body": "NumLock"
+		},
+		{
+			"body": "Numpad0"
+		},
+		{
+			"body": "Numpad1"
+		},
+		{
+			"body": "Numpad2"
+		},
+		{
+			"body": "Numpad3"
+		},
+		{
+			"body": "Numpad4"
+		},
+		{
+			"body": "Numpad5"
+		},
+		{
+			"body": "Numpad6"
+		},
+		{
+			"body": "Numpad7"
+		},
+		{
+			"body": "Numpad8"
+		},
+		{
+			"body": "Numpad9"
+		},
+		{
+			"body": "NumpadAdd"
+		},
+		{
+			"body": "NumpadClear"
+		},
+		{
+			"body": "NumpadDel"
+		},
+		{
+			"body": "NumpadDiv"
+		},
+		{
+			"body": "NumpadDot"
+		},
+		{
+			"body": "NumpadDown"
+		},
+		{
+			"body": "NumpadEnd"
+		},
+		{
+			"body": "NumpadEnter"
+		},
+		{
+			"body": "NumpadHome"
+		},
+		{
+			"body": "NumpadIns"
+		},
+		{
+			"body": "NumpadLeft"
+		},
+		{
+			"body": "NumpadMult"
+		},
+		{
+			"body": "NumpadPgdn"
+		},
+		{
+			"body": "NumpadPgup"
+		},
+		{
+			"body": "NumpadRight"
+		},
+		{
+			"body": "NumpadSub"
+		},
+		{
+			"body": "NumpadUp"
+		},
+		{
+			"body": "PgDn"
+		},
+		{
+			"body": "PgUp"
+		},
+		{
+			"body": "PrintScreen"
+		},
+		{
+			"body": "RAlt"
+		},
+		{
+			"body": "RButton"
+		},
+		{
+			"body": "RControl"
+		},
+		{
+			"body": "RCtrl"
+		},
+		{
+			"body": "Right"
+		},
+		{
+			"body": "RShift"
+		},
+		{
+			"body": "RWin"
+		},
+		{
+			"body": "ScrollLock"
+		},
+		{
+			"body": "Shift"
+		},
+		{
+			"body": "ShiftAltTab"
+		},
+		{
+			"body": "Space"
+		},
+		{
+			"body": "Tab"
+		},
+		{
+			"body": "Up"
+		},
+		{
+			"body": "Volume_Down"
+		},
+		{
+			"body": "Volume_Mute"
+		},
+		{
+			"body": "Volume_Up"
+		},
+		{
+			"body": "WheelDown"
+		},
+		{
+			"body": "WheelLeft"
+		},
+		{
+			"body": "WheelRight"
+		},
+		{
+			"body": "WheelUp"
+		},
+		{
+			"body": "XButton1"
+		},
+		{
+			"body": "XButton2"
+		}
+	]
 }
