@@ -13,7 +13,7 @@ import { URI } from 'vscode-uri';
 import { get_ahkProvider } from './ahkProvider';
 import {
 	a_vars,
-	ahkpath_cur,
+	interpreterPathV2,
 	chinese_punctuations,
 	clearLibfuns,
 	codeActionProvider,
@@ -47,7 +47,7 @@ import {
 	semanticTokensOnRange,
 	SemanticTokenTypes,
 	set_ahk_h,
-	set_ahkpath,
+	setInterpreterPathV2,
 	set_Connection,
 	set_dirname,
 	set_locale,
@@ -352,7 +352,7 @@ async function initpathenv(samefolder = false, retry = true): Promise<boolean> {
 		return false;
 	}
 	if (!(data = data.trim())) {
-		const path = ahkpath_cur;
+		const path = interpreterPathV2;
 		if ((await getAHKversion([path]))[0].endsWith('[UIAccess]')) {
 			let ret = false,
 				n = path.replace(/_uia\.exe$/i, '.exe');
@@ -362,9 +362,9 @@ async function initpathenv(samefolder = false, retry = true): Promise<boolean> {
 				(n = resolvePath(n, true)) &&
 				!(await getAHKversion([n]))[0].endsWith('[UIAccess]')
 			) {
-				set_ahkpath(n);
+				setInterpreterPathV2(n);
 				if ((ret = await initpathenv(samefolder))) fail = 0;
-				set_ahkpath(path);
+				setInterpreterPathV2(path);
 			}
 			if (fail) connection.window.showWarningMessage(setting.uialimit());
 			await update_rcdata();
@@ -384,7 +384,7 @@ async function initpathenv(samefolder = false, retry = true): Promise<boolean> {
 				.map((l) => l.split('\t')),
 		),
 	);
-	a_vars.ahkpath = ahkpath_cur;
+	a_vars.ahkpath = interpreterPathV2;
 	set_version((a_vars.ahkversion ??= '2.0.0'));
 	if (a_vars.ahkversion.startsWith('1.')) patherr(setting.versionerr());
 	if (!samefolder || !libdirs.length) {
@@ -426,7 +426,7 @@ async function initpathenv(samefolder = false, retry = true): Promise<boolean> {
 	if (includeUserAndStandardLibrary(ahkppConfig.v2.general.librarySuggestions)) parseuserlibs();
 	return true;
 	async function update_rcdata() {
-		const pe = new PEFile(ahkpath_cur);
+		const pe = new PEFile(interpreterPathV2);
 		try {
 			const rc = await pe.getResource(RESOURCE_TYPE.RCDATA);
 			curPERCDATA = rc;
@@ -495,10 +495,10 @@ async function changeInterpreter(oldpath: string, newpath: string) {
 }
 
 async function setInterpreter(path: string) {
-	const old = ahkpath_cur;
+	const old = interpreterPathV2;
 	if (!path || path.toLowerCase() === old.toLowerCase()) return false;
-	set_ahkpath(path);
-	if (!(await changeInterpreter(old, path))) set_ahkpath(old);
+	setInterpreterPathV2(path);
+	if (!(await changeInterpreter(old, path))) setInterpreterPathV2(old);
 	return true;
 }
 
@@ -593,7 +593,7 @@ async function getDllExport(paths: string[] | Set<string>, onlyone = false) {
 
 let curPERCDATA: { [key: string]: Buffer } | undefined = undefined;
 function getRCDATA(name?: string) {
-	const exe = resolvePath(ahkpath_cur, true);
+	const exe = resolvePath(interpreterPathV2, true);
 	if (!exe) return;
 	if (!name)
 		return { uri: '', path: '', paths: Object.keys(curPERCDATA ?? {}) };

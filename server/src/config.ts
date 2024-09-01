@@ -68,7 +68,7 @@ export enum CfgKey {
     ClassNonDynamicMemberCheck = 'v2.diagnostics.classNonDynamicMemberCheck',
     ParamsCheck = 'v2.diagnostics.paramsCheck',
     Exclude = 'v2.exclude', // still used directly in some places
-    InterpreterPath = 'v2.file.interpreterPath',
+    InterpreterPath = 'v2.file.interpreterPath', // still used directly in some places
     MaxScanDepth = 'v2.file.maxScanDepth',
     Formatter = 'v2.formatter',
     VarUnset = 'v2.warn.varUnset',

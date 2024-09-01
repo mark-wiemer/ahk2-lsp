@@ -194,7 +194,7 @@ export async function activate(context: ExtensionContext) {
 		commands.registerTextEditorCommand('ahk++.run', textEditor => runScript(textEditor)),
 		commands.registerTextEditorCommand('ahk++.runSelection', textEditor => runScript(textEditor, true)),
 		commands.registerCommand('ahk++.stop', stopRunningScript),
-		commands.registerCommand('ahk++.setV2Interpreter', setInterpreter),
+		commands.registerCommand('ahk++.setV2Interpreter', setInterpreterV2),
 		commands.registerCommand('ahk++.debugParams', () => beginDebug(extlist, debugexts, true)),
 		commands.registerCommand('ahk++.debugAttach', () => beginDebug(extlist, debugexts, false, true)),
 		commands.registerCommand('ahk++.selectSyntaxes', selectSyntaxes),
@@ -273,23 +273,33 @@ function decode(buf: Buffer) {
 	return buf.toString();
 }
 
-function runScript(textEditor: TextEditor, selection = false) {
-	const executePath = resolvePath(v2Interpreter, workspace.getWorkspaceFolder(textEditor.document.uri)?.uri.fsPath);
+/** Also in original src */
+export enum LanguageId {
+    ahk1 = 'ahk',
+    ahk2 = 'ahk2',
+}
+
+const isV1 = (): boolean =>
+    window.activeTextEditor?.document.languageId === LanguageId.ahk1;
+
+function runScript(textEditor: TextEditor, runSelection = false) {
+	const interpreter: string | undefined = isV1() ? ahkppConfig.get('v1.file.interpreterPath') : ahkppConfig.get('v2.file.interpreterPath');
+	const executePath = resolvePath(interpreter, workspace.getWorkspaceFolder(textEditor.document.uri)?.uri.fsPath);
 	if (!executePath) {
-		const s = v2Interpreter || 'AutoHotkey.exe';
-		window.showErrorMessage(zhcn ? `"${s}"未找到!` : `"${s}" not find!`, 'Select Interpreter')
-			.then(r => r && setInterpreter());
+		const s = interpreter || 'AutoHotkey.exe';
+		window.showErrorMessage(zhcn ? `"${s}"未找到` : `"${s}" not found`, 'Select Interpreter')
+			.then(r => r && setInterpreterV2());
 		return;
 	}
-	let selecttext = '', path = '*', command = `"${executePath}" /ErrorStdOut=utf-8 `;
+	let selectedText = '', path = '*', command = `"${executePath}" /ErrorStdOut=utf-8 `;
 	let startTime: Date;
 	outputchannel.show(true);
 	if (!ahkprocesses.size)
 		outputchannel.clear();
-	if (selection)
-		selecttext = textEditor.selections.map(textEditor.document.getText).join('\n');
+	if (runSelection)
+		selectedText = textEditor.selections.map(textEditor.document.getText).join('\n');
 	else if (textEditor.document.isUntitled || !textEditor.document.uri.toString().startsWith('file:///'))
-		selecttext = textEditor.document.getText();
+		selectedText = textEditor.document.getText();
 	executePath.replace(/^(.+[\\/])AutoHotkeyUX\.exe$/i, (...m) => {
 		const lc = m[1] + 'launcher.ahk';
 		if (existsSync(lc))
@@ -297,17 +307,17 @@ function runScript(textEditor: TextEditor, selection = false) {
 		return '';
 	})
 	let process: ChildProcess & { path?: string };
-	if (selecttext !== '') {
+	if (selectedText !== '') {
 		if (ahkStatusBarItem.text.endsWith('[UIAccess]')) {
 			path = resolve(__dirname, 'temp.ahk');
-			writeFileSync(path, selecttext);
+			writeFileSync(path, selectedText);
 			command += `"${path}"`, startTime = new Date();
 			process = spawn(command, { cwd: `${resolve(textEditor.document.fileName, '..')}`, shell: true });
 			unlinkSync(path);
 		} else {
 			command += path, startTime = new Date();
 			process = spawn(command, { cwd: `${resolve(textEditor.document.fileName, '..')}`, shell: true });
-			process.stdin?.write(selecttext), process.stdin?.end();
+			process.stdin?.write(selectedText), process.stdin?.end();
 		}
 	} else {
 		if (textEditor.document.isUntitled)
@@ -396,9 +406,14 @@ async function beginDebug(extlist: string[], debugexts: { [type: string]: string
 	debug.startDebugging(editor && workspace.getWorkspaceFolder(editor.document.uri), config);
 }
 
-async function setInterpreter() {
+/**
+ * Sets the v2 interpreter path via quick pick.
+ * Updates the most local configuration target that has a custom interpreter path.
+ * If no target has a custom path, updates workspace folder config.
+ */
+async function setInterpreterV2() {
 	// eslint-disable-next-line prefer-const
-	let index = -1, { path: ahkpath, from } = getInterpreterPath();
+	let index = -1, { path: ahkpath, from } = getInterpreterV2Path();
 	const list: QuickPickItem[] = [], _ = (ahkpath = resolvePath(v2Interpreter || ahkpath, undefined, false)).toLowerCase();
 	const pick = window.createQuickPick();
 	let it: QuickPickItem, active: QuickPickItem | undefined, sel: QuickPickItem = { label: '' };
@@ -499,7 +514,12 @@ function getAHKversion(paths: string[]): Thenable<string[]> {
 	return client.sendRequest('ahk2.getAHKversion', paths.map(p => resolvePath(p, undefined, true) || p));
 }
 
-function getInterpreterPath() {
+/**
+ * Gets the interpreter v2 path from the folder, workspace, global, or default value.
+ * Returns both the value and the target it was retrieved from.
+ * `from` is undefined if default value was used.
+ */
+function getInterpreterV2Path(): { path: string, from?: ConfigurationTarget } {
 	const configDetails = ahkppConfig.inspect('v2.file.interpreterPath');
 	let path = '';
 	if (configDetails)
@@ -529,8 +549,13 @@ async function onDidChangegetInterpreter() {
 	}
 }
 
-/** Resolves a given path to an absolute path. Returns empty string if resolution fails. */
-export function resolvePath(path: string, workspace?: string, resolveSymbolicLink = true): string {
+/**
+ * Returns the provided path as an absolute path.
+ * Resolves the provided path against the provided workspace.
+ * Resolves symbolic links by default.
+ * Returns empty string if resolution fails.
+ */
+export function resolvePath(path: string | undefined, workspace?: string, resolveSymbolicLink = true): string {
 	if (!path)
 		return '';
 	const paths: string[] = [];
