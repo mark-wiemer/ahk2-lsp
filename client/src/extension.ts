@@ -201,7 +201,7 @@ export async function activate(context: ExtensionContext) {
 		commands.registerTextEditorCommand('ahk++.updateVersionInfo', async textEditor => {
 			if (!server_is_ready)
 				return;
-			const info: { content: string, uri: string, range: Range } | null = await client.sendRequest('ahk2.getVersionInfo', textEditor.document.uri.toString());
+			const info: { content: string, uri: string, range: Range } | null = await client.sendRequest('ahk++.getVersionInfo', textEditor.document.uri.toString());
 			if (!info) {
 				await textEditor.insertSnippet(new SnippetString([
 					"/************************************************************************",

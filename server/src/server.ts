@@ -290,7 +290,7 @@ connection.onRequest('ahk2.getAHKversion', getAHKversion);
 connection.onRequest('ahk2.getContent', (uri: string) =>
 	lexers[uri.toLowerCase()]?.document.getText(),
 );
-connection.onRequest('ahk2.getVersionInfo', (uri: string) => {
+connection.onRequest('ahk++.getVersionInfo', (uri: string) => {
 	const doc = lexers[uri.toLowerCase()];
 	if (doc) {
 		const tk = doc.get_token(0);
