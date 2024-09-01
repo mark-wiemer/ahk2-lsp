@@ -59,7 +59,7 @@ import {
 	symbolProvider,
 	traverse_include,
 	typeFormatting,
-	updateSettings,
+	updateAhkppConfig,
 	utils,
 	winapis,
 	workspaceSymbolProvider,
@@ -148,24 +148,24 @@ connection.onInitialize(async (params) => {
 		};
 	}
 
-	let configs: AhkppConfig | undefined;
+	let envAhkppConfig: AhkppConfig | undefined;
 	const env = process.env;
 	if (env.AHK2_LS_CONFIG)
 		try {
-			configs = JSON.parse(env.AHK2_LS_CONFIG);
+			envAhkppConfig = JSON.parse(env.AHK2_LS_CONFIG);
 		} catch {
 			/* do nothing */
 		}
 	if (params.initializationOptions)
-		configs = Object.assign(configs ?? {}, params.initializationOptions);
+		envAhkppConfig = Object.assign(envAhkppConfig ?? {}, params.initializationOptions);
 	set_dirname(resolve(__dirname, '../..'));
-	set_locale(configs?.locale ?? params.locale);
+	set_locale(envAhkppConfig?.locale ?? params.locale);
 	utils.get_RCDATA = getRCDATA;
 	utils.get_DllExport = getDllExport;
 	utils.get_ahkProvider = get_ahkProvider;
 	loadlocalize();
 	initahk2cache();
-	if (configs) updateSettings(configs);
+	if (envAhkppConfig) updateAhkppConfig(envAhkppConfig);
 	if (
 		!(await setInterpreter(
 			resolvePath((ahkppConfig.v2.file.interpreterPath ??= '')),
@@ -208,17 +208,17 @@ connection.onDidChangeConfiguration(async (change) => {
 		connection.window.showWarningMessage('Failed to obtain the AHK++ configuration');
 		return;
 	}
-	const { v2: oldV2, Syntaxes } = ahkppConfig;
-	updateSettings(newAhkppConfig); // this updates `extsettings`
+	const { v2: oldV2 } = ahkppConfig;
+	updateAhkppConfig(newAhkppConfig);
 	const { v2: newV2 } = ahkppConfig;
 	set_WorkspaceFolders(workspaceFolders);
-	if (oldV2.interpreterPath !== newV2.interpreterPath) {
+	if (oldV2.file.interpreterPath !== newV2.file.interpreterPath) {
 		if (
 			await setInterpreter(
-				resolvePath((newV2.interpreterPath ??= '')),
+				resolvePath((newV2.file.interpreterPath ??= '')),
 			)
 		)
-		connection.sendRequest('ahk2.updateStatusBar', [newV2.interpreterPath]);
+		connection.sendRequest('ahk2.updateStatusBar', [newV2.file.interpreterPath]);
 	}
 	if (oldV2.librarySuggestions !== newV2.librarySuggestions) {
 		if (includeUserAndStandardLibrary(newV2.librarySuggestions) && !includeUserAndStandardLibrary(oldV2.librarySuggestions))
@@ -226,7 +226,7 @@ connection.onDidChangeConfiguration(async (change) => {
 		if (includeLocalLibrary(newV2.librarySuggestions) && !includeLocalLibrary(oldV2.librarySuggestions))
 			documents.all().forEach((e) => parseproject(e.uri.toLowerCase()));
 	}
-	if (Syntaxes !== ahkppConfig.Syntaxes) {
+	if (oldV2.syntaxes !== newV2.syntaxes) {
 		initahk2cache();
 		loadahk2();
 		if (isahk2_h) {

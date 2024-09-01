@@ -13,7 +13,7 @@ import {
 	hoverProvider, initahk2cache, Lexer, lexers, loadahk2, loadlocalize, prepareRename, rangeFormatting,
 	referenceProvider, renameProvider, SemanticTokenModifiers, semanticTokensOnFull, semanticTokensOnRange,
 	SemanticTokenTypes, set_ahk_h, set_Connection, set_dirname, set_locale, set_version, set_WorkspaceFolders,
-	signatureProvider, symbolProvider, typeFormatting, updateSettings, workspaceSymbolProvider
+	signatureProvider, symbolProvider, typeFormatting, updateAhkppConfig, workspaceSymbolProvider
 } from './common';
 import { AhkppConfig } from './config';
 
@@ -79,12 +79,12 @@ connection.onInitialize(params => {
 		result.capabilities.workspace = { workspaceFolders: { supported: true } };
 	}
 
-	const configs: AhkppConfig = params.initializationOptions;
+	const ahkppConfig: AhkppConfig = params.initializationOptions;
 	set_ahk_h(true);
 	set_locale(params.locale);
-	set_dirname(configs.extensionUri!);
+	set_dirname(ahkppConfig.extensionUri!);
 	loadlocalize();
-	updateSettings(configs);
+	updateAhkppConfig(ahkppConfig);
 	set_WorkspaceFolders(workspaceFolders);
 	set_version('3.0.0');
 	initahk2cache();
@@ -109,14 +109,14 @@ connection.onInitialized(() => {
 });
 
 connection.onDidChangeConfiguration(async change => {
-	let newset: AhkppConfig | undefined = change?.settings;
-	if (hasConfigurationCapability && !newset)
-		newset = await connection.workspace.getConfiguration('ahk++');
-	if (!newset) {
+	let newAhkppConfig: AhkppConfig | undefined = change?.settings;
+	if (hasConfigurationCapability && !newAhkppConfig)
+		newAhkppConfig = await connection.workspace.getConfiguration('ahk++');
+	if (!newAhkppConfig) {
 		connection.window.showWarningMessage('Failed to obtain the configuration');
 		return;
 	}
-	updateSettings(newset);
+	updateAhkppConfig(newAhkppConfig);
 	set_WorkspaceFolders(workspaceFolders);
 });
 

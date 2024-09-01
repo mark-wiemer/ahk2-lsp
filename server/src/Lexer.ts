@@ -6211,7 +6211,7 @@ export class Lexer {
 			return;
 		let workfolder: string;
 		if (!dir) {
-			for (workfolder of ahkppConfig.WorkingDirs)
+			for (workfolder of ahkppConfig.v2.workingDirectories)
 				if (this.uri.startsWith(workfolder)) {
 					dir = restorePath(URI.parse(workfolder).fsPath.replace(/[\\/]$/, ''));
 					break;
@@ -6269,7 +6269,7 @@ export class Lexer {
 	}
 
 	private addSymbolFolding(symbol: AhkSymbol, first_brace: number) {
-		const l1 = ahkppConfig.SymbolFoldingFromOpenBrace ? this.document.positionAt(first_brace).line : symbol.range.start.line;
+		const l1 = ahkppConfig.v2.symbolFoldingFromOpenBrace ? this.document.positionAt(first_brace).line : symbol.range.start.line;
 		const l2 = symbol.range.end.line - 1;
 		const ranges = this.foldingranges;
 		if (l1 < l2) {

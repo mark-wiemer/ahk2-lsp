@@ -37,8 +37,8 @@
 		"clean": "del-cli client/dist server/dist/*.js*",
 		"clean//": "Remove both the compiled extension and compiled test files",
 		"compile-cli": "webpack --config webpack.config.cli.js --mode production --devtool hidden-source-map",
-		"compile-test": "cd client && tsc",
-		"compile-test//": "Compile test files",
+		"compile-ts": "cd client && tsc && cd ../server && tsc",
+		"compile-ts//": "Compile TS files",
 		"compile//": "Compile the extension for packaging and publishing",
 		"eslint": "npm run eslint:files -- client server && echo No ESLint problems",
 		"eslint:files": "eslint --max-warnings=0",
@@ -51,7 +51,7 @@
 		"sort-package-json:fix": "sort-package-json",
 		"test": "npm run test-grammar && npm run test-unit",
 		"test-grammar": "vscode-tmgrammar-snap syntaxes/samples/*.{ahk1,ahk2}",
-		"pretest-unit": "npm run compile-test",
+		"pretest-unit": "npm run compile-ts",
 		"test-unit": "cd client && vscode-test",
 		"test//": "Run unit tests, not grammar tests",
 		"validate": "npm run lint && npm run test && npm run package",
@@ -372,13 +372,13 @@
 					"default": "C:/Program Files/Autohotkey/v2/AutoHotkey.exe",
 					"markdownDescription": "%ahk++.config.v2.file.interpreterPath%"
 				},
-				"ahk++.SymbolFoldingFromOpenBrace": {
+				"ahk++.symbolFoldingFromOpenBrace": {
 					"scope": "window",
 					"type": "boolean",
 					"default": false,
 					"description": "%ahk++.config.v2.symbolFoldingFromOpenBrace%"
 				},
-				"ahk++.WorkingDirs": {
+				"ahk++.workingDirectories": {
 					"scope": "window",
 					"type": "array",
 					"default": [],
@@ -388,7 +388,7 @@
 					"uniqueItems": true,
 					"description": "%ahk++.config.v2.workingDirectories%"
 				},
-				"ahk++.Syntaxes": {
+				"ahk++.v2.syntaxes": {
 					"scope": "window",
 					"type": "string",
 					"markdownDescription": "%ahk++.config.v2.syntaxes%"

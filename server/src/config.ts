@@ -72,8 +72,16 @@ export interface AhkppConfig {
 			classNonDynamicMemberCheck: boolean;
 			paramsCheck: boolean;
 		};
+		file: {
+			/** Glob pattern of files to ignore */
+			exclude: string[];
+			/** Path to the AHK v2 intepreter */
+			interpreterPath: string;
+			/** Depth of folders to scan for IntelliSense */
+			maxScanDepth: number;
+		};
+		/** Config of the v2 formatter */
 		formatter: FormatterConfig;
-		interpreterPath: string;
 		/** Suggest library functions */
 		librarySuggestions: LibrarySuggestions;
 		warn: {
@@ -84,18 +92,14 @@ export interface AhkppConfig {
 			/** Function call without parentheses */
 			callWithoutParentheses: CallWithoutParentheses;
 		};
+		symbolFoldingFromOpenBrace: boolean;
+		syntaxes: string;
+		workingDirectories: string[];
 	};
 	locale?: string;
 	commands?: string[];
 	extensionUri?: string;
-	Files: {
-		Exclude: string[];
-		MaxDepth: number;
-	};
 	GlobalStorage?: string;
-	Syntaxes?: string;
-	SymbolFoldingFromOpenBrace: boolean;
-	WorkingDirs: string[];
 }
 
 /**
@@ -148,14 +152,16 @@ export const newAhkppConfig = (
 			localSameAsGlobal: false,
 			callWithoutParentheses: CallWithoutParentheses.Off,
 		},
+		file: {
+			exclude: [],
+			interpreterPath:
+				'C:\\Program Files\\AutoHotkey\\v2\\AutoHotkey.exe',
+			maxScanDepth: 2,
+		},
 		formatter: newFormatterConfig(),
-		interpreterPath: 'C:\\Program Files\\AutoHotkey\\v2\\AutoHotkey.exe',
+		symbolFoldingFromOpenBrace: false,
+		workingDirectories: [],
+		syntaxes: '',
 	},
-	Files: {
-		Exclude: [],
-		MaxDepth: 2,
-	},
-	SymbolFoldingFromOpenBrace: false,
-	WorkingDirs: [],
 	...config,
 });
