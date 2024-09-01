@@ -25,7 +25,7 @@ import {
 	hoverCache, isBrowser, isahk2_h, lexers, libdirs, libfuncs, openAndParse, openFile,
 	restorePath, rootdir, setTextDocumentLanguage, symbolProvider, utils, workspaceFolders
 } from './common';
-import { newFormatterConfig, FormatterConfig, ObjectOrArrayStyle, BraceStyle, ActionType, newAhkppConfig, CallWithoutParentheses, getCfg, CfgKey } from './config';
+import { newFormatterConfig, FormatterConfig, BraceStyle, ActionType, newAhkppConfig, CallWithoutParentheses, getCfg, CfgKey } from './config';
 
 export interface ParamInfo {
 	offset: number

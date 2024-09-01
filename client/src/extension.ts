@@ -37,7 +37,7 @@ import { readdirSync, lstatSync, readlinkSync, unlinkSync, writeFileSync } from 
 let client: LanguageClient, outputchannel: OutputChannel, ahkStatusBarItem: StatusBarItem;
 const ahkprocesses = new Map<number, ChildProcess & { path?: string }>();
 const ahkppConfig = workspace.getConfiguration('AHK++');
-let v2Interpreter: string = ahkppConfig.v2.file.interpreterPath, server_is_ready = false, zhcn = false;
+let v2Interpreter: string = ahkppConfig?.v2?.file?.interpreterPath, server_is_ready = false, zhcn = false;
 const textdecoders: TextDecoder[] = [new TextDecoder('utf8', { fatal: true }), new TextDecoder('utf-16le', { fatal: true })];
 const isWindows = process.platform === 'win32';
 

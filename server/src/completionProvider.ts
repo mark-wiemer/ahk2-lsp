@@ -11,7 +11,6 @@ import {
 	decltype_expr, dllcalltpe, ahkppConfig, find_class, find_symbol, find_symbols, get_detail,
 	generate_fn_comment, get_callinfo, get_class_constructor, get_class_member, get_class_members,
 	isBrowser, lexers, libfuncs, make_search_re, sendAhkRequest, utils, winapis,
-	connection
 } from './common';
 import { includeLocalLibrary, includeUserAndStandardLibrary } from './utils';
 import { BraceStyle, CompletionCommitCharacters, CfgKey, FormatterConfig, getCfg } from './config';

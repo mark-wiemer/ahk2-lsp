@@ -196,7 +196,8 @@ export const newAhkppConfig = (
 /** Gets a single config value from the given config */
 export const getCfg = <T>(config: AhkppConfig, key: CfgKey): T => {
 	const keyPath = key.split('.');
-	/** ConfigKey values are guaranteed to work ;) */
+	// ConfigKey values are guaranteed to work ;)
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	let value: any = config;
 	for (const k of keyPath) {
 		value = value[k];
