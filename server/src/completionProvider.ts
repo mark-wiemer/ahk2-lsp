@@ -686,8 +686,8 @@ export async function completionProvider(params: CompletionParams, _token: Cance
 	}
 
 	// library suggestions
-	if (ahkppConfig.v2.librarySuggestions) {
-		const librarySuggestions = ahkppConfig.v2.librarySuggestions;
+	if (ahkppConfig.v2.general.librarySuggestions) {
+		const librarySuggestions = ahkppConfig.v2.general.librarySuggestions;
 		const libdirs = doc.libdirs, caches: { [path: string]: TextEdit[] } = {};
 		let exportnum = 0, line = -1, first_is_comment: boolean | undefined, cm: Token;
 		let dir = doc.workspaceFolder;
@@ -926,7 +926,7 @@ export async function completionProvider(params: CompletionParams, _token: Cance
 			// fall through
 			case SymbolKind.Function:
 				ci.kind = info.kind === SymbolKind.Method ? CompletionItemKind.Method : CompletionItemKind.Function;
-				if (ahkppConfig.v2.completeFunctionCalls) {
+				if (ahkppConfig.v2.general.completeFunctionCalls) {
 					const fn = info as FuncNode;
 					if (right_is_paren)
 						ci.command = { title: 'cursorRight', command: 'cursorRight' };

@@ -323,7 +323,7 @@ class ParseStopError {
 }
 
 export class Lexer {
-	public actionWhenV1Detected: ActionType = newAhkppConfig().v2.actionWhenV1Detected;
+	public actionWhenV1Detected: ActionType = newAhkppConfig().v2.general.actionWhenV1Detected;
 	public actived = false;
 	public beautify: (options: FormatterConfig, range?: Range) => string;
 	public checkmember: boolean | undefined;
@@ -1175,7 +1175,7 @@ export class Lexer {
 			if (requirev2)
 				return false;
 			_this.maybev1 ??= maybev1 = 1;
-			switch (_this.actionWhenV1Detected ??= ahkppConfig.v2.actionWhenV1Detected) {
+			switch (_this.actionWhenV1Detected ??= ahkppConfig.v2.general.actionWhenV1Detected) {
 				case 'SkipLine': {
 					if (!allow_skip)
 						return true;
@@ -6211,7 +6211,7 @@ export class Lexer {
 			return;
 		let workfolder: string;
 		if (!dir) {
-			for (workfolder of ahkppConfig.v2.workingDirectories)
+			for (workfolder of ahkppConfig.v2.general.workingDirectories)
 				if (this.uri.startsWith(workfolder)) {
 					dir = restorePath(URI.parse(workfolder).fsPath.replace(/[\\/]$/, ''));
 					break;
@@ -6269,7 +6269,7 @@ export class Lexer {
 	}
 
 	private addSymbolFolding(symbol: AhkSymbol, first_brace: number) {
-		const l1 = ahkppConfig.v2.symbolFoldingFromOpenBrace ? this.document.positionAt(first_brace).line : symbol.range.start.line;
+		const l1 = ahkppConfig.v2.general.symbolFoldingFromOpenBrace ? this.document.positionAt(first_brace).line : symbol.range.start.line;
 		const l2 = symbol.range.end.line - 1;
 		const ranges = this.foldingranges;
 		if (l1 < l2) {

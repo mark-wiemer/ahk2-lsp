@@ -205,7 +205,7 @@ export function loadahk2(filename = 'ahk2', d = 3) {
 		if ((data = getwebfile(file + '.json')))
 			build_item_cache(JSON.parse(data.text));
 	} else {
-		const syntaxes = ahkppConfig.v2.syntaxes && existsSync(ahkppConfig.v2.syntaxes) ? ahkppConfig.v2.syntaxes : '';
+		const syntaxes = ahkppConfig.v2.general.syntaxes && existsSync(ahkppConfig.v2.general.syntaxes) ? ahkppConfig.v2.general.syntaxes : '';
 		const file2 = syntaxes ? `${syntaxes}/<>/${filename}` : file;
 		let td: TextDocument | undefined;
 		if ((path = getfilepath('.d.ahk')) && (td = openFile(restorePath(path)))) {
@@ -366,17 +366,17 @@ export function enum_ahkfiles(dirpath: string) {
 /** Updates `extsettings` with the provided config values */
 export function updateAhkppConfig(newConfig: AhkppConfig) {
 	try {
-		setCommentTagRegex(newConfig.v2.commentTagRegex!);
+		setCommentTagRegex(newConfig.v2.general.commentTagRegex!);
 	} catch (e) {
 		delete (e as { stack: unknown }).stack;
-		delete newConfig.v2.commentTagRegex;
+		delete newConfig.v2.general.commentTagRegex;
 		connection.console.error(e as string);
 	}
-	if (newConfig.v2.workingDirectories instanceof Array)
-		newConfig.v2.workingDirectories = newConfig.v2.workingDirectories.map(dir =>
+	if (newConfig.v2.general.workingDirectories instanceof Array)
+		newConfig.v2.general.workingDirectories = newConfig.v2.general.workingDirectories.map(dir =>
 			(dir = URI.file(dir.includes(':') ? dir : resolve(dir)).toString().toLowerCase())
 				.endsWith('/') ? dir : dir + '/');
-	else newConfig.v2.workingDirectories = [];
+	else newConfig.v2.general.workingDirectories = [];
 	scanExclude = {};
 	const file: RegExp[] = [], folder: RegExp[] = [];
 	for (const s of newConfig.v2.file.exclude ?? [])
@@ -391,8 +391,8 @@ export function updateAhkppConfig(newConfig: AhkppConfig) {
 		scanExclude.folder = folder;
 	if (newConfig.v2.file.maxScanDepth < 0)
 		newConfig.v2.file.maxScanDepth = Infinity;
-	if (newConfig.v2.syntaxes)
-		newConfig.v2.syntaxes = resolve(newConfig.v2.syntaxes).toLowerCase();
+	if (newConfig.v2.general.syntaxes)
+		newConfig.v2.general.syntaxes = resolve(newConfig.v2.general.syntaxes).toLowerCase();
 	Object.assign(ahkppConfig, newConfig);
 }
 
@@ -439,7 +439,7 @@ export function set_version(version: string) { ahk_version = encode_version(vers
 export function set_WorkspaceFolders(folders: Set<string>) {
 	const old = workspaceFolders;
 	workspaceFolders = [...folders];
-	ahkppConfig.v2.workingDirectories.forEach(dir => { if (!folders.has(dir)) workspaceFolders.push(dir) });
+	ahkppConfig.v2.general.workingDirectories.forEach(dir => { if (!folders.has(dir)) workspaceFolders.push(dir) });
 	workspaceFolders.sort().reverse();
 	if (old.length === workspaceFolders.length &&
 		!old.some((v, i) => workspaceFolders[i] !== v))

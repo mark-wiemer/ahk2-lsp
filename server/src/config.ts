@@ -59,11 +59,18 @@ export enum CallWithoutParentheses {
 
 export interface AhkppConfig {
 	v2: {
-		actionWhenV1Detected: ActionType;
-		/** The regex denoting a custom symbol. Defaults to `;;` */
-		commentTagRegex?: string;
-		/** Automatically insert parentheses on function call */
-		completeFunctionCalls: boolean;
+		general: {
+			actionWhenV1Detected: ActionType;
+			/** The regex denoting a custom symbol. Defaults to `;;` */
+			commentTagRegex?: string;
+			/** Automatically insert parentheses on function call */
+			completeFunctionCalls: boolean;
+			/** Suggest library functions */
+			librarySuggestions: LibrarySuggestions;
+			symbolFoldingFromOpenBrace: boolean;
+			syntaxes: string;
+			workingDirectories: string[];
+		};
 		completionCommitCharacters: {
 			Class: string;
 			Function: string;
@@ -82,8 +89,6 @@ export interface AhkppConfig {
 		};
 		/** Config of the v2 formatter */
 		formatter: FormatterConfig;
-		/** Suggest library functions */
-		librarySuggestions: LibrarySuggestions;
 		warn: {
 			/** Ref to a potentially-unset variable */
 			varUnset: boolean;
@@ -92,9 +97,6 @@ export interface AhkppConfig {
 			/** Function call without parentheses */
 			callWithoutParentheses: CallWithoutParentheses;
 		};
-		symbolFoldingFromOpenBrace: boolean;
-		syntaxes: string;
-		workingDirectories: string[];
 	};
 	locale?: string;
 	commands?: string[];
@@ -135,10 +137,15 @@ export const newAhkppConfig = (
 	config: Partial<AhkppConfig> = {},
 ): AhkppConfig => ({
 	v2: {
-		actionWhenV1Detected: 'SwitchToV1',
-		librarySuggestions: LibrarySuggestions.Off,
-		commentTagRegex: '^;;\\s*(.*)',
-		completeFunctionCalls: false,
+		general: {
+			actionWhenV1Detected: 'SwitchToV1',
+			commentTagRegex: '^;;\\s*(.*)',
+			completeFunctionCalls: false,
+			librarySuggestions: LibrarySuggestions.Off,
+			symbolFoldingFromOpenBrace: false,
+			syntaxes: '',
+			workingDirectories: [],
+		},
 		completionCommitCharacters: {
 			Class: '.(',
 			Function: '(',
@@ -159,9 +166,6 @@ export const newAhkppConfig = (
 			maxScanDepth: 2,
 		},
 		formatter: newFormatterConfig(),
-		symbolFoldingFromOpenBrace: false,
-		workingDirectories: [],
-		syntaxes: '',
 	},
 	...config,
 });

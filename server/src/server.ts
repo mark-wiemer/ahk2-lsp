@@ -220,13 +220,13 @@ connection.onDidChangeConfiguration(async (change) => {
 		)
 		connection.sendRequest('ahk2.updateStatusBar', [newV2.file.interpreterPath]);
 	}
-	if (oldV2.librarySuggestions !== newV2.librarySuggestions) {
-		if (includeUserAndStandardLibrary(newV2.librarySuggestions) && !includeUserAndStandardLibrary(oldV2.librarySuggestions))
+	if (oldV2.general.librarySuggestions !== newV2.general.librarySuggestions) {
+		if (includeUserAndStandardLibrary(newV2.general.librarySuggestions) && !includeUserAndStandardLibrary(oldV2.general.librarySuggestions))
 			parseuserlibs();
-		if (includeLocalLibrary(newV2.librarySuggestions) && !includeLocalLibrary(oldV2.librarySuggestions))
+		if (includeLocalLibrary(newV2.general.librarySuggestions) && !includeLocalLibrary(oldV2.general.librarySuggestions))
 			documents.all().forEach((e) => parseproject(e.uri.toLowerCase()));
 	}
-	if (oldV2.syntaxes !== newV2.syntaxes) {
+	if (oldV2.general.syntaxes !== newV2.general.syntaxes) {
 		initahk2cache();
 		loadahk2();
 		if (isahk2_h) {
@@ -250,7 +250,7 @@ documents.onDidOpen((e) => {
 	}
 	doc.actived = true;
 	if (to_ahk2) doc.actionWhenV1Detected = 'Continue';
-	if (includeLocalLibrary(ahkppConfig.v2.librarySuggestions))
+	if (includeLocalLibrary(ahkppConfig.v2.general.librarySuggestions))
 		parseproject(uri).then(
 			() =>
 				doc.last_diags &&
@@ -422,7 +422,7 @@ async function initpathenv(samefolder = false, retry = true): Promise<boolean> {
 		}
 	}
 	clearLibfuns();
-	if (includeUserAndStandardLibrary(ahkppConfig.v2.librarySuggestions)) parseuserlibs();
+	if (includeUserAndStandardLibrary(ahkppConfig.v2.general.librarySuggestions)) parseuserlibs();
 	return true;
 	async function update_rcdata() {
 		const pe = new PEFile(ahkpath_cur);
@@ -488,7 +488,7 @@ async function changeInterpreter(oldpath: string, newpath: string) {
 		const doc = lexers[td.uri.toLowerCase()];
 		if (!doc) return;
 		doc.initLibDirs(doc.scriptdir);
-		if (includeLocalLibrary(ahkppConfig.v2.librarySuggestions)) parseproject(doc.uri);
+		if (includeLocalLibrary(ahkppConfig.v2.general.librarySuggestions)) parseproject(doc.uri);
 	});
 	return true;
 }
