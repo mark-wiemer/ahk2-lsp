@@ -182,7 +182,7 @@ export async function activate(context: ExtensionContext) {
 	}
 	update_extensions_info();
 
-	commands.executeCommand('setContext', 'ahk2:isRunning', false);
+	commands.executeCommand('setContext', 'ahk:isRunning', false);
 	ahkStatusBarItem = window.createStatusBarItem(StatusBarAlignment.Left, 75);
 	ahkStatusBarItem.command = 'ahk++.setV2Interpreter';
 	const ahkLanguageStatusItem = languages.createLanguageStatusItem('ahk++', { language: 'ahk2' });
@@ -296,6 +296,8 @@ function runScript(textEditor: TextEditor, runSelection = false) {
 	outputchannel.show(true);
 	if (!ahkprocesses.size)
 		outputchannel.clear();
+
+	// Build the command
 	if (runSelection)
 		selectedText = textEditor.selections.map(textEditor.document.getText).join('\n');
 	else if (textEditor.document.isUntitled || !textEditor.document.uri.toString().startsWith('file:///'))
@@ -306,6 +308,8 @@ function runScript(textEditor: TextEditor, runSelection = false) {
 			command = `"${executePath}" "${lc}" `;
 		return '';
 	})
+
+	// Spawn the process
 	let process: ChildProcess & { path?: string };
 	if (selectedText !== '') {
 		if (ahkStatusBarItem.text.endsWith('[UIAccess]')) {
@@ -326,11 +330,12 @@ function runScript(textEditor: TextEditor, runSelection = false) {
 		path = textEditor.document.fileName, command += `"${path}"`, startTime = new Date();
 		process = spawn(command, { cwd: resolve(path, '..'), shell: true });
 	}
+
 	if (process.pid) {
 		outputchannel.appendLine(`[Running] [pid:${process.pid}] ${command}`);
 		ahkprocesses.set(process.pid, process);
 		process.path = path;
-		commands.executeCommand('setContext', 'ahk2:isRunning', true);
+		commands.executeCommand('setContext', 'ahk:isRunning', true);
 		process.stderr?.on('data', (data) => {
 			outputchannel.appendLine(decode(data));
 		});
@@ -345,7 +350,7 @@ function runScript(textEditor: TextEditor, runSelection = false) {
 			outputchannel.appendLine(`[Done] [pid:${process.pid}] exited with code=${code} in ${((new Date()).getTime() - startTime.getTime()) / 1000} seconds`);
 			ahkprocesses.delete(process.pid!);
 			if (!ahkprocesses.size)
-				commands.executeCommand('setContext', 'ahk2:isRunning', false);
+				commands.executeCommand('setContext', 'ahk:isRunning', false);
 		});
 	} else
 		outputchannel.appendLine(`[Fail] ${command}`);
