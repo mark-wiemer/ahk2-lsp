@@ -1,50 +1,50 @@
 {
-	"directives": [
-		{
-			"body": "#DefineDefault${1|Array,Map,Object|}Value ",
-			"description": "Defines the default value that will be used when an attribute or item is not found in Object/Array/Map.",
-			"prefix": "#DefineDefault"
-		},
-		{
-			"body": "#DllImport ${1:Function_Name}, ${2:DllFile\\Function}, ${3:DynaCallParameterDefinition [, DefaultArg1, ...]}",
-			"description": "Create script functions for dll or exe functions.",
-			"prefix": "#DllImport"
-		},
-		{
-			"body": "#WindowClassGui ",
-			"description": "Change the name of the Gui window class from AutoHotkey GUI to another name."
-		},
-		{
-			"body": "#WindowClassMain ",
-			"description": "Change the name of the main window class from AutoHotkey to another name."
-		},
-		{
-			"body": "#UseStdLib",
-			"description": "Automatically load a functions from standard library. The search order is UserLib -> Resource LIB -> WinApi."
-		},
-		{
-			"body": "#MapCaseSense ${1|On,Off,Locale|}",
-			"description": "Set the default case-sensitive Settings for Map.",
-			"prefix": "#MapCaseSense"
-		},
-		{
-			"body": "#TargetControlError",
-			"description": "Don't throw error when target control is not found."
-		},
-		{
-			"body": "#TargetWindowError",
-			"description": "Don't throw error when target window  is not found."
-		},
-		{
-			"body": "#InitExec ${1:Expression}",
-			"description": "The initialization expression is executed in load order before the script begins.",
-			"prefix": "#InitExec"
-		}
-	],
-	"keywords": [
-		{
-			"body": "macro",
-			"description": "A function definition can be prefixed with 'macro ' to create a macro function. All undeclared variables within a macro function except parameters and local variables come from the scope of the caller."
-		}
-	]
+    "directives": [
+        {
+            "body": "#DefineDefault${1|Array,Map,Object|}Value ",
+            "description": "Defines the default value that will be used when an attribute or item is not found in Object/Array/Map.",
+            "prefix": "#DefineDefault"
+        },
+        {
+            "body": "#DllImport ${1:Function_Name}, ${2:DllFile\\Function}, ${3:DynaCallParameterDefinition [, DefaultArg1, ...]}",
+            "description": "Create script functions for dll or exe functions.",
+            "prefix": "#DllImport"
+        },
+        {
+            "body": "#WindowClassGui ",
+            "description": "Change the name of the Gui window class from AutoHotkey GUI to another name."
+        },
+        {
+            "body": "#WindowClassMain ",
+            "description": "Change the name of the main window class from AutoHotkey to another name."
+        },
+        {
+            "body": "#UseStdLib",
+            "description": "Automatically load a functions from standard library. The search order is UserLib -> Resource LIB -> WinApi."
+        },
+        {
+            "body": "#MapCaseSense ${1|On,Off,Locale|}",
+            "description": "Set the default case-sensitive Settings for Map.",
+            "prefix": "#MapCaseSense"
+        },
+        {
+            "body": "#TargetControlError",
+            "description": "Don't throw error when target control is not found."
+        },
+        {
+            "body": "#TargetWindowError",
+            "description": "Don't throw error when target window  is not found."
+        },
+        {
+            "body": "#InitExec ${1:Expression}",
+            "description": "The initialization expression is executed in load order before the script begins.",
+            "prefix": "#InitExec"
+        }
+    ],
+    "keywords": [
+        {
+            "body": "macro",
+            "description": "A function definition can be prefixed with 'macro ' to create a macro function. All undeclared variables within a macro function except parameters and local variables come from the scope of the caller."
+        }
+    ]
 }

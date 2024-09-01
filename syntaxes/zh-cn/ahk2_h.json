@@ -1,50 +1,50 @@
 {
-	"directives": [
-		{
-			"body": "#DefineDefault${1|Array,Map,Object|}Value ",
-			"description": "定义在Object/Array/Map中找不到属性或项目时将使用的默认值.",
-			"prefix": "#DefineDefault"
-		},
-		{
-			"body": "#DllImport ${1:Function_Name}, ${2:DllFile\\Function}${3:[, Type1, Arg1, Type2, Arg2, Cdecl ReturnType]}",
-			"description": "为dll或exe函数创建脚本函数.",
-			"prefix": "#DllImport"
-		},
-		{
-			"body": "#WindowClassGui ",
-			"description": "将Gui窗口类名称从AutoHotkey GUI更改为其他名称."
-		},
-		{
-			"body": "#WindowClassMain ",
-			"description": "将主窗口类名称从AutoHotkey更改为其他名称."
-		},
-		{
-			"body": "#UseStdLib",
-			"description": "自动从标准库加载函数。搜索顺序是UserLib -> Resource LIB -> WinApi."
-		},
-		{
-			"body": "#MapCaseSense ${1|On,Off,Locale|}",
-			"description": "设置Map的默认大小写敏感性设置.",
-			"prefix": "#MapCaseSense"
-		},
-		{
-			"body": "#TargetControlError",
-			"description": "当没有找到目标控件时, 不要抛出错误."
-		},
-		{
-			"body": "#TargetWindowError",
-			"description": "当没有找到目标窗口时, 不要抛出错误."
-		},
-		{
-			"body": "#InitExec ${1:Expression}",
-			"description": "在脚本开始之前按加载顺序执行初始化表达式.",
-			"prefix": "#InitExec"
-		}
-	],
-	"keywords": [
-		{
-			"body": "macro",
-			"description": "函数定义可以以'macro '作为前缀来创建宏函数. 宏函数内除参数和局部变量外的所有未声明变量来自调用者的作用域."
-		}
-	]
+    "directives": [
+        {
+            "body": "#DefineDefault${1|Array,Map,Object|}Value ",
+            "description": "定义在Object/Array/Map中找不到属性或项目时将使用的默认值.",
+            "prefix": "#DefineDefault"
+        },
+        {
+            "body": "#DllImport ${1:Function_Name}, ${2:DllFile\\Function}${3:[, Type1, Arg1, Type2, Arg2, Cdecl ReturnType]}",
+            "description": "为dll或exe函数创建脚本函数.",
+            "prefix": "#DllImport"
+        },
+        {
+            "body": "#WindowClassGui ",
+            "description": "将Gui窗口类名称从AutoHotkey GUI更改为其他名称."
+        },
+        {
+            "body": "#WindowClassMain ",
+            "description": "将主窗口类名称从AutoHotkey更改为其他名称."
+        },
+        {
+            "body": "#UseStdLib",
+            "description": "自动从标准库加载函数。搜索顺序是UserLib -> Resource LIB -> WinApi."
+        },
+        {
+            "body": "#MapCaseSense ${1|On,Off,Locale|}",
+            "description": "设置Map的默认大小写敏感性设置.",
+            "prefix": "#MapCaseSense"
+        },
+        {
+            "body": "#TargetControlError",
+            "description": "当没有找到目标控件时, 不要抛出错误."
+        },
+        {
+            "body": "#TargetWindowError",
+            "description": "当没有找到目标窗口时, 不要抛出错误."
+        },
+        {
+            "body": "#InitExec ${1:Expression}",
+            "description": "在脚本开始之前按加载顺序执行初始化表达式.",
+            "prefix": "#InitExec"
+        }
+    ],
+    "keywords": [
+        {
+            "body": "macro",
+            "description": "函数定义可以以'macro '作为前缀来创建宏函数. 宏函数内除参数和局部变量外的所有未声明变量来自调用者的作用域."
+        }
+    ]
 }

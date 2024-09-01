@@ -1,935 +1,935 @@
 {
-	"directives": [
-		{
-			"body": "#ClipboardTimeout ${0:Milliseconds}",
-			"description": "更改首次尝试访问剪贴板失败时脚本继续尝试访问剪贴板的时间.",
-			"prefix": "#ClipboardTimeout"
-		},
-		{
-			"body": "#DllLoad",
-			"description": "在脚本开始执行之前加载 DLL 或 EXE 文件.",
-			"syntax": "#DllLoad [FileOrDirName]"
-		},
-		{
-			"body": "#ErrorStdOut ${1|'CP0','UTF-8','UTF-16','CP###'|}",
-			"description": "把任何阻止脚本运行的语法错误发送到 stderr, 而不是显示一个对话框.",
-			"prefix": "#ErrorStdOut",
-			"syntax": "#ErrorStdOut [Encoding]"
-		},
-		{
-			"body": "#HotIf",
-			"description": "创建上下文相关的热键和热字串. 这样的热键会根据表达式的结果执行不同的操作(或什么都不做).",
-			"syntax": "HotIf [Expression]"
-		},
-		{
-			"body": "#HotIfTimeout ${0:Timeout}",
-			"description": "设置计算单个 #HotIf 表达式可以使用的最大时间.",
-			"prefix": "#HotIfTimeout"
-		},
-		{
-			"body": "#Hotstring ${1|NoMouse,EndChars |}",
-			"description": "```ahk2\n#Hotstring EndChars NewChars\n#Hotstring NewOptions\n```\n改变热字串的选项或终止符.\n```ahk2\n#Hotstring NoMouse\n```\n防止鼠标单击重置热串识别器.",
-			"prefix": "#Hotstring",
-			"syntax": ""
-		},
-		{
-			"body": "#Include ${0:File_Dir_Or_LibName}",
-			"description": "使脚本的行为与指定文件的内容位于此确切位置一样.",
-			"prefix": "#Include"
-		},
-		{
-			"body": "#IncludeAgain ${0:File_Or_Dir}",
-			"description": "使脚本的行为与指定文件的内容位于此确切位置一样.",
-			"prefix": "#IncludeAgain"
-		},
-		{
-			"body": "#InputLevel ${0:0_to_100}",
-			"description": "控制热键和热字串是否忽略模拟的键盘和鼠标事件.",
-			"prefix": "#InputLevel"
-		},
-		{
-			"body": "#MaxThreads ${0:1_to_255}",
-			"description": "设置可同时存在的线程的最大数目.",
-			"prefix": "#MaxThreads"
-		},
-		{
-			"body": "#MaxThreadsBuffer ${1|true,false|}",
-			"description": "当某些或所有的热键达到 #MaxThreadsPerHotkey 限制时, 这个指令让它们缓冲而不是忽略键击.",
-			"prefix": "#MaxThreadsBuffer"
-		},
-		{
-			"body": "#MaxThreadsPerHotkey ${0:1_to_255}",
-			"description": "设置每个热键或热字串可同时存在的最大线程数.",
-			"prefix": "#MaxThreadsPerHotkey"
-		},
-		{
-			"body": "#NoTrayIcon",
-			"description": "禁止显示托盘图标."
-		},
-		{
-			"body": "#Requires AutoHotkey${1| , >, >=, <, <=, =|}v2.${2:0}${3| , 32-bit, 64-bit|}",
-			"description": "如果不符合版本要求, 则显示错误并退出.",
-			"prefix": "#Requires"
-		},
-		{
-			"body": "#SingleInstance ${1|Force,Ignore,Prompt,Off|}",
-			"description": "确定脚本已在运行时是否允许再次运行.",
-			"prefix": "#SingleInstance"
-		},
-		{
-			"body": "#SuspendExempt ${1|true,false|}",
-			"description": "免除后续热键和热键字符串的挂起.",
-			"prefix": "#SuspendExempt"
-		},
-		{
-			"body": "#UseHook ${1|true,false|}",
-			"description": "强制使用钩子实现全部或部分键盘热键.",
-			"prefix": "#UseHook"
-		},
-		{
-			"body": "#Warn ${1|All,VarUnset,LocalSameAsGlobal,Unreachable|}, ${2|MsgBox,StdOut,OutputDebug,Off|}",
-			"description": "启用或禁用特定条件下的警告, 这些条件可能会产生错误, 例如书写错误或缺少 '全局' 声明.",
-			"prefix": "#Warn"
-		},
-		{
-			"body": "#WinActivateForce",
-			"description": "跳过温和的方法而直接使用强制的方法激活窗口."
-		},
-		{
-			"body": ";@Ahk2Exe-${1|IgnoreBegin,IgnoreEnd|}",
-			"description": "可以通过将已编译脚本中的代码片段包装在指令中来删除它们.",
-			"prefix": "@Ahk2Exe-Ignore"
-		},
-		{
-			"body": "/*@Ahk2Exe-Keep",
-			"description": "标记代码片段只在编译后的脚本中执行.",
-			"prefix": "@Ahk2Exe-Keep"
-		},
-		{
-			"body": ";@Ahk2Exe-AddResource ${0:FileName [, ResourceName]}",
-			"description": "将资源添加到已编译的可执行文件中.",
-			"prefix": "@Ahk2Exe-AddResource"
-		},
-		{
-			"body": ";@Ahk2Exe-Base ${0:[Path\\]Name [, [Exe_path\\][Name], Codepage]}",
-			"description": "指定要包含在生成的 .exe 文件中的 AutoHotkey 的二进制版本.",
-			"prefix": "@Ahk2Exe-Base"
-		},
-		{
-			"body": ";@Ahk2Exe-ConsoleApp",
-			"description": "将可执行子系统更改为控制台模式.",
-			"prefix": "@Ahk2Exe-ConsoleApp"
-		},
-		{
-			"body": ";@Ahk2Exe-Cont ${0:Text}",
-			"description": "为前指令指定一个延续行. 这允许格式化一个长行指令, 以便在源代码中容易阅读.",
-			"prefix": "@Ahk2Exe-Cont"
-		},
-		{
-			"body": ";@Ahk2Exe-Debug ${0:Text}",
-			"description": "显示带有支持文本的 msgbox, 用于调试.",
-			"prefix": "@Ahk2Exe-Debug"
-		},
-		{
-			"body": ";@Ahk2Exe-ExeName ${0:[Path\\][Name]}",
-			"description": "指定生成的 .exe 文件的位置和名称.",
-			"prefix": "@Ahk2Exe-ExeName"
-		},
-		{
-			"body": ";@Ahk2Exe-Let ${0:Name = Value [, Name = Value, ...]}",
-			"description": "创建(或修改) 一个或多个用户变量, 这些变量可以通过 %U_Name% 来访问, 类似于内置变量(见上文).",
-			"prefix": "@Ahk2Exe-Let"
-		},
-		{
-			"body": ";@Ahk2Exe-Obey ${0:Name}, ${2:CmdOrExp [, Extra]}",
-			"description": "执行独立于 AutoHotkey 的命令或表达式, 结果为 U_Name.",
-			"prefix": "@Ahk2Exe-Obey"
-		},
-		{
-			"body": ";@Ahk2Exe-PostExec ${0:Program [parameters] [, When]}",
-			"description": "指定在编译成功后, 在任何压缩程序应用于 .exe 文件之前(或之后) 要执行的程序.",
-			"prefix": "@Ahk2Exe-PostExec"
-		},
-		{
-			"body": ";@Ahk2Exe-Set${1|CompanyName,Copyright,Description,FileVersion,InternalName,Language,LegalTrademarks,Name,OrigFilename,ProductName,ProductVersion,Version|} ${2:Value}",
-			"description": "更改已编译可执行文件的版本信息中的属性. 注意, 无论指定属性的顺序如何, 所有属性都按字母顺序处理.",
-			"prefix": "@Ahk2Exe-Set"
-		},
-		{
-			"body": ";@Ahk2Exe-SetMainIcon ${0:[IcoFile]}",
-			"description": "覆盖用于编译的自定义 EXE 图标.",
-			"prefix": "@Ahk2Exe-SetMainIcon"
-		}
-	],
-	"keywords": [
-		{
-			"body": "and"
-		},
-		{
-			"body": "as"
-		},
-		{
-			"body": "in"
-		},
-		{
-			"body": "is",
-			"description": "如果Value是Class的实例,则返回true,否则返回false."
-		},
-		{
-			"body": "not"
-		},
-		{
-			"body": "or"
-		},
-		{
-			"body": "break",
-			"description": "退出（终止）任何类型的循环语句.",
-			"syntax": "break [LoopLabel]\nbreak('Label')"
-		},
-		{
-			"body": "catch",
-			"description": "指定在try语句执行期间引发异常时要执行的代码.",
-			"syntax": "catch [ErrorClass] [as OutputVar] {\n\tStatements\n}"
-		},
-		{
-			"body": "continue",
-			"description": "跳过循环语句当前迭代的其余部分,然后开始一个新的循环.",
-			"syntax": "continue [LoopLabel]\ncontinue('Label')"
-		},
-		{
-			"body": "else if ",
-			"prefix": "elif"
-		},
-		{
-			"body": "else",
-			"description": "如果if语句的结果为false,则指定要执行的一个或多个语句."
-		},
-		{
-			"body": "finally",
-			"description": "确保在执行try语句之后始终执行一个或多个语句（函数或表达式）."
-		},
-		{
-			"body": "for $1 in $0",
-			"description": "对对象中的每个键值对重复一系列功能.",
-			"prefix": "for",
-			"syntax": "for value1 [, value2...] in Expression"
-		},
-		{
-			"body": "global",
-			"description": "要引用函数内部的现有全局变量（或创建一个新的全局变量）,请在使用变量之前将其声明为全局变量.",
-			"syntax": "global [Var]"
-		},
-		{
-			"body": "goto",
-			"description": "跳转到指定的标签并继续执行.",
-			"syntax": "goto Label\ngoto('Label')"
-		},
-		{
-			"body": "if ",
-			"description": "指定在表达式计算为true时要执行的一个或多个语句.",
-			"syntax": "if Expression"
-		},
-		{
-			"body": "loop files ${0:FilePattern [, Mode]}",
-			"description": "检索指定的文件或文件夹, 每次一个.",
-			"prefix": "loop files"
-		},
-		{
-			"body": "loop parse ${0:String [, Delimiters|'CSV', OmitChars]}",
-			"description": "从一个字符串中一次检索一个子字符串（字段）.",
-			"prefix": "loop parse"
-		},
-		{
-			"body": "loop read ${0:InputFile [, OutputFile]}",
-			"description": "检索文本文件中的行, 每次一行.",
-			"prefix": "loop read"
-		},
-		{
-			"body": "loop reg ${0:KeyName [, Mode]}",
-			"description": "检索指定注册表子项的内容,一次检索一项.",
-			"prefix": "loop reg"
-		},
-		{
-			"body": "loop",
-			"description": "重复执行一系列函数: 可以指定表示重复次数的数字或直到遇到 break.",
-			"syntax": "loop [Count]"
-		},
-		{
-			"body": "local ${0:Var}",
-			"description": "局部变量特定于单个函数,并且仅在该函数内部可见.因此,局部变量可能与全局变量具有相同的名称,并且两者将具有单独的内容.单独的函数也可以安全地使用相同的变量名.",
-			"prefix": "local"
-		},
-		{
-			"body": "case $1:",
-			"prefix": "case",
-			"syntax": "case ExpressionOrValue:"
-		},
-		{
-			"body": "default:",
-			"prefix": "default"
-		},
-		{
-			"body": "return",
-			"description": "从先前通过函数调用,热键激活或其他方式跳转到执行的子例程返回.",
-			"syntax": "return [Expression]"
-		},
-		{
-			"body": "static",
-			"description": "静态变量始终是隐式局部变量,但与局部变量有所不同,因为它们的值在两次调用之间被记住.",
-			"syntax": "static [Var]\nstatic Method()\nstatic Property"
-		},
-		{
-			"body": "throw",
-			"description": "表示发生错误.可以通过try-catch语句捕获该信号.",
-			"syntax": "throw Expression"
-		},
-		{
-			"body": "try",
-			"description": "保护一个或多个语句（函数或表达式）以防止运行时错误和throw语句引发的异常."
-		},
-		{
-			"body": "until ",
-			"description": "将条件应用于循环或for循环的继续.",
-			"syntax": "until Expression"
-		},
-		{
-			"body": "while ",
-			"description": "重复执行一系列功能,直到指定的表达式计算为false.",
-			"syntax": "while Expression"
-		}
-	],
-	"options": {
-		"ahk_criteria": [
-			{
-				"body": "ahk_class",
-				"description": "窗口类是系统用作创建窗口的模板的一组属性.换句话说,窗口的类名标识了窗口的类型.若要使用窗口类,请指定ahk_class ExactClassName,如Window Spy所示.可以通过WinGetClass检索ExactClassName."
-			},
-			{
-				"body": "ahk_exe",
-				"description": "使用ahk_exe来标识属于具有给定名称或路径的任何进程的窗口."
-			},
-			{
-				"body": "ahk_group",
-				"description": "使用ahk_group标识一个或多个与先前定义的窗口组所包含的规则匹配的窗口."
-			},
-			{
-				"body": "ahk_id",
-				"description": "每个窗口或控件都有唯一的ID,也称为HWND（窗口句柄的缩写）."
-			},
-			{
-				"body": "ahk_pid",
-				"description": "使用ahk_pid标识属于特定进程的窗口.进程标识符（PID）通常由WinGet,Run或Process检索."
-			}
-		],
-		"hotstring": [
-			{
-				"body": "*",
-				"description": "不需要终止符(例如 `Space`, `.` 或 `Enter`) 来触发热字串. 例如:\n```ahk2\n:*:j@::jsmith@somedomain.com\n```"
-			},
-			{
-				"body": "?",
-				"description": "即使热字串在另一个单词中也会被触发; 也就是说, 在它之前输入的字符是字母数字时. 例如, 如果`:?:al::airline`是热字串, 输入 \"practical \" 会产生 \"practicairline \". 使用 `?0` 来关闭此选项."
-			},
-			{
-				"body": "B0",
-				"description": "不自动退格来删除您输入的缩写. 关闭此选项后可以使用 `B` 来启用. 例如:\n```ahk2\n:*b0:<em>::</em>{left 5}\n```"
-			},
-			{
-				"body": "C",
-				"description": "区分大小写: 当您输入缩写时, 它必须准确匹配脚本中定义的大小写形式. 使用 `C0` 可以关闭区分大小写的特性."
-			},
-			{
-				"body": "C1",
-				"description": "不遵循输入的大小写形式. 使用此选项可以让自动替换热字串不区分大小写且阻止它们遵循您实际输入字符的大小写形式. 遵循大小写形式的热字串(这是默认状态) 会在您输入的缩写都为大写时产生大写形式的的替换文本. 如果您的输入的首字母为大写, 那么替换的首字母也会为标题格式(大写, 如果首个字符是字母). 您按其他任何大小写形式输入时, 替换会准确按照定义进行发送."
-			},
-			{
-				"body": "Kn",
-				"description": "按键延迟: 这个较少使用的选项设置在自动退格或自动替换产生的键击之间的延迟. 通过 n 指定新的延迟; 例如, 指定 `k10` 来设置 10 ms 的延迟, 而 `k-1` 则取消延迟."
-			},
-			{
-				"body": "O",
-				"description": "进行替换时忽略自动替换热字串的终止符. 它可以用于当您希望使用终止符让热字串保持清晰, 却不希望终止符显示在屏幕上的时候. 使用 `O0` 来关闭此选项."
-			},
-			{
-				"body": "Pn",
-				"description": "字符串的优先级(例如 `P1`). 这个较少使用的选项对自动替换热字串没有效果."
-			},
-			{
-				"body": "R",
-				"description": "发送替换文本的原始文本; 即不把 `{Enter}` 转换成 `Enter`, `^c` 转换成 `Ctrl+C`, 等等. 使用 `R0` 来关闭此选项, 或用 `T` 来覆盖."
-			},
-			{
-				"body": "S",
-				"description": "指定字母 `S` 使热字串免于挂起. 指定 `S0` 来移除豁免, 允许热字串被挂起."
-			},
-			{
-				"body": "SI",
-				"description": "SendInput"
-			},
-			{
-				"body": "SP",
-				"description": "SendPlay"
-			},
-			{
-				"body": "SE",
-				"description": "SendEvent"
-			},
-			{
-				"body": "T",
-				"description": "使用文本模式 发送替换文本. 使用 `T0` 或 `R0` 来关闭此选项, 或使用 `R` 来覆盖."
-			},
-			{
-				"body": "X",
-				"description": "取代替换文本, 热字串接受一个函数调用或表达式来执行."
-			},
-			{
-				"body": "Z",
-				"description": "这个较少使用的选项会在每次热字串触发后重置热字串识别器."
-			}
-		]
-	},
-	"texts": [
-		{
-			"body": "A_PriorLine",
-			"description": "包含了紧接当前编译器指令之前的源代码行. 只忽略中间的空白行和注释, 以及任何中间的编译器指令行."
-		},
-		{
-			"body": "A_WorkFileName",
-			"description": "特殊变量 A_WorkFileName 还保存着处理后的 .exe 文件的临时名称. 这可以用来将文件名作为参数传递给任何需要访问生成的 .exe 文件的 PostExec 指令."
-		},
-		{
-			"body": "AlwaysOnTop",
-			"description": "使窗口保持在所有其他窗口之上."
-		},
-		{
-			"body": "AutoSize",
-			"description": "调整窗口大小以仅容纳其当前可见的控件.这对于在添加新控件或调整现有控件的大小、隐藏或取消隐藏后调整窗口大小很有用."
-		},
-		{
-			"body": "Border",
-			"description": "在控件周围提供细线边框.大多数控件不需要这样,因为它们已经有了特定于类型的边框.向现有控件添加边框时,可能需要将控件的宽度和高度增加1个像素."
-		},
-		{
-			"body": "Caption",
-			"description": "提供标题栏和厚窗口边框/边缘."
-		},
-		{
-			"body": "Center",
-			"description": "将控件的文本在其可用宽度内居中."
-		},
-		{
-			"body": "DropFiles",
-			"description": "当文件/文件夹作为拖放操作的一部分被拖放到窗口上时启动(但是如果这个回调已经在运行,拖放事件将被忽略)."
-		}
-	],
-	"keys": [
-		{
-			"body": "Alt"
-		},
-		{
-			"body": "AltTab",
-			"description": "如果 alt-tab 菜单可见, 那么在菜单中前移. 否则, 显示菜单(仅当热键是 '&' 连接的两个按键时; 否则, 它什么都不做)."
-		},
-		{
-			"body": "AltTabAndMenu",
-			"description": "如果 alt-tab 菜单可见, 则向前移动. 否则, 显示菜单."
-		},
-		{
-			"body": "AltTabMenu",
-			"description": "显示或隐藏 alt-tab 菜单."
-		},
-		{
-			"body": "AltTabMenuDismiss",
-			"description": "关闭 Alt-tab 菜单."
-		},
-		{
-			"body": "AppsKey",
-			"description": "Menu. 这是调用右键上下文菜单的按键."
-		},
-		{
-			"body": "BackSpace"
-		},
-		{
-			"body": "BS"
-		},
-		{
-			"body": "Browser_Back",
-			"description": "后退"
-		},
-		{
-			"body": "Browser_Favorites",
-			"description": "收藏夹"
-		},
-		{
-			"body": "Browser_Forward",
-			"description": "前进"
-		},
-		{
-			"body": "Browser_Home",
-			"description": "主页"
-		},
-		{
-			"body": "Browser_Refresh",
-			"description": "刷新"
-		},
-		{
-			"body": "Browser_Search",
-			"description": "搜索"
-		},
-		{
-			"body": "Browser_Stop",
-			"description": "停止"
-		},
-		{
-			"body": "CapsLock"
-		},
-		{
-			"body": "Control"
-		},
-		{
-			"body": "Ctrl"
-		},
-		{
-			"body": "CtrlBreak",
-			"description": "Ctrl+Pause 或 Ctrl+ScrollLock"
-		},
-		{
-			"body": "Del"
-		},
-		{
-			"body": "Delete"
-		},
-		{
-			"body": "Down"
-		},
-		{
-			"body": "End"
-		},
-		{
-			"body": "Enter"
-		},
-		{
-			"body": "Esc"
-		},
-		{
-			"body": "Escape"
-		},
-		{
-			"body": "F1"
-		},
-		{
-			"body": "F10"
-		},
-		{
-			"body": "F11"
-		},
-		{
-			"body": "F12"
-		},
-		{
-			"body": "F13"
-		},
-		{
-			"body": "F14"
-		},
-		{
-			"body": "F15"
-		},
-		{
-			"body": "F16"
-		},
-		{
-			"body": "F17"
-		},
-		{
-			"body": "F18"
-		},
-		{
-			"body": "F19"
-		},
-		{
-			"body": "F2"
-		},
-		{
-			"body": "F20"
-		},
-		{
-			"body": "F21"
-		},
-		{
-			"body": "F22"
-		},
-		{
-			"body": "F23"
-		},
-		{
-			"body": "F24"
-		},
-		{
-			"body": "F3"
-		},
-		{
-			"body": "F4"
-		},
-		{
-			"body": "F5"
-		},
-		{
-			"body": "F6"
-		},
-		{
-			"body": "F7"
-		},
-		{
-			"body": "F8"
-		},
-		{
-			"body": "F9"
-		},
-		{
-			"body": "Home"
-		},
-		{
-			"body": "Ins"
-		},
-		{
-			"body": "Insert"
-		},
-		{
-			"body": "Joy1"
-		},
-		{
-			"body": "Joy10"
-		},
-		{
-			"body": "Joy11"
-		},
-		{
-			"body": "Joy12"
-		},
-		{
-			"body": "Joy13"
-		},
-		{
-			"body": "Joy14"
-		},
-		{
-			"body": "Joy15"
-		},
-		{
-			"body": "Joy16"
-		},
-		{
-			"body": "Joy17"
-		},
-		{
-			"body": "Joy18"
-		},
-		{
-			"body": "Joy19"
-		},
-		{
-			"body": "Joy2"
-		},
-		{
-			"body": "Joy20"
-		},
-		{
-			"body": "Joy21"
-		},
-		{
-			"body": "Joy22"
-		},
-		{
-			"body": "Joy23"
-		},
-		{
-			"body": "Joy24"
-		},
-		{
-			"body": "Joy25"
-		},
-		{
-			"body": "Joy26"
-		},
-		{
-			"body": "Joy27"
-		},
-		{
-			"body": "Joy28"
-		},
-		{
-			"body": "Joy29"
-		},
-		{
-			"body": "Joy3"
-		},
-		{
-			"body": "Joy30"
-		},
-		{
-			"body": "Joy31"
-		},
-		{
-			"body": "Joy32"
-		},
-		{
-			"body": "Joy4"
-		},
-		{
-			"body": "Joy5"
-		},
-		{
-			"body": "Joy6"
-		},
-		{
-			"body": "Joy7"
-		},
-		{
-			"body": "Joy8"
-		},
-		{
-			"body": "Joy9"
-		},
-		{
-			"body": "JoyAxes"
-		},
-		{
-			"body": "JoyButtons"
-		},
-		{
-			"body": "JoyInfo"
-		},
-		{
-			"body": "JoyName"
-		},
-		{
-			"body": "JoyPOV"
-		},
-		{
-			"body": "JoyR"
-		},
-		{
-			"body": "JoyU"
-		},
-		{
-			"body": "JoyV"
-		},
-		{
-			"body": "JoyX"
-		},
-		{
-			"body": "JoyY"
-		},
-		{
-			"body": "JoyZ"
-		},
-		{
-			"body": "LAlt"
-		},
-		{
-			"body": "Launch_App1"
-		},
-		{
-			"body": "Launch_App2"
-		},
-		{
-			"body": "Launch_Mail"
-		},
-		{
-			"body": "Launch_Media"
-		},
-		{
-			"body": "LButton"
-		},
-		{
-			"body": "LControl"
-		},
-		{
-			"body": "LCtrl"
-		},
-		{
-			"body": "Left"
-		},
-		{
-			"body": "LShift"
-		},
-		{
-			"body": "LWin"
-		},
-		{
-			"body": "MButton"
-		},
-		{
-			"body": "Media_Next"
-		},
-		{
-			"body": "Media_Play_Pause"
-		},
-		{
-			"body": "Media_Prev"
-		},
-		{
-			"body": "Media_Stop"
-		},
-		{
-			"body": "NumLock"
-		},
-		{
-			"body": "Numpad0"
-		},
-		{
-			"body": "Numpad1"
-		},
-		{
-			"body": "Numpad2"
-		},
-		{
-			"body": "Numpad3"
-		},
-		{
-			"body": "Numpad4"
-		},
-		{
-			"body": "Numpad5"
-		},
-		{
-			"body": "Numpad6"
-		},
-		{
-			"body": "Numpad7"
-		},
-		{
-			"body": "Numpad8"
-		},
-		{
-			"body": "Numpad9"
-		},
-		{
-			"body": "NumpadAdd"
-		},
-		{
-			"body": "NumpadClear"
-		},
-		{
-			"body": "NumpadDel"
-		},
-		{
-			"body": "NumpadDiv"
-		},
-		{
-			"body": "NumpadDot"
-		},
-		{
-			"body": "NumpadDown"
-		},
-		{
-			"body": "NumpadEnd"
-		},
-		{
-			"body": "NumpadEnter"
-		},
-		{
-			"body": "NumpadHome"
-		},
-		{
-			"body": "NumpadIns"
-		},
-		{
-			"body": "NumpadLeft"
-		},
-		{
-			"body": "NumpadMult"
-		},
-		{
-			"body": "NumpadPgdn"
-		},
-		{
-			"body": "NumpadPgup"
-		},
-		{
-			"body": "NumpadRight"
-		},
-		{
-			"body": "NumpadSub"
-		},
-		{
-			"body": "NumpadUp"
-		},
-		{
-			"body": "PgDn"
-		},
-		{
-			"body": "PgUp"
-		},
-		{
-			"body": "PrintScreen"
-		},
-		{
-			"body": "RAlt"
-		},
-		{
-			"body": "RButton"
-		},
-		{
-			"body": "RControl"
-		},
-		{
-			"body": "RCtrl"
-		},
-		{
-			"body": "Right"
-		},
-		{
-			"body": "RShift"
-		},
-		{
-			"body": "RWin"
-		},
-		{
-			"body": "ScrollLock"
-		},
-		{
-			"body": "Shift"
-		},
-		{
-			"body": "ShiftAltTab"
-		},
-		{
-			"body": "Space"
-		},
-		{
-			"body": "Tab"
-		},
-		{
-			"body": "Up"
-		},
-		{
-			"body": "Volume_Down"
-		},
-		{
-			"body": "Volume_Mute"
-		},
-		{
-			"body": "Volume_Up"
-		},
-		{
-			"body": "WheelDown"
-		},
-		{
-			"body": "WheelLeft"
-		},
-		{
-			"body": "WheelRight"
-		},
-		{
-			"body": "WheelUp"
-		},
-		{
-			"body": "XButton1"
-		},
-		{
-			"body": "XButton2"
-		}
-	]
+    "directives": [
+        {
+            "body": "#ClipboardTimeout ${0:Milliseconds}",
+            "description": "更改首次尝试访问剪贴板失败时脚本继续尝试访问剪贴板的时间.",
+            "prefix": "#ClipboardTimeout"
+        },
+        {
+            "body": "#DllLoad",
+            "description": "在脚本开始执行之前加载 DLL 或 EXE 文件.",
+            "syntax": "#DllLoad [FileOrDirName]"
+        },
+        {
+            "body": "#ErrorStdOut ${1|'CP0','UTF-8','UTF-16','CP###'|}",
+            "description": "把任何阻止脚本运行的语法错误发送到 stderr, 而不是显示一个对话框.",
+            "prefix": "#ErrorStdOut",
+            "syntax": "#ErrorStdOut [Encoding]"
+        },
+        {
+            "body": "#HotIf",
+            "description": "创建上下文相关的热键和热字串. 这样的热键会根据表达式的结果执行不同的操作(或什么都不做).",
+            "syntax": "HotIf [Expression]"
+        },
+        {
+            "body": "#HotIfTimeout ${0:Timeout}",
+            "description": "设置计算单个 #HotIf 表达式可以使用的最大时间.",
+            "prefix": "#HotIfTimeout"
+        },
+        {
+            "body": "#Hotstring ${1|NoMouse,EndChars |}",
+            "description": "```ahk2\n#Hotstring EndChars NewChars\n#Hotstring NewOptions\n```\n改变热字串的选项或终止符.\n```ahk2\n#Hotstring NoMouse\n```\n防止鼠标单击重置热串识别器.",
+            "prefix": "#Hotstring",
+            "syntax": ""
+        },
+        {
+            "body": "#Include ${0:File_Dir_Or_LibName}",
+            "description": "使脚本的行为与指定文件的内容位于此确切位置一样.",
+            "prefix": "#Include"
+        },
+        {
+            "body": "#IncludeAgain ${0:File_Or_Dir}",
+            "description": "使脚本的行为与指定文件的内容位于此确切位置一样.",
+            "prefix": "#IncludeAgain"
+        },
+        {
+            "body": "#InputLevel ${0:0_to_100}",
+            "description": "控制热键和热字串是否忽略模拟的键盘和鼠标事件.",
+            "prefix": "#InputLevel"
+        },
+        {
+            "body": "#MaxThreads ${0:1_to_255}",
+            "description": "设置可同时存在的线程的最大数目.",
+            "prefix": "#MaxThreads"
+        },
+        {
+            "body": "#MaxThreadsBuffer ${1|true,false|}",
+            "description": "当某些或所有的热键达到 #MaxThreadsPerHotkey 限制时, 这个指令让它们缓冲而不是忽略键击.",
+            "prefix": "#MaxThreadsBuffer"
+        },
+        {
+            "body": "#MaxThreadsPerHotkey ${0:1_to_255}",
+            "description": "设置每个热键或热字串可同时存在的最大线程数.",
+            "prefix": "#MaxThreadsPerHotkey"
+        },
+        {
+            "body": "#NoTrayIcon",
+            "description": "禁止显示托盘图标."
+        },
+        {
+            "body": "#Requires AutoHotkey${1| , >, >=, <, <=, =|}v2.${2:0}${3| , 32-bit, 64-bit|}",
+            "description": "如果不符合版本要求, 则显示错误并退出.",
+            "prefix": "#Requires"
+        },
+        {
+            "body": "#SingleInstance ${1|Force,Ignore,Prompt,Off|}",
+            "description": "确定脚本已在运行时是否允许再次运行.",
+            "prefix": "#SingleInstance"
+        },
+        {
+            "body": "#SuspendExempt ${1|true,false|}",
+            "description": "免除后续热键和热键字符串的挂起.",
+            "prefix": "#SuspendExempt"
+        },
+        {
+            "body": "#UseHook ${1|true,false|}",
+            "description": "强制使用钩子实现全部或部分键盘热键.",
+            "prefix": "#UseHook"
+        },
+        {
+            "body": "#Warn ${1|All,VarUnset,LocalSameAsGlobal,Unreachable|}, ${2|MsgBox,StdOut,OutputDebug,Off|}",
+            "description": "启用或禁用特定条件下的警告, 这些条件可能会产生错误, 例如书写错误或缺少 '全局' 声明.",
+            "prefix": "#Warn"
+        },
+        {
+            "body": "#WinActivateForce",
+            "description": "跳过温和的方法而直接使用强制的方法激活窗口."
+        },
+        {
+            "body": ";@Ahk2Exe-${1|IgnoreBegin,IgnoreEnd|}",
+            "description": "可以通过将已编译脚本中的代码片段包装在指令中来删除它们.",
+            "prefix": "@Ahk2Exe-Ignore"
+        },
+        {
+            "body": "/*@Ahk2Exe-Keep",
+            "description": "标记代码片段只在编译后的脚本中执行.",
+            "prefix": "@Ahk2Exe-Keep"
+        },
+        {
+            "body": ";@Ahk2Exe-AddResource ${0:FileName [, ResourceName]}",
+            "description": "将资源添加到已编译的可执行文件中.",
+            "prefix": "@Ahk2Exe-AddResource"
+        },
+        {
+            "body": ";@Ahk2Exe-Base ${0:[Path\\]Name [, [Exe_path\\][Name], Codepage]}",
+            "description": "指定要包含在生成的 .exe 文件中的 AutoHotkey 的二进制版本.",
+            "prefix": "@Ahk2Exe-Base"
+        },
+        {
+            "body": ";@Ahk2Exe-ConsoleApp",
+            "description": "将可执行子系统更改为控制台模式.",
+            "prefix": "@Ahk2Exe-ConsoleApp"
+        },
+        {
+            "body": ";@Ahk2Exe-Cont ${0:Text}",
+            "description": "为前指令指定一个延续行. 这允许格式化一个长行指令, 以便在源代码中容易阅读.",
+            "prefix": "@Ahk2Exe-Cont"
+        },
+        {
+            "body": ";@Ahk2Exe-Debug ${0:Text}",
+            "description": "显示带有支持文本的 msgbox, 用于调试.",
+            "prefix": "@Ahk2Exe-Debug"
+        },
+        {
+            "body": ";@Ahk2Exe-ExeName ${0:[Path\\][Name]}",
+            "description": "指定生成的 .exe 文件的位置和名称.",
+            "prefix": "@Ahk2Exe-ExeName"
+        },
+        {
+            "body": ";@Ahk2Exe-Let ${0:Name = Value [, Name = Value, ...]}",
+            "description": "创建(或修改) 一个或多个用户变量, 这些变量可以通过 %U_Name% 来访问, 类似于内置变量(见上文).",
+            "prefix": "@Ahk2Exe-Let"
+        },
+        {
+            "body": ";@Ahk2Exe-Obey ${0:Name}, ${2:CmdOrExp [, Extra]}",
+            "description": "执行独立于 AutoHotkey 的命令或表达式, 结果为 U_Name.",
+            "prefix": "@Ahk2Exe-Obey"
+        },
+        {
+            "body": ";@Ahk2Exe-PostExec ${0:Program [parameters] [, When]}",
+            "description": "指定在编译成功后, 在任何压缩程序应用于 .exe 文件之前(或之后) 要执行的程序.",
+            "prefix": "@Ahk2Exe-PostExec"
+        },
+        {
+            "body": ";@Ahk2Exe-Set${1|CompanyName,Copyright,Description,FileVersion,InternalName,Language,LegalTrademarks,Name,OrigFilename,ProductName,ProductVersion,Version|} ${2:Value}",
+            "description": "更改已编译可执行文件的版本信息中的属性. 注意, 无论指定属性的顺序如何, 所有属性都按字母顺序处理.",
+            "prefix": "@Ahk2Exe-Set"
+        },
+        {
+            "body": ";@Ahk2Exe-SetMainIcon ${0:[IcoFile]}",
+            "description": "覆盖用于编译的自定义 EXE 图标.",
+            "prefix": "@Ahk2Exe-SetMainIcon"
+        }
+    ],
+    "keywords": [
+        {
+            "body": "and"
+        },
+        {
+            "body": "as"
+        },
+        {
+            "body": "in"
+        },
+        {
+            "body": "is",
+            "description": "如果Value是Class的实例,则返回true,否则返回false."
+        },
+        {
+            "body": "not"
+        },
+        {
+            "body": "or"
+        },
+        {
+            "body": "break",
+            "description": "退出（终止）任何类型的循环语句.",
+            "syntax": "break [LoopLabel]\nbreak('Label')"
+        },
+        {
+            "body": "catch",
+            "description": "指定在try语句执行期间引发异常时要执行的代码.",
+            "syntax": "catch [ErrorClass] [as OutputVar] {\n\tStatements\n}"
+        },
+        {
+            "body": "continue",
+            "description": "跳过循环语句当前迭代的其余部分,然后开始一个新的循环.",
+            "syntax": "continue [LoopLabel]\ncontinue('Label')"
+        },
+        {
+            "body": "else if ",
+            "prefix": "elif"
+        },
+        {
+            "body": "else",
+            "description": "如果if语句的结果为false,则指定要执行的一个或多个语句."
+        },
+        {
+            "body": "finally",
+            "description": "确保在执行try语句之后始终执行一个或多个语句（函数或表达式）."
+        },
+        {
+            "body": "for $1 in $0",
+            "description": "对对象中的每个键值对重复一系列功能.",
+            "prefix": "for",
+            "syntax": "for value1 [, value2...] in Expression"
+        },
+        {
+            "body": "global",
+            "description": "要引用函数内部的现有全局变量（或创建一个新的全局变量）,请在使用变量之前将其声明为全局变量.",
+            "syntax": "global [Var]"
+        },
+        {
+            "body": "goto",
+            "description": "跳转到指定的标签并继续执行.",
+            "syntax": "goto Label\ngoto('Label')"
+        },
+        {
+            "body": "if ",
+            "description": "指定在表达式计算为true时要执行的一个或多个语句.",
+            "syntax": "if Expression"
+        },
+        {
+            "body": "loop files ${0:FilePattern [, Mode]}",
+            "description": "检索指定的文件或文件夹, 每次一个.",
+            "prefix": "loop files"
+        },
+        {
+            "body": "loop parse ${0:String [, Delimiters|'CSV', OmitChars]}",
+            "description": "从一个字符串中一次检索一个子字符串（字段）.",
+            "prefix": "loop parse"
+        },
+        {
+            "body": "loop read ${0:InputFile [, OutputFile]}",
+            "description": "检索文本文件中的行, 每次一行.",
+            "prefix": "loop read"
+        },
+        {
+            "body": "loop reg ${0:KeyName [, Mode]}",
+            "description": "检索指定注册表子项的内容,一次检索一项.",
+            "prefix": "loop reg"
+        },
+        {
+            "body": "loop",
+            "description": "重复执行一系列函数: 可以指定表示重复次数的数字或直到遇到 break.",
+            "syntax": "loop [Count]"
+        },
+        {
+            "body": "local ${0:Var}",
+            "description": "局部变量特定于单个函数,并且仅在该函数内部可见.因此,局部变量可能与全局变量具有相同的名称,并且两者将具有单独的内容.单独的函数也可以安全地使用相同的变量名.",
+            "prefix": "local"
+        },
+        {
+            "body": "case $1:",
+            "prefix": "case",
+            "syntax": "case ExpressionOrValue:"
+        },
+        {
+            "body": "default:",
+            "prefix": "default"
+        },
+        {
+            "body": "return",
+            "description": "从先前通过函数调用,热键激活或其他方式跳转到执行的子例程返回.",
+            "syntax": "return [Expression]"
+        },
+        {
+            "body": "static",
+            "description": "静态变量始终是隐式局部变量,但与局部变量有所不同,因为它们的值在两次调用之间被记住.",
+            "syntax": "static [Var]\nstatic Method()\nstatic Property"
+        },
+        {
+            "body": "throw",
+            "description": "表示发生错误.可以通过try-catch语句捕获该信号.",
+            "syntax": "throw Expression"
+        },
+        {
+            "body": "try",
+            "description": "保护一个或多个语句（函数或表达式）以防止运行时错误和throw语句引发的异常."
+        },
+        {
+            "body": "until ",
+            "description": "将条件应用于循环或for循环的继续.",
+            "syntax": "until Expression"
+        },
+        {
+            "body": "while ",
+            "description": "重复执行一系列功能,直到指定的表达式计算为false.",
+            "syntax": "while Expression"
+        }
+    ],
+    "options": {
+        "ahk_criteria": [
+            {
+                "body": "ahk_class",
+                "description": "窗口类是系统用作创建窗口的模板的一组属性.换句话说,窗口的类名标识了窗口的类型.若要使用窗口类,请指定ahk_class ExactClassName,如Window Spy所示.可以通过WinGetClass检索ExactClassName."
+            },
+            {
+                "body": "ahk_exe",
+                "description": "使用ahk_exe来标识属于具有给定名称或路径的任何进程的窗口."
+            },
+            {
+                "body": "ahk_group",
+                "description": "使用ahk_group标识一个或多个与先前定义的窗口组所包含的规则匹配的窗口."
+            },
+            {
+                "body": "ahk_id",
+                "description": "每个窗口或控件都有唯一的ID,也称为HWND（窗口句柄的缩写）."
+            },
+            {
+                "body": "ahk_pid",
+                "description": "使用ahk_pid标识属于特定进程的窗口.进程标识符（PID）通常由WinGet,Run或Process检索."
+            }
+        ],
+        "hotstring": [
+            {
+                "body": "*",
+                "description": "不需要终止符(例如 `Space`, `.` 或 `Enter`) 来触发热字串. 例如:\n```ahk2\n:*:j@::jsmith@somedomain.com\n```"
+            },
+            {
+                "body": "?",
+                "description": "即使热字串在另一个单词中也会被触发; 也就是说, 在它之前输入的字符是字母数字时. 例如, 如果`:?:al::airline`是热字串, 输入 \"practical \" 会产生 \"practicairline \". 使用 `?0` 来关闭此选项."
+            },
+            {
+                "body": "B0",
+                "description": "不自动退格来删除您输入的缩写. 关闭此选项后可以使用 `B` 来启用. 例如:\n```ahk2\n:*b0:<em>::</em>{left 5}\n```"
+            },
+            {
+                "body": "C",
+                "description": "区分大小写: 当您输入缩写时, 它必须准确匹配脚本中定义的大小写形式. 使用 `C0` 可以关闭区分大小写的特性."
+            },
+            {
+                "body": "C1",
+                "description": "不遵循输入的大小写形式. 使用此选项可以让自动替换热字串不区分大小写且阻止它们遵循您实际输入字符的大小写形式. 遵循大小写形式的热字串(这是默认状态) 会在您输入的缩写都为大写时产生大写形式的的替换文本. 如果您的输入的首字母为大写, 那么替换的首字母也会为标题格式(大写, 如果首个字符是字母). 您按其他任何大小写形式输入时, 替换会准确按照定义进行发送."
+            },
+            {
+                "body": "Kn",
+                "description": "按键延迟: 这个较少使用的选项设置在自动退格或自动替换产生的键击之间的延迟. 通过 n 指定新的延迟; 例如, 指定 `k10` 来设置 10 ms 的延迟, 而 `k-1` 则取消延迟."
+            },
+            {
+                "body": "O",
+                "description": "进行替换时忽略自动替换热字串的终止符. 它可以用于当您希望使用终止符让热字串保持清晰, 却不希望终止符显示在屏幕上的时候. 使用 `O0` 来关闭此选项."
+            },
+            {
+                "body": "Pn",
+                "description": "字符串的优先级(例如 `P1`). 这个较少使用的选项对自动替换热字串没有效果."
+            },
+            {
+                "body": "R",
+                "description": "发送替换文本的原始文本; 即不把 `{Enter}` 转换成 `Enter`, `^c` 转换成 `Ctrl+C`, 等等. 使用 `R0` 来关闭此选项, 或用 `T` 来覆盖."
+            },
+            {
+                "body": "S",
+                "description": "指定字母 `S` 使热字串免于挂起. 指定 `S0` 来移除豁免, 允许热字串被挂起."
+            },
+            {
+                "body": "SI",
+                "description": "SendInput"
+            },
+            {
+                "body": "SP",
+                "description": "SendPlay"
+            },
+            {
+                "body": "SE",
+                "description": "SendEvent"
+            },
+            {
+                "body": "T",
+                "description": "使用文本模式 发送替换文本. 使用 `T0` 或 `R0` 来关闭此选项, 或使用 `R` 来覆盖."
+            },
+            {
+                "body": "X",
+                "description": "取代替换文本, 热字串接受一个函数调用或表达式来执行."
+            },
+            {
+                "body": "Z",
+                "description": "这个较少使用的选项会在每次热字串触发后重置热字串识别器."
+            }
+        ]
+    },
+    "texts": [
+        {
+            "body": "A_PriorLine",
+            "description": "包含了紧接当前编译器指令之前的源代码行. 只忽略中间的空白行和注释, 以及任何中间的编译器指令行."
+        },
+        {
+            "body": "A_WorkFileName",
+            "description": "特殊变量 A_WorkFileName 还保存着处理后的 .exe 文件的临时名称. 这可以用来将文件名作为参数传递给任何需要访问生成的 .exe 文件的 PostExec 指令."
+        },
+        {
+            "body": "AlwaysOnTop",
+            "description": "使窗口保持在所有其他窗口之上."
+        },
+        {
+            "body": "AutoSize",
+            "description": "调整窗口大小以仅容纳其当前可见的控件.这对于在添加新控件或调整现有控件的大小、隐藏或取消隐藏后调整窗口大小很有用."
+        },
+        {
+            "body": "Border",
+            "description": "在控件周围提供细线边框.大多数控件不需要这样,因为它们已经有了特定于类型的边框.向现有控件添加边框时,可能需要将控件的宽度和高度增加1个像素."
+        },
+        {
+            "body": "Caption",
+            "description": "提供标题栏和厚窗口边框/边缘."
+        },
+        {
+            "body": "Center",
+            "description": "将控件的文本在其可用宽度内居中."
+        },
+        {
+            "body": "DropFiles",
+            "description": "当文件/文件夹作为拖放操作的一部分被拖放到窗口上时启动(但是如果这个回调已经在运行,拖放事件将被忽略)."
+        }
+    ],
+    "keys": [
+        {
+            "body": "Alt"
+        },
+        {
+            "body": "AltTab",
+            "description": "如果 alt-tab 菜单可见, 那么在菜单中前移. 否则, 显示菜单(仅当热键是 '&' 连接的两个按键时; 否则, 它什么都不做)."
+        },
+        {
+            "body": "AltTabAndMenu",
+            "description": "如果 alt-tab 菜单可见, 则向前移动. 否则, 显示菜单."
+        },
+        {
+            "body": "AltTabMenu",
+            "description": "显示或隐藏 alt-tab 菜单."
+        },
+        {
+            "body": "AltTabMenuDismiss",
+            "description": "关闭 Alt-tab 菜单."
+        },
+        {
+            "body": "AppsKey",
+            "description": "Menu. 这是调用右键上下文菜单的按键."
+        },
+        {
+            "body": "BackSpace"
+        },
+        {
+            "body": "BS"
+        },
+        {
+            "body": "Browser_Back",
+            "description": "后退"
+        },
+        {
+            "body": "Browser_Favorites",
+            "description": "收藏夹"
+        },
+        {
+            "body": "Browser_Forward",
+            "description": "前进"
+        },
+        {
+            "body": "Browser_Home",
+            "description": "主页"
+        },
+        {
+            "body": "Browser_Refresh",
+            "description": "刷新"
+        },
+        {
+            "body": "Browser_Search",
+            "description": "搜索"
+        },
+        {
+            "body": "Browser_Stop",
+            "description": "停止"
+        },
+        {
+            "body": "CapsLock"
+        },
+        {
+            "body": "Control"
+        },
+        {
+            "body": "Ctrl"
+        },
+        {
+            "body": "CtrlBreak",
+            "description": "Ctrl+Pause 或 Ctrl+ScrollLock"
+        },
+        {
+            "body": "Del"
+        },
+        {
+            "body": "Delete"
+        },
+        {
+            "body": "Down"
+        },
+        {
+            "body": "End"
+        },
+        {
+            "body": "Enter"
+        },
+        {
+            "body": "Esc"
+        },
+        {
+            "body": "Escape"
+        },
+        {
+            "body": "F1"
+        },
+        {
+            "body": "F10"
+        },
+        {
+            "body": "F11"
+        },
+        {
+            "body": "F12"
+        },
+        {
+            "body": "F13"
+        },
+        {
+            "body": "F14"
+        },
+        {
+            "body": "F15"
+        },
+        {
+            "body": "F16"
+        },
+        {
+            "body": "F17"
+        },
+        {
+            "body": "F18"
+        },
+        {
+            "body": "F19"
+        },
+        {
+            "body": "F2"
+        },
+        {
+            "body": "F20"
+        },
+        {
+            "body": "F21"
+        },
+        {
+            "body": "F22"
+        },
+        {
+            "body": "F23"
+        },
+        {
+            "body": "F24"
+        },
+        {
+            "body": "F3"
+        },
+        {
+            "body": "F4"
+        },
+        {
+            "body": "F5"
+        },
+        {
+            "body": "F6"
+        },
+        {
+            "body": "F7"
+        },
+        {
+            "body": "F8"
+        },
+        {
+            "body": "F9"
+        },
+        {
+            "body": "Home"
+        },
+        {
+            "body": "Ins"
+        },
+        {
+            "body": "Insert"
+        },
+        {
+            "body": "Joy1"
+        },
+        {
+            "body": "Joy10"
+        },
+        {
+            "body": "Joy11"
+        },
+        {
+            "body": "Joy12"
+        },
+        {
+            "body": "Joy13"
+        },
+        {
+            "body": "Joy14"
+        },
+        {
+            "body": "Joy15"
+        },
+        {
+            "body": "Joy16"
+        },
+        {
+            "body": "Joy17"
+        },
+        {
+            "body": "Joy18"
+        },
+        {
+            "body": "Joy19"
+        },
+        {
+            "body": "Joy2"
+        },
+        {
+            "body": "Joy20"
+        },
+        {
+            "body": "Joy21"
+        },
+        {
+            "body": "Joy22"
+        },
+        {
+            "body": "Joy23"
+        },
+        {
+            "body": "Joy24"
+        },
+        {
+            "body": "Joy25"
+        },
+        {
+            "body": "Joy26"
+        },
+        {
+            "body": "Joy27"
+        },
+        {
+            "body": "Joy28"
+        },
+        {
+            "body": "Joy29"
+        },
+        {
+            "body": "Joy3"
+        },
+        {
+            "body": "Joy30"
+        },
+        {
+            "body": "Joy31"
+        },
+        {
+            "body": "Joy32"
+        },
+        {
+            "body": "Joy4"
+        },
+        {
+            "body": "Joy5"
+        },
+        {
+            "body": "Joy6"
+        },
+        {
+            "body": "Joy7"
+        },
+        {
+            "body": "Joy8"
+        },
+        {
+            "body": "Joy9"
+        },
+        {
+            "body": "JoyAxes"
+        },
+        {
+            "body": "JoyButtons"
+        },
+        {
+            "body": "JoyInfo"
+        },
+        {
+            "body": "JoyName"
+        },
+        {
+            "body": "JoyPOV"
+        },
+        {
+            "body": "JoyR"
+        },
+        {
+            "body": "JoyU"
+        },
+        {
+            "body": "JoyV"
+        },
+        {
+            "body": "JoyX"
+        },
+        {
+            "body": "JoyY"
+        },
+        {
+            "body": "JoyZ"
+        },
+        {
+            "body": "LAlt"
+        },
+        {
+            "body": "Launch_App1"
+        },
+        {
+            "body": "Launch_App2"
+        },
+        {
+            "body": "Launch_Mail"
+        },
+        {
+            "body": "Launch_Media"
+        },
+        {
+            "body": "LButton"
+        },
+        {
+            "body": "LControl"
+        },
+        {
+            "body": "LCtrl"
+        },
+        {
+            "body": "Left"
+        },
+        {
+            "body": "LShift"
+        },
+        {
+            "body": "LWin"
+        },
+        {
+            "body": "MButton"
+        },
+        {
+            "body": "Media_Next"
+        },
+        {
+            "body": "Media_Play_Pause"
+        },
+        {
+            "body": "Media_Prev"
+        },
+        {
+            "body": "Media_Stop"
+        },
+        {
+            "body": "NumLock"
+        },
+        {
+            "body": "Numpad0"
+        },
+        {
+            "body": "Numpad1"
+        },
+        {
+            "body": "Numpad2"
+        },
+        {
+            "body": "Numpad3"
+        },
+        {
+            "body": "Numpad4"
+        },
+        {
+            "body": "Numpad5"
+        },
+        {
+            "body": "Numpad6"
+        },
+        {
+            "body": "Numpad7"
+        },
+        {
+            "body": "Numpad8"
+        },
+        {
+            "body": "Numpad9"
+        },
+        {
+            "body": "NumpadAdd"
+        },
+        {
+            "body": "NumpadClear"
+        },
+        {
+            "body": "NumpadDel"
+        },
+        {
+            "body": "NumpadDiv"
+        },
+        {
+            "body": "NumpadDot"
+        },
+        {
+            "body": "NumpadDown"
+        },
+        {
+            "body": "NumpadEnd"
+        },
+        {
+            "body": "NumpadEnter"
+        },
+        {
+            "body": "NumpadHome"
+        },
+        {
+            "body": "NumpadIns"
+        },
+        {
+            "body": "NumpadLeft"
+        },
+        {
+            "body": "NumpadMult"
+        },
+        {
+            "body": "NumpadPgdn"
+        },
+        {
+            "body": "NumpadPgup"
+        },
+        {
+            "body": "NumpadRight"
+        },
+        {
+            "body": "NumpadSub"
+        },
+        {
+            "body": "NumpadUp"
+        },
+        {
+            "body": "PgDn"
+        },
+        {
+            "body": "PgUp"
+        },
+        {
+            "body": "PrintScreen"
+        },
+        {
+            "body": "RAlt"
+        },
+        {
+            "body": "RButton"
+        },
+        {
+            "body": "RControl"
+        },
+        {
+            "body": "RCtrl"
+        },
+        {
+            "body": "Right"
+        },
+        {
+            "body": "RShift"
+        },
+        {
+            "body": "RWin"
+        },
+        {
+            "body": "ScrollLock"
+        },
+        {
+            "body": "Shift"
+        },
+        {
+            "body": "ShiftAltTab"
+        },
+        {
+            "body": "Space"
+        },
+        {
+            "body": "Tab"
+        },
+        {
+            "body": "Up"
+        },
+        {
+            "body": "Volume_Down"
+        },
+        {
+            "body": "Volume_Mute"
+        },
+        {
+            "body": "Volume_Up"
+        },
+        {
+            "body": "WheelDown"
+        },
+        {
+            "body": "WheelLeft"
+        },
+        {
+            "body": "WheelRight"
+        },
+        {
+            "body": "WheelUp"
+        },
+        {
+            "body": "XButton1"
+        },
+        {
+            "body": "XButton2"
+        }
+    ]
 }

@@ -12,84 +12,81 @@ const path = require('path');
 /**@type {import('webpack').Configuration}*/
 
 const nodeClientConfig = /** @type WebpackConfig */ {
-	context: path.join(__dirname, 'client'),
-	mode: 'none',
-	target: 'node',
-	entry: {
-		extension: './src/extension.ts',
-	},
-	output: {
-		filename: '[name].js',
-		path: path.join(__dirname, 'client', 'dist'),
-		libraryTarget: 'commonjs',
-	},
-	resolve: {
-		mainFields: ['module', 'main'],
-		extensions: ['.ts', '.js'], // support ts-files and js-files
-		alias: {},
-	},
-	module: {
-		rules: [
-			{
-				test: /\.ts$/,
-				exclude: /node_modules/,
-				use: [
-					{
-						loader: 'ts-loader',
-					},
-				],
-			},
-		],
-	},
-	externals: {
-		vscode: 'commonjs vscode', // ignored because it doesn't exist
-	},
-	performance: {
-		hints: false,
-	},
-	devtool: 'source-map',
+    context: path.join(__dirname, 'client'),
+    mode: 'none',
+    target: 'node',
+    entry: {
+        extension: './src/extension.ts',
+    },
+    output: {
+        filename: '[name].js',
+        path: path.join(__dirname, 'client', 'dist'),
+        libraryTarget: 'commonjs',
+    },
+    resolve: {
+        mainFields: ['module', 'main'],
+        extensions: ['.ts', '.js'], // support ts-files and js-files
+        alias: {},
+    },
+    module: {
+        rules: [
+            {
+                test: /\.ts$/,
+                exclude: /node_modules/,
+                use: [
+                    {
+                        loader: 'ts-loader',
+                    },
+                ],
+            },
+        ],
+    },
+    externals: {
+        vscode: 'commonjs vscode', // ignored because it doesn't exist
+    },
+    performance: {
+        hints: false,
+    },
+    devtool: 'source-map',
 };
 
 const nodeServerConfig = /** @type WebpackConfig */ {
-	context: path.join(__dirname, 'server'),
-	mode: 'none',
-	target: 'node',
-	entry: {
-		server: './src/server.ts',
-	},
-	output: {
-		filename: '[name].js',
-		path: path.join(__dirname, 'server', 'dist'),
-		libraryTarget: 'commonjs',
-	},
-	resolve: {
-		mainFields: ['module', 'main'],
-		extensions: ['.ts', '.js'], // support ts-files and js-files
-		alias: {},
-	},
-	module: {
-		rules: [
-			{
-				test: /\.ts$/,
-				exclude: /node_modules/,
-				use: [
-					{
-						loader: 'ts-loader',
-					},
-				],
-			},
-		],
-	},
-	externals: {
-		vscode: 'commonjs vscode', // ignored because it doesn't exist
-	},
-	performance: {
-		hints: false,
-	},
-	devtool: 'source-map',
+    context: path.join(__dirname, 'server'),
+    mode: 'none',
+    target: 'node',
+    entry: {
+        server: './src/server.ts',
+    },
+    output: {
+        filename: '[name].js',
+        path: path.join(__dirname, 'server', 'dist'),
+        libraryTarget: 'commonjs',
+    },
+    resolve: {
+        mainFields: ['module', 'main'],
+        extensions: ['.ts', '.js'], // support ts-files and js-files
+        alias: {},
+    },
+    module: {
+        rules: [
+            {
+                test: /\.ts$/,
+                exclude: /node_modules/,
+                use: [
+                    {
+                        loader: 'ts-loader',
+                    },
+                ],
+            },
+        ],
+    },
+    externals: {
+        vscode: 'commonjs vscode', // ignored because it doesn't exist
+    },
+    performance: {
+        hints: false,
+    },
+    devtool: 'source-map',
 };
 
-module.exports = [
-	nodeClientConfig,
-	nodeServerConfig,
-];
+module.exports = [nodeClientConfig, nodeServerConfig];

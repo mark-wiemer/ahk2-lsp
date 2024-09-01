@@ -1,19 +1,19 @@
 import { LibrarySuggestions } from './config';
 
 export function includeUserAndStandardLibrary(
-	librarySuggestions: LibrarySuggestions,
+    librarySuggestions: LibrarySuggestions,
 ): boolean {
-	return (
-		librarySuggestions === LibrarySuggestions.All ||
-		librarySuggestions === LibrarySuggestions.UserAndStandard
-	);
+    return (
+        librarySuggestions === LibrarySuggestions.All ||
+        librarySuggestions === LibrarySuggestions.UserAndStandard
+    );
 }
 
 export function includeLocalLibrary(
-	librarySuggestions: LibrarySuggestions,
+    librarySuggestions: LibrarySuggestions,
 ): boolean {
-	return (
-		librarySuggestions === LibrarySuggestions.All ||
-		librarySuggestions === LibrarySuggestions.Local
-	);
+    return (
+        librarySuggestions === LibrarySuggestions.All ||
+        librarySuggestions === LibrarySuggestions.Local
+    );
 }
