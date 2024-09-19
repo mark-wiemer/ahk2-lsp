@@ -69,10 +69,11 @@ export enum CfgKey {
 	CommentTagRegex = 'v2.general.commentTagRegex',
 	CompleteFunctionCalls = 'v2.general.completeFunctionCalls',
 	CompletionCommitCharacters = 'v2.completionCommitCharacters',
+	DebugConfiguration = 'v2.debugConfiguration',
 	Exclude = 'v2.exclude',
 	Formatter = 'v2.formatter',
-	InterpreterPathV2 = 'v2.file.interpreterPath',
 	InterpreterPathV1 = 'v1.file.interpreterPath',
+	InterpreterPathV2 = 'v2.file.interpreterPath',
 	LibrarySuggestions = 'v2.general.librarySuggestions',
 	LocalSameAsGlobal = 'v2.warn.localSameAsGlobal',
 	MaxScanDepth = 'v2.file.maxScanDepth',
@@ -208,10 +209,4 @@ export const newAhkppConfig = (
 	...config,
 });
 
-/** Gets a single config value from the given config */
-export const getCfg = <T>(key: CfgKey): T | undefined => {
-	return (
-		vscode.workspace.getConfiguration('ahk++').get<T>(key) ??
-		vscode.workspace.getConfiguration('AHK++').get<T>(key)
-	);
-};
+export const configPrefix = 'AHK++';
