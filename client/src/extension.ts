@@ -33,12 +33,11 @@ import {
 import { resolve } from 'path';
 import { ChildProcess, execSync, spawn } from 'child_process';
 import { readdirSync, lstatSync, readlinkSync, unlinkSync, writeFileSync } from 'fs';
-import { CfgKey, configPrefix } from './config';
+import { CfgKey, getAhkppConfig, getCfg, ShowOutputView } from './config';
 
 let client: LanguageClient, outputchannel: OutputChannel, ahkStatusBarItem: StatusBarItem;
 const ahkprocesses = new Map<number, ChildProcess & { path?: string }>();
-const ahkppConfig = workspace.getConfiguration(configPrefix);
-let v2Interpreter = ahkppConfig.get<string>(CfgKey.InterpreterPathV2), server_is_ready = false, zhcn = false;
+let v2Interpreter = getCfg<string>(CfgKey.InterpreterPathV2), server_is_ready = false, zhcn = false;
 const textdecoders: TextDecoder[] = [new TextDecoder('utf8', { fatal: true }), new TextDecoder('utf-16le', { fatal: true })];
 const isWindows = process.platform === 'win32';
 
@@ -100,7 +99,7 @@ export async function activate(context: ExtensionContext) {
 		initializationOptions: {
 			commands: Object.keys(request_handlers),
 			GlobalStorage: context.globalStorageUri.fsPath,
-			...ahkppConfig
+			...getAhkppConfig()
 		}
 	};
 
@@ -147,7 +146,7 @@ export async function activate(context: ExtensionContext) {
 						config.request ||= 'launch';
 						configs = configs?.filter(it => it.request === config.request && it.type === config.type);
 						if (!config.__ahk2debug) {
-							const def = { ...ahkppConfig.get(CfgKey.DebugConfiguration) as Partial<DebugConfiguration> };
+							const def = { ...getCfg(CfgKey.DebugConfiguration) as Partial<DebugConfiguration> };
 							delete def.request, delete def.type;
 							appendConfigs.push(def, configs?.filter(it =>
 								Object.entries(it).every(([k, v]) => equal(v, config[k]))
@@ -288,7 +287,7 @@ const isV1 = (): boolean =>
  * Does not work on never-saved files (new untitled documents)
  */
 function runScript(textEditor: TextEditor, runSelection = false) {
-	const interpreter: string | undefined = isV1() ? ahkppConfig.get(CfgKey.InterpreterPathV1) : ahkppConfig.get(CfgKey.InterpreterPathV2);
+	const interpreter: string | undefined = isV1() ? getCfg(CfgKey.InterpreterPathV1) : getCfg(CfgKey.InterpreterPathV2);
 	const executePath = resolvePath(interpreter, workspace.getWorkspaceFolder(textEditor.document.uri)?.uri.fsPath);
 	if (!executePath) {
 		const s = interpreter || 'AutoHotkey.exe';
@@ -298,7 +297,9 @@ function runScript(textEditor: TextEditor, runSelection = false) {
 	}
 	let selectedText = '', path = '*', command = `"${executePath}" /ErrorStdOut=utf-8 `;
 	let startTime: Date;
-	outputchannel.show(true);
+	const showOutputView = getCfg<ShowOutputView>(CfgKey.ShowOutputView);
+	if (showOutputView === 'always')
+		outputchannel.show(true);
 	if (!ahkprocesses.size)
 		outputchannel.clear();
 
@@ -346,6 +347,8 @@ function runScript(textEditor: TextEditor, runSelection = false) {
 		});
 		process.on('error', (error) => {
 			outputchannel.appendLine(JSON.stringify(error));
+			if (showOutputView === 'onError')
+				outputchannel.show(true);
 			ahkprocesses.delete(process.pid!);
 		});
 		process.stdout?.on('data', (data) => {
@@ -386,7 +389,7 @@ async function stopRunningScript() {
 async function beginDebug(extlist: string[], debugexts: { [type: string]: string }, params = false, attach = false) {
 	let extname: string | undefined;
 	const editor = window.activeTextEditor;
-	const config = { ...ahkppConfig.get(CfgKey.DebugConfiguration), request: 'launch', __ahk2debug: true } as DebugConfiguration;
+	const config = { ...getCfg(CfgKey.DebugConfiguration), request: 'launch', __ahk2debug: true } as DebugConfiguration;
 	if (!extlist.length) {
 		window.showErrorMessage(zhcn ? '未找到debug扩展, 请先安装debug扩展!' : 'The debug extension was not found, please install the debug extension first!');
 		extname = await window.showQuickPick(['zero-plusplus.vscode-autohotkey-debug', 'helsmy.autohotkey-debug', 'mark-wiemer.vscode-autohotkey-plus-plus', 'cweijan.vscode-autohotkey-plus']);
@@ -472,7 +475,7 @@ async function setInterpreterV2() {
 		pick.dispose();
 		if (sel.detail) {
 			ahkStatusBarItem.tooltip = v2Interpreter = sel.detail;
-			ahkppConfig.update(CfgKey.InterpreterPathV2, v2Interpreter, from);
+			getAhkppConfig().update(CfgKey.InterpreterPathV2, v2Interpreter, from);
 			ahkStatusBarItem.text = sel.label ||= (await getAHKversion([v2Interpreter]))[0];
 			if (server_is_ready)
 				commands.executeCommand('ahk++.v2.setIntepreterPath', v2Interpreter);
@@ -508,7 +511,7 @@ async function setInterpreterV2() {
 
 async function selectSyntaxes() {
 	const path = (await window.showOpenDialog({ canSelectFiles: false, canSelectFolders: true }))?.[0].fsPath;
-	const t = ahkppConfig.inspect('Syntaxes');
+	const t = getAhkppConfig().inspect('Syntaxes');
 	let v = '', f = ConfigurationTarget.Global;
 	if (t) {
 		v = ((f = ConfigurationTarget.WorkspaceFolder, t.workspaceFolderValue) ??
@@ -517,7 +520,7 @@ async function selectSyntaxes() {
 	}
 	if (path === undefined || v.toLowerCase() === path.toLowerCase())
 		return;
-	ahkppConfig.update('Syntaxes', path || undefined, f);
+	getAhkppConfig().update('Syntaxes', path || undefined, f);
 }
 
 function getAHKversion(paths: string[]): Thenable<string[]> {
@@ -530,7 +533,7 @@ function getAHKversion(paths: string[]): Thenable<string[]> {
  * `from` is undefined if default value was used.
  */
 function getInterpreterV2Path(): { path: string, from?: ConfigurationTarget } {
-	const configDetails = ahkppConfig.inspect(CfgKey.InterpreterPathV2);
+	const configDetails = getAhkppConfig().inspect(CfgKey.InterpreterPathV2);
 	let path = '';
 	if (configDetails)
 		if ((path = configDetails.workspaceFolderValue as string))
