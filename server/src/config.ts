@@ -74,7 +74,6 @@ export enum CfgKey {
 	LocalSameAsGlobal = 'v2.warn.localSameAsGlobal',
 	MaxScanDepth = 'v2.file.maxScanDepth',
 	ParamsCheck = 'v2.diagnostics.paramsCheck',
-	ShowOutputView = 'general.showOutputView',
 	SymbolFoldingFromOpenBrace = 'v2.general.symbolFoldingFromOpenBrace',
 	Syntaxes = 'v2.general.syntaxes',
 	VarUnset = 'v2.warn.varUnset',
@@ -88,9 +87,6 @@ export interface CompletionCommitCharacters {
 
 /** Defined in package.json */
 export interface AhkppConfig {
-	general: {
-		showOutputView: boolean;
-	};
 	v2: {
 		general: {
 			actionWhenV1Detected: ActionType;
@@ -168,9 +164,6 @@ export const newFormatterConfig = (
 export const newAhkppConfig = (
 	config: Partial<AhkppConfig> = {},
 ): AhkppConfig => ({
-	general: {
-		showOutputView: true,
-	},
 	v2: {
 		general: {
 			actionWhenV1Detected: 'SwitchToV1',
