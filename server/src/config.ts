@@ -59,21 +59,22 @@ export enum CallWithoutParentheses {
 
 export enum CfgKey {
 	ActionWhenV1Detected = 'v2.general.actionWhenV1Detected',
+	CallWithoutParentheses = 'v2.warn.callWithoutParentheses',
+	ClassNonDynamicMemberCheck = 'v2.diagnostics.classNonDynamicMemberCheck',
 	CommentTagRegex = 'v2.general.commentTagRegex', // still used directly in some places
 	CompleteFunctionCalls = 'v2.general.completeFunctionCalls',
 	CompletionCommitCharacters = 'v2.completionCommitCharacters',
+	Exclude = 'v2.exclude', // still used directly in some places
+	Formatter = 'v2.formatter',
+	InterpreterPath = 'v2.file.interpreterPath', // still used directly in some places
 	LibrarySuggestions = 'v2.general.librarySuggestions',
+	LocalSameAsGlobal = 'v2.warn.localSameAsGlobal',
+	MaxScanDepth = 'v2.file.maxScanDepth',
+	ParamsCheck = 'v2.diagnostics.paramsCheck',
+	ShowOutputView = 'general.showOutputView',
 	SymbolFoldingFromOpenBrace = 'v2.general.symbolFoldingFromOpenBrace',
 	Syntaxes = 'v2.general.syntaxes',
-	ClassNonDynamicMemberCheck = 'v2.diagnostics.classNonDynamicMemberCheck',
-	ParamsCheck = 'v2.diagnostics.paramsCheck',
-	Exclude = 'v2.exclude', // still used directly in some places
-	InterpreterPath = 'v2.file.interpreterPath', // still used directly in some places
-	MaxScanDepth = 'v2.file.maxScanDepth',
-	Formatter = 'v2.formatter',
 	VarUnset = 'v2.warn.varUnset',
-	LocalSameAsGlobal = 'v2.warn.localSameAsGlobal',
-	CallWithoutParentheses = 'v2.warn.callWithoutParentheses',
 	WorkingDirectories = 'v2.workingDirectories', // still used directly in some places
 }
 
