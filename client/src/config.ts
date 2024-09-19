@@ -4,7 +4,7 @@
 import * as vscode from 'vscode';
 
 /** Defined in package.json */
-export type ShowOutputView = 'always' | 'onError' | 'never';
+export type ShowOutputView = 'always' | 'never';
 
 export enum CfgKey {
 	ActionWhenV1Detected = 'v2.general.actionWhenV1Detected',

@@ -347,8 +347,6 @@ function runScript(textEditor: TextEditor, runSelection = false) {
 		});
 		process.on('error', (error) => {
 			outputchannel.appendLine(JSON.stringify(error));
-			if (showOutputView === 'onError')
-				outputchannel.show(true);
 			ahkprocesses.delete(process.pid!);
 		});
 		process.stdout?.on('data', (data) => {
