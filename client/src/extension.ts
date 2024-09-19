@@ -286,7 +286,6 @@ const isV1 = (): boolean =>
  * Runs the script or selection in the provided editor.
  * Works for both AHK v1 and AHK v2
  * Does not work on never-saved files (new untitled documents)
- * 
  */
 function runScript(textEditor: TextEditor, runSelection = false) {
 	const interpreter: string | undefined = isV1() ? ahkppConfig.get(CfgKey.InterpreterPathV1) : ahkppConfig.get(CfgKey.InterpreterPathV2);
