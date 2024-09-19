@@ -1,3 +1,6 @@
+// Same as ahk2/client/src/config.ts
+// todo dedupe config.ts
+
 /** Defined in package.json */
 export type ActionType =
 	| 'Continue'
@@ -83,7 +86,11 @@ export interface CompletionCommitCharacters {
 	Function: string;
 }
 
+/** Defined in package.json */
 export interface AhkppConfig {
+	general: {
+		showOutputView: boolean;
+	};
 	v2: {
 		general: {
 			actionWhenV1Detected: ActionType;
@@ -157,9 +164,13 @@ export const newFormatterConfig = (
 	...config,
 });
 
+/** Defaults according to package.json */
 export const newAhkppConfig = (
 	config: Partial<AhkppConfig> = {},
 ): AhkppConfig => ({
+	general: {
+		showOutputView: true,
+	},
 	v2: {
 		general: {
 			actionWhenV1Detected: 'SwitchToV1',
