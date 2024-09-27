@@ -6,5 +6,8 @@ export default defineConfig({
 	test: {
 		isolate: false,
 		pool: 'threads',
+		coverage: {
+			enabled: true,
+		},
 	},
 });
