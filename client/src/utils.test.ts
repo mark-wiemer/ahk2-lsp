@@ -13,11 +13,17 @@ describe('resolvePath', () => {
 		vi.restoreAllMocks();
 	});
 
-	test.concurrent.each([
-		['', ''],
-		['C:/out.txt', 'C:/out.txt'],
-	])('("%s") -> "%s"', (input, expected) => {
-		const result = resolvePath(input);
+	test.concurrent.each<
+		[
+			name: string,
+			args: Parameters<typeof resolvePath>,
+			expected: ReturnType<typeof resolvePath>,
+		]
+	>([
+		['empty string', [''], ''],
+		['absolute path at drive root', ['C:/out.txt'], 'C:/out.txt'],
+	])('%s', (_name, args, expected) => {
+		const result = resolvePath(...args);
 		expect(result).toBe(expected);
 	});
 });
