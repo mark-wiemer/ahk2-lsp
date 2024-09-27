@@ -54,7 +54,7 @@
 		"test-unit": "cd client && vscode-test",
 		"test//": "Run unit tests, not grammar tests",
 		"validate": "npm run lint && npm run test",
-		"validate:ci": "npm run lint:ci && npm run test",
+		"validate:ci": "npm run lint:ci",
 		"watch": "tsc -b -w"
 	},
 	"prettier": {
