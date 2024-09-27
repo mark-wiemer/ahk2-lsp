@@ -31,18 +31,11 @@ jobs:
       - run: npm install
       - name: Run Prettier
         id: runPrettier
+        # format is just `prettier --check .`
         run: npm run format
-      - name: Show diff
-        # https://docs.github.com/en/actions/learn-github-actions/expressions#failure
+      - name:
         if: ${{ failure() }}
+        # format:fix is just `prettier --write .`
         run: |
           npm run format:fix
-          git diff > diff.txt
-          npm install -g diff2html-cli
-          diff2html -i file -s side -F diff.html -- diff.txt
-      - name: Comment the diff as HTML
-        # https://docs.github.com/en/actions/learn-github-actions/expressions#failure-with-conditions
-        if: ${{ failure() && steps.runPrettier.conclusion == 'failure' }}
-        uses: thollander/actions-comment-pull-request@v2
-        with:
-          filePath: diff.html
+          git diff
