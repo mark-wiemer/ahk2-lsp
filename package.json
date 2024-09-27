@@ -46,7 +46,6 @@
 		"format": "prettier --check .",
 		"format:fix": "prettier --write .",
 		"lint": "npm run format && npm run eslint && npm run sort-package-json",
-		"lint:ci": "npm run eslint && npm run sort-package-json",
 		"lint:fix": "npm run format:fix && npm run eslint:fix && npm run sort-package-json:fix",
 		"sort-package-json": "sort-package-json --check",
 		"sort-package-json:fix": "sort-package-json",
