@@ -16,7 +16,7 @@ build({
 	bundle: true,
 	outfile: path.join('./server/dist/server.js'),
 	external: ['vscode'],
-	format: 'cjs',
+	format: 'esm',
 	platform: 'node',
 	minify: isProd,
 	sourcemap: !isProd,

@@ -86,7 +86,8 @@ commands['ahk++.v2.setIntepreterPath'] = (args: string[]) =>
 	setInterpreter(args[0].replace(/^[A-Z]:/, (m) => m.toLowerCase()));
 
 connection.onInitialize(async (params) => {
-	// Not seeing this in the debug console yet
+	// Shows up in extension development host
+	// Output > AHK++
 	connection.console.log(`Initializing language server`);
 	const capabilities = params.capabilities;
 	hasConfigurationCapability = !!(
