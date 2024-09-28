@@ -301,10 +301,10 @@ connection.onExecuteCommand(executeCommandProvider);
 connection.onWorkspaceSymbol(workspaceSymbolProvider);
 connection.languages.semanticTokens.on(semanticTokensOnFull);
 connection.languages.semanticTokens.onRange(semanticTokensOnRange);
-connection.onRequest('ahk2.exportSymbols', (uri: string) => exportSymbols(uri));
-connection.onRequest('ahk2.getAHKversion', getAHKversion);
-connection.onRequest('ahk2.getContent', (uri: string) => lexers[uri.toLowerCase()]?.document.getText());
-connection.onRequest('ahk2.getVersionInfo', getVersionInfo);
+connection.onRequest('ahk++.exportSymbols', (uri: string) => exportSymbols(uri));
+connection.onRequest('ahk++.getAHKversion', getAHKversion);
+connection.onRequest('ahk++.getContent', (uri: string) => lexers[uri.toLowerCase()]?.document.getText());
+connection.onRequest('ahk++.getVersionInfo', getVersionInfo);
 connection.onNotification('onDidCloseTextDocument', (params: { uri: string, id: string }) => {
 	if (params.id === 'ahk2')
 		lexers[params.uri.toLowerCase()]?.close(true);
