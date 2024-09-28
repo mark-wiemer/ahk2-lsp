@@ -29,7 +29,7 @@ build({
 	bundle: true,
 	outfile: path.join('./client/dist/extension.js'),
 	external: ['vscode'],
-	format: 'cjs',
+	format: 'esm',
 	platform: 'node',
 	minify: isProd,
 	sourcemap: !isProd,
