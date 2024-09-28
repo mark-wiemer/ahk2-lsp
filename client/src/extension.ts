@@ -61,6 +61,9 @@ const loadedCollection = {
 };
 
 export function activate(context: ExtensionContext): Promise<LanguageClient> {
+	// when debugging, this goes into the Debug Console (Ctrl + Shift + Y)
+	console.log('Activating AHK v2 language server');
+
 	/** Absolute path to `server.js` */
 	const defaultServerModule = context.asAbsolutePath(`ahk2/server/dist/server.js`);
 	const serverModule = process.env.VSCODE_AHK_SERVER_PATH ? context.asAbsolutePath(process.env.VSCODE_AHK_SERVER_PATH) : defaultServerModule;
