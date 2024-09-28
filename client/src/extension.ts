@@ -29,11 +29,11 @@ import {
 	LanguageClientOptions,
 	ServerOptions,
 	TransportKind
-} from 'vscode-languageclient/node.js';
+} from 'vscode-languageclient/node';
 import { resolve } from 'path';
 import { ChildProcess, execSync, spawn } from 'child_process';
 import { readdirSync, readFileSync, lstatSync, readlinkSync, unlinkSync, writeFileSync } from 'fs';
-import { CfgKey, getAhkppConfig, getCfg, ShowOutput } from './config.js';
+import { CfgKey, getAhkppConfig, getCfg, ShowOutput } from './config';
 
 let client: LanguageClient, outputchannel: OutputChannel, ahkStatusBarItem: StatusBarItem;
 const ahkprocesses = new Map<number, ChildProcess & { path?: string }>();
