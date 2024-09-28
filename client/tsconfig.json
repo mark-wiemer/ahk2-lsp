@@ -7,7 +7,6 @@
 		"sourceMap": true,
 		"strict": true,
 		"outDir": "dist",
-		"rootDirs": ["src", "../server/src"],
 		"composite": true
 	},
 	"include": ["src"],
