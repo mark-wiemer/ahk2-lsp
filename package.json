@@ -37,7 +37,7 @@
 		"clean": "del-cli client/dist server/dist/*.js*",
 		"clean//": "Remove both the compiled extension and compiled test files",
 		"compile-cli": "webpack --config webpack.config.cli.js --mode production --devtool hidden-source-map",
-		"compile-ts": "cd client && npm run compile-ts && cd ../server && tsc",
+		"compile-ts": "cd client && npm run compile-ts && cd ../server && npm run compile-ts",
 		"compile-ts//": "Compile TS files",
 		"compile//": "Compile the extension for packaging and publishing",
 		"eslint": "npm run eslint:files -- client server && echo No ESLint problems",
