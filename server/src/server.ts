@@ -220,7 +220,7 @@ connection.onDidChangeConfiguration(async (change) => {
 	const newInterpreterPath: string = getCfg(newCfg, CfgKey.InterpreterPath);
 	if (getCfg(oldCfg, CfgKey.InterpreterPath) !== newInterpreterPath) {
 		if (await setInterpreter(resolvePath(newInterpreterPath)))
-			connection.sendRequest('ahk2.updateStatusBar', [newInterpreterPath]);
+			connection.sendRequest('ahk++.updateStatusBar', [newInterpreterPath]);
 	}
 
 	const oldLibSuggestions: LibrarySuggestions = getCfg(oldCfg, CfgKey.LibrarySuggestions);
@@ -314,10 +314,10 @@ documents.listen(connection);
 connection.listen();
 
 async function patherr(msg: string) {
-	if (!ahkppConfig.commands?.includes('ahk2.executeCommand'))
+	if (!ahkppConfig.commands?.includes('ahk++.executeCommand'))
 		return connection.window.showErrorMessage(msg);
 	if (await connection.window.showErrorMessage(msg, { title: 'Select Interpreter' }))
-		connection.sendRequest('ahk2.executeCommand', ['ahk++.setV2Interpreter']);
+		connection.sendRequest('ahk++.executeCommand', ['ahk++.setV2Interpreter']);
 }
 
 async function initpathenv(samefolder = false, retry = true): Promise<boolean> {
