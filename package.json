@@ -34,7 +34,7 @@
 		"build:dev": "node build.mjs",
 		"build:old": "webpack",
 		"chrome": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ./test-data",
-		"clean": "del-cli client/dist server/dist/*.(c)js*",
+		"clean": "del-cli client/dist server/dist/*.js* server/dist/*.cjs",
 		"clean//": "Remove both the compiled extension and compiled test files",
 		"compile-cli": "webpack --config webpack.config.cli.js --mode production --devtool hidden-source-map",
 		"compile-ts": "cd client && npm run compile-ts && cd ../server && npm run compile-ts",
