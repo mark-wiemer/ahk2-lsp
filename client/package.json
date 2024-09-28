@@ -3,6 +3,9 @@
 	"description": "VSCode part of a language server",
 	"license": "MIT",
 	"version": "0.0.1",
+	"scripts": {
+		"compile-ts": "tsc"
+	},
 	"engines": {
 		"vscode": "^1.43.0"
 	}
