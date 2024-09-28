@@ -6,7 +6,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { commands, ExtensionContext, languages, Range, RelativePattern, SnippetString, Uri, window, workspace, WorkspaceEdit } from 'vscode';
-import { LanguageClient } from 'vscode-languageclient/browser';
+import { LanguageClient } from 'vscode-languageclient/browser.js';
 
 let client: LanguageClient;
 

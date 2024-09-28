@@ -39,7 +39,7 @@ import {
 	WorkspaceSymbolParams,
 	ExecuteCommandRequest,
 	ExecuteCommandParams,
-} from 'vscode-languageclient/node';
+} from 'vscode-languageclient/node.js';
 
 suite('Start ahk language server', () => {
 	test('should be running', async () => {
