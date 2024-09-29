@@ -77,7 +77,7 @@
 		]
 	},
 	"mocha": {
-		"spec": "out/**/*.test.js"
+		"spec": "./**/out/**/*.test.js"
 	},
 	"dependencies": {
 		"vscode-languageclient": "^9.0.1",
