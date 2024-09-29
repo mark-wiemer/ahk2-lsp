@@ -86,6 +86,7 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.4.0",
+		"@types/mocha": "^10.0.8",
 		"@types/node": "^20.16.0",
 		"@types/vscode": "^1.82.0",
 		"del-cli": "^5.1.0",
