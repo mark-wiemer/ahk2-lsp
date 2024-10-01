@@ -149,7 +149,7 @@ connection.onWorkspaceSymbol(workspaceSymbolProvider);
 connection.languages.semanticTokens.on(semanticTokensOnFull);
 connection.languages.semanticTokens.onRange(semanticTokensOnRange);
 connection.onRequest('ahk2.exportSymbols', exportSymbols);
-connection.onRequest('ahk2.getContent', (uri: string) => lexers[uri.toLowerCase()]?.document.getText());
+connection.onRequest('ahk++.getContent', (uri: string) => lexers[uri.toLowerCase()]?.document.getText());
 connection.onRequest('ahk2.getVersionInfo', getVersionInfo);
 connection.onNotification('onDidCloseTextDocument',
 	(params: { uri: string, id: string }) => {
