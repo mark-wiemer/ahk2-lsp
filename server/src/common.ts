@@ -6,8 +6,9 @@ import { TextDocument } from 'vscode-languageserver-textdocument';
 import { CompletionItem, CompletionItemKind, Hover, InsertTextFormat, Range, SymbolKind } from 'vscode-languageserver-types';
 import { AhkSymbol, Lexer, setCommentTagRegex } from './Lexer';
 import { diagnostic } from './localize';
-import { isBrowser, jsDocTagNames } from './constants';
+import { jsDocTagNames } from './constants';
 import { AhkppConfig, CfgKey, getCfg, newAhkppConfig } from './config';
+
 export * from './codeActionProvider';
 export * from './colorProvider';
 export * from './commandProvider';
@@ -30,7 +31,7 @@ export const alpha_3 = encode_version('2.1-alpha.3');
 export const ahkppConfig: AhkppConfig = newAhkppConfig();
 export const utils = {
 	get_DllExport: (_paths: string[] | Set<string>, _onlyone = false) => Promise.resolve([] as string[]),
-	get_RCDATA: (_path?: string) => ({ uri: '', path: '' } as { uri: string, path: string, paths?: string[] } | undefined),
+	get_RCDATA: (_path?: string) => undefined as { uri: string, path: string, paths?: string[] } | undefined,
 	get_ahkProvider: async () => null as unknown as Promise<MessageConnection | null>
 };
 
@@ -85,7 +86,7 @@ export function read_ahk_file(path: string, showError = true) {
 }
 
 export function openFile(path: string, showError = true): TextDocument | undefined {
-	if (isBrowser) {
+	if (process.env.BROWSER) {
 		const data = getwebfile(path);
 		if (data)
 			return TextDocument.create(data.url, 'ahk2', -10, data.text);
@@ -107,7 +108,7 @@ export function openAndParse(path: string, showError = true, cache = true) {
 }
 
 export function restorePath(path: string): string {
-	if (isBrowser || !existsSync(path))
+	if (process.env.BROWSER || !existsSync(path))
 		return path;
 	if (path.includes('..'))
 		path = resolve(path);
@@ -194,7 +195,7 @@ export function loadahk2(filename = 'ahk2', d = 3) {
 	let path: string | undefined;
 	const syntaxesPath = process.env.SYNTAXES_PATH || 'syntaxes';
 	const file = `${rootdir}/${syntaxesPath}/<>/${filename}`;
-	if (isBrowser) {
+	if (process.env.BROWSER) {
 		const td = openFile(file + '.d.ahk');
 		if (td) {
 			const doc = new Lexer(td, undefined, d);
@@ -409,7 +410,7 @@ function encode_version(version: string) {
 }
 
 export async function sendAhkRequest(method: string, params: unknown[]) {
-	if (isBrowser)
+	if (process.env.BROWSER)
 		return undefined;
 	return utils.get_ahkProvider().then((server) => server?.sendRequest(method, ...params));
 }
