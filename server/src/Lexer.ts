@@ -321,7 +321,7 @@ class ParseStopError {
 }
 
 export class Lexer {
-	public actionWhenV1Detected: ActionType = getCfg(newAhkppConfig(), CfgKey.ActionWhenV1Detected);
+	public actionWhenV1Detected?: ActionType = getCfg(newAhkppConfig(), CfgKey.ActionWhenV1Detected);
 	public actived = false;
 	public beautify: (options: FormatterConfig, range?: Range) => string;
 	public checkmember: boolean | undefined;
@@ -1136,6 +1136,8 @@ export class Lexer {
 			}
 		} else {
 			const d_path = this.fsPath.replace(/\.\w+$/, '.d.ahk');
+			if (!this.fsPath.endsWith('2'))
+				delete this.actionWhenV1Detected;
 			this.parseScript = function (): void {
 				input = this.document.getText(), input_length = input.length, includedir = this.scriptpath, dlldir = '';
 				begin_line = true, requirev2 = false, maybev1 = 0, lst = { ...EMPTY_TOKEN }, currsymbol = last_comment_fr = undefined;
