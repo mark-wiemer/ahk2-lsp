@@ -368,7 +368,10 @@ export function enum_ahkfiles(dirpath: string) {
 	}
 }
 
-/** Updates `extsettings` with the provided config values */
+/**
+ * Updates `extsettings` with the provided config values
+ * Formerly `update_settings`
+ */
 export function updateAhkppConfig(newConfig: AhkppConfig) {
 	try {
 		setCommentTagRegex(getCfg(newConfig, CfgKey.CommentTagRegex));
@@ -378,7 +381,7 @@ export function updateAhkppConfig(newConfig: AhkppConfig) {
 		setCommentTagRegex(getCfg(newAhkppConfig(), CfgKey.CommentTagRegex))
 		connection.console.error(e as string);
 	}
-	newConfig.v2.workingDirectories = newConfig.v2.workingDirectories.map(dir =>
+	(newConfig as any)[CfgKey.WorkingDirectories] = getCfg<string[]>(newConfig, CfgKey.WorkingDirectories).map(dir =>
 		(dir = URI.file(dir.includes(':') ? dir : resolve(dir)).toString().toLowerCase())
 			.endsWith('/') ? dir : dir + '/');
 	scanExclude = {};
@@ -443,7 +446,7 @@ export function set_version(version: string) { ahk_version = encode_version(vers
 export function set_WorkspaceFolders(folders: Set<string>) {
 	const old = workspaceFolders;
 	workspaceFolders = [...folders];
-	ahkppConfig.v2.workingDirectories.forEach(dir => { if (!folders.has(dir)) workspaceFolders.push(dir) });
+	getCfg<string[]>(ahkppConfig, CfgKey.WorkingDirectories).forEach(dir => { if (!folders.has(dir)) workspaceFolders.push(dir) });
 	workspaceFolders.sort().reverse();
 	if (old.length === workspaceFolders.length &&
 		!old.some((v, i) => workspaceFolders[i] !== v))
