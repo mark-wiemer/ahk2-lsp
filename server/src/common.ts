@@ -396,10 +396,10 @@ export function updateAhkppConfig(newConfig: AhkppConfig) {
 		scanExclude.file = file;
 	if (folder.length)
 		scanExclude.folder = folder;
-	if (newConfig.v2.file.maxScanDepth < 0)
-		newConfig.v2.file.maxScanDepth = Infinity;
-	if (newConfig.v2.general.syntaxes)
-		newConfig.v2.general.syntaxes = resolve(newConfig.v2.general.syntaxes).toLowerCase();
+	if (getCfg<number>(newConfig, CfgKey.MaxScanDepth) < 0)
+		(newConfig as any)[CfgKey.MaxScanDepth] = Infinity;
+	if (getCfg(newConfig, CfgKey.Syntaxes))
+		(newConfig as any)[CfgKey.Syntaxes] = resolve(getCfg(newConfig, CfgKey.Syntaxes)).toLowerCase();
 	Object.assign(ahkppConfig, newConfig);
 }
 

@@ -13,7 +13,7 @@ import {
 	lexers, libfuncs, make_search_re, sendAhkRequest, utils, winapis
 } from './common';
 import { includeLocalLibrary, includeUserAndStandardLibrary } from './utils';
-import { BraceStyle, CompletionCommitCharacters, CfgKey, FormatterConfig, getCfg } from './config';
+import { BraceStyle, CompletionCommitCharacters, CfgKey, FormatterConfig, getCfg, LibrarySuggestions } from './config';
 
 export async function completionProvider(params: CompletionParams, _token: CancellationToken): Promise<Maybe<CompletionItem[]>> {
 	let { position, textDocument: { uri } } = params;
@@ -696,8 +696,8 @@ export async function completionProvider(params: CompletionParams, _token: Cance
 	}
 
 	// library suggestions
-	if (ahkppConfig.v2.general.librarySuggestions) {
-		const librarySuggestions = ahkppConfig.v2.general.librarySuggestions;
+	if (getCfg(ahkppConfig, CfgKey.LibrarySuggestions)) {
+		const librarySuggestions = getCfg<LibrarySuggestions>(ahkppConfig, CfgKey.LibrarySuggestions);
 		const libdirs = doc.libdirs, caches: Record<string, TextEdit[]> = {};
 		let exportnum = 0, line = -1, first_is_comment: boolean | undefined, cm: Token;
 		let dir = doc.workspaceFolder;
