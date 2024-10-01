@@ -67,7 +67,7 @@ export enum CfgKey {
 	CommentTagRegex = 'v2.general.commentTagRegex', // still used directly in some places
 	CompleteFunctionCalls = 'v2.general.completeFunctionCalls',
 	CompletionCommitCharacters = 'v2.completionCommitCharacters',
-	Exclude = 'v2.exclude', // still used directly in some places
+	Exclude = 'v2.exclude',
 	Formatter = 'v2.formatter',
 	InterpreterPath = 'v2.file.interpreterPath', // still used directly in some places
 	LibrarySuggestions = 'v2.general.librarySuggestions',
