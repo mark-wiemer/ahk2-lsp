@@ -55,6 +55,7 @@ import {
 	serverGetAHKVersion,
 	serverGetContent,
 	serverGetVersionInfo,
+	extExtractSymbols,
 } from '../../util/src/env';
 
 let client: LanguageClient, outputchannel: OutputChannel, ahkStatusBarItem: StatusBarItem;
@@ -292,7 +293,7 @@ export function activate(context: ExtensionContext): Promise<LanguageClient> {
 			const doc = textEditor.document;
 			languages.setTextDocumentLanguage(doc, doc.languageId === 'ahk2' ? 'ahk' : 'ahk2');
 		}),
-		commands.registerTextEditorCommand('ahk2.extract.symbols', textEditor => {
+		commands.registerTextEditorCommand(extExtractSymbols, textEditor => {
 			const doc = textEditor.document;
 			if (doc.languageId !== 'ahk2')
 				return;
