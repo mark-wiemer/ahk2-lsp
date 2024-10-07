@@ -283,7 +283,7 @@ export const newInternalFormatOptions = (partial: Partial<InternalFormatOptions>
 
 export const mapToInternalFormatOptions = (extOptions: Partial<FormatOptions>): InternalFormatOptions => {
 	const defaultOptions = newInternalFormatOptions();
-	return {
+	const result =  {
 		array_style: extOptions.arrayStyle ?? defaultOptions.array_style,
 		brace_style: extOptions.braceStyle ?? defaultOptions.brace_style,
 		break_chained_methods: extOptions.breakChainedMethods ?? defaultOptions.break_chained_methods,
@@ -304,6 +304,8 @@ export const mapToInternalFormatOptions = (extOptions: Partial<FormatOptions>): 
 		white_space_before_inline_comment: extOptions.whitespaceBeforeInlineComment ?? defaultOptions.white_space_before_inline_comment,
 		wrap_line_length: extOptions.wrapLineLength ?? defaultOptions.wrap_line_length,
 	}
+	console.log('Mapped format options:', result);
+	return result;
 };
 
 namespace SymbolNode {
