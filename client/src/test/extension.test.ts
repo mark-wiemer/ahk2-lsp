@@ -208,7 +208,16 @@ suite('Open AHK file', () => {
 suite('Formatting', async () => {
 	before(async () => {
 		await client.sendNotification(DidChangeConfigurationNotification.method, {
-			settings: { FormatOptions: {} },
+			settings: {
+				v2: {
+					formatter: {
+						indentString: '    ',
+						wrapLineLength: 120,
+						objectStyle: 'none',
+						arrayStyle: 'none',
+					},
+				},
+			},
 		});
 	});
 	const dir = resolve(__dirname, '../../src/test/formatting');

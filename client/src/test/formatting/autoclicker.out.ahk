@@ -7,8 +7,7 @@ ClicksPerSecond := 10
 ^z::
 {
     global ClickerToggle := !ClickerToggle
-    loop
-    {
+    loop {
         if (!ClickerToggle)
             break
         Click
