@@ -48,7 +48,7 @@ export type ServerCommand = `${typeof serverCommandPrefix}${string}`;
 
 export const serverExportSymbols = `${serverCommandPrefix}exportSymbols`;
 
-export const serverGetAHKVersion = `${serverCommandPrefix}getAHKVersion`;
+export const serverGetAHKVersion = `${serverCommandPrefix}getAHKversion`;
 
 export const serverGetContent = `${serverCommandPrefix}getContent`;
 
@@ -82,7 +82,7 @@ export const extRunSelection = `${extCommandPrefix}runSelection`;
 export const extStop = `${extCommandPrefix}stop`;
 
 /** Set the interpreter */
-export const extSetInterpreter = `${extCommandPrefix}setV2Interpreter`;
+export const extSetInterpreter = `${extCommandPrefix}setv2Interpreter`;
 
 /** Debug from a selected config */
 export const extDebugConfig = `${extCommandPrefix}debugConfigs`;
@@ -94,13 +94,13 @@ export const extDebugParams = `${extCommandPrefix}debugParams`;
 export const extDebugAttach = `${extCommandPrefix}debugAttach`;
 
 /** Select syntaxes */
-export const extSelectSyntaxes = `${extCommandPrefix}selectSyntaxes`;
+export const extSelectSyntaxes = `${extCommandPrefix}select.syntaxes`;
 
 /** Update version info file header comment */
 export const extUpdateVersionInfo = `${extCommandPrefix}updateVersionInfo`;
 
 /** Extract the symbols from the active editor */
-export const extExtractSymbols = `${extCommandPrefix}extract.symbols`;
+export const extExtractSymbols = `${extCommandPrefix}exportSymbols`;
 
 /** Switch the current editor from AHK v1 to AHK v2 and vice versa */
 export const extSwitchAHKVersion = `${extCommandPrefix}switchAhkVersion`;
