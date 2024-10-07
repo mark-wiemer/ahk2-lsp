@@ -6,7 +6,7 @@ import {
 	Flag,
 	parseFormatDirective,
 	updateCommentTagRegex,
-} from './Lexer1';
+} from './lexer';
 import { BraceStyle } from '../../util/src/config';
 
 suite('updateCommentTagRegex', () => {
