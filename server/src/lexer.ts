@@ -5549,8 +5549,8 @@ export class Lexer {
 				output_space_before_token ??= space_in_other;
 
 				const firstCondition = previous_flags.in_case_statement && last_type === 'TK_LABEL' && /^(default)?:$/.test(last_text);
-				const secondCondition = opt.brace_style === 'Allman' || input_wanted_newline && opt.preserve_newlines && opt.brace_style !== 'Preserve';
-				console.log('5553', firstCondition, secondCondition, opt.brace_style);
+				const secondCondition = opt.brace_style === 'Allman' || input_wanted_newline && opt.preserve_newlines && opt.brace_style === 'Preserve';
+				console.log('5553', firstCondition, `${opt.brace_style === 'Allman'} || ${input_wanted_newline} && ${opt.preserve_newlines} && ${opt.brace_style === 'Preserve'}`, secondCondition);
 				if (firstCondition)
 					flags.case_body = null, print_newline(), flags.indentation_level--;
 				else if (secondCondition)
@@ -5562,7 +5562,7 @@ export class Lexer {
 				previous_flags.indentation_level = Math.min(previous_flags.indentation_level, flags.indentation_level);
 				if (!(opt.switch_case_alignment && flags.last_word === 'switch'))
 					indent();
-				console.log('5565', need_newline || opt.brace_style !== 'Preserve', opt.brace_style);
+				console.log('5565', need_newline || opt.brace_style !== 'Preserve');
 				if (need_newline || opt.brace_style !== 'Preserve')
 					print_newline(true);
 				else output_space_before_token = space_in_other;
@@ -5577,7 +5577,7 @@ export class Lexer {
 
 			const is_obj = flags.mode === MODE.ObjectLiteral, is_exp = is_obj || (ck.in_expr !== undefined);
 			const secondCondition = opt.brace_style !== 'Preserve' || input_wanted_newline;
-			console.log('5580', is_obj, secondCondition, opt.brace_style);
+			console.log('5580', is_obj, secondCondition);
 			if (is_obj) {
 				const style = flags.object_style ?? opt.object_style;
 				if (style === OBJECT_STYLE.collapse || last_text === '{')
@@ -5593,7 +5593,7 @@ export class Lexer {
 			if (!is_exp) {
 				if (previous_flags.case_body === null)
 					indent();
-				console.log('5596', opt.brace_style !== 'Preserve', opt.brace_style);
+				console.log('5596', opt.brace_style !== 'Preserve');
 				if (opt.brace_style !== 'Preserve')
 					print_newline(true);
 				output_space_before_token = space_in_other;
@@ -5713,7 +5713,7 @@ export class Lexer {
 						|| input_wanted_newline 
 							&& opt.preserve_newlines 
 							&& opt.brace_style !== 'Preserve';
-						console.log('5700', opt.brace_style, condition)
+						console.log('5700', condition)
 						if (condition)
 							print_newline(true);
 						else output_space_before_token = space_in_other;
