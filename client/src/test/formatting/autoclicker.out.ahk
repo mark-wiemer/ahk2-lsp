@@ -6,11 +6,12 @@ global ClickerToggle := false
 ClicksPerSecond := 10
 ^z::
 {
-	global ClickerToggle := !ClickerToggle
-	loop {
-		if (!ClickerToggle)
-			break
-		Click
-		Sleep 1000 / ClicksPerSecond
-	}
+    global ClickerToggle := !ClickerToggle
+    loop
+    {
+        if (!ClickerToggle)
+            break
+        Click
+        Sleep 1000 / ClicksPerSecond
+    }
 }
