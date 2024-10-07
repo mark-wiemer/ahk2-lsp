@@ -82,7 +82,7 @@ export const extRunSelection = `${extCommandPrefix}runSelection`;
 export const extStop = `${extCommandPrefix}stop`;
 
 /** Set the interpreter */
-export const extSetInterpreter = `${extCommandPrefix}setv2Interpreter`;
+export const extSetInterpreter = `${extCommandPrefix}setV2Interpreter`;
 
 /** Debug from a selected config */
 export const extDebugConfig = `${extCommandPrefix}debugConfigs`;
