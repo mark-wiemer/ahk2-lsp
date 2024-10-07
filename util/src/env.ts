@@ -43,7 +43,7 @@ export const clientGetWorkspaceFileContent: ClientCommand = `${clientCommandPref
 //* Internal commands - Server-side
 
 /** Prefix for commands handled by the server. These are not registered in package.json */
-const serverCommandPrefix = 'ahk++.';
+const serverCommandPrefix = 'ahk++.lsp.';
 export type ServerCommand = `${typeof serverCommandPrefix}${string}`;
 
 export const serverExportSymbols = `${serverCommandPrefix}exportSymbols`;
