@@ -1,5 +1,4 @@
-// Same as ahk2/client/src/config.ts
-// todo dedupe config.ts
+// todo move to config.ts
 
 /** Defined in package.json */
 export type ActionType =
@@ -101,7 +100,7 @@ export enum CfgKey {
 	// Syntaxes = 'v2.general.syntaxes',
 	// VarUnset = 'v2.warn.varUnset',
 	// WorkingDirectories = 'v2.workingDirectories',
-	
+
 	//* thqby values
 	ActionWhenV1Detected = 'ActionWhenV1IsDetected',
 	CallWithoutParentheses = 'Warn.CallWithoutParentheses',
@@ -225,8 +224,7 @@ export const newAhkppConfig = (
 		},
 		exclude: [],
 		file: {
-			interpreterPath:
-				'C:\\Program Files\\AutoHotkey\\v2\\AutoHotkey.exe',
+			interpreterPath: 'C:\\Program Files\\AutoHotkey\\v2\\AutoHotkey.exe',
 			maxScanDepth: 2,
 		},
 		formatter: newFormatterConfig(),
