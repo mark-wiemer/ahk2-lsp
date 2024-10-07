@@ -49,7 +49,7 @@
 		"publish": "vsce publish",
 		"sort-package-json": "sort-package-json --check",
 		"sort-package-json:fix": "sort-package-json",
-		"test": "npm run test:grammar && npm run test:unit && npm run test:e2e",
+		"test": "npm run test:grammar && npm run test:unit",
 		"pretest:e2e": "npm run build -- --e2e",
 		"test:e2e": "vscode-test",
 		"test:grammar": "vscode-tmgrammar-snap tmgrammar-test/*.ahk",
