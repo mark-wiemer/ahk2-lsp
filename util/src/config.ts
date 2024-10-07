@@ -295,19 +295,27 @@ export const setConfigRoot = (config: AHKLSConfig): void => {
 
 export const shouldIncludeUserStdLib = (
 	config: AHKLSConfig = ahklsConfig,
-): boolean =>
-	getCfg<LibIncludeType>(CfgKey.LibrarySuggestions, config) ===
-		LibIncludeType.UserAndStandard ||
-	getCfg<LibIncludeType>(CfgKey.LibrarySuggestions, config) ===
-		LibIncludeType.All;
+): boolean => {
+	const result =
+		getCfg<LibIncludeType>(CfgKey.LibrarySuggestions, config) ===
+			LibIncludeType.UserAndStandard ||
+		getCfg<LibIncludeType>(CfgKey.LibrarySuggestions, config) ===
+			LibIncludeType.All;
+	console.log(`Should suggest user and standard lib: ${result}`);
+	return result;
+};
 
 export const shouldIncludeLocalLib = (
 	config: AHKLSConfig = ahklsConfig,
-): boolean =>
-	getCfg<LibIncludeType>(CfgKey.LibrarySuggestions, config) ===
-		LibIncludeType.Local ||
-	getCfg<LibIncludeType>(CfgKey.LibrarySuggestions, config) ===
-		LibIncludeType.All;
+): boolean => {
+	const result =
+		getCfg<LibIncludeType>(CfgKey.LibrarySuggestions, config) ===
+			LibIncludeType.Local ||
+		getCfg<LibIncludeType>(CfgKey.LibrarySuggestions, config) ===
+			LibIncludeType.All;
+	console.log(`Should suggest local lib: ${result}`);
+	return result;
+};
 
 //* Unique to AHK++
 
