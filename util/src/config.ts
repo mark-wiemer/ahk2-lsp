@@ -222,7 +222,7 @@ export const newConfig = (config: Partial<AHKLSConfig> = {}): AHKLSConfig => ({
 const ahklsConfig: AHKLSConfig = newConfig();
 
 /** The start of each config value in package.json */
-export const configPrefix = 'AutoHotkey2';
+export const configPrefix = 'AHK++';
 
 /**
  * Gets a single config value from the provided config.
