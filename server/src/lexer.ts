@@ -286,27 +286,30 @@ export const newInternalFormatOptions = (partial: Partial<InternalFormatOptions>
  * But if `InternalFormatOptions` type ever changes (to have camelCase keys, for example),
  * we can update this function instead of pushing breaking changes to user settings.
  */
-export const mapToInternalFormatOptions = (extOptions: FormatOptions): InternalFormatOptions => ({
-	array_style: extOptions.arrayStyle,
-	brace_style: extOptions.braceStyle,
-	break_chained_methods: extOptions.breakChainedMethods,
-	ignore_comment: extOptions.ignoreComment,
-	indent_string: extOptions.indentString,
-	indent_between_hotif_directive: extOptions.indentBetweenHotIfDirectives,
-	keyword_start_with_uppercase: extOptions.keywordStartWithUppercase,
-	max_preserve_newlines: extOptions.maxPreserveNewlines,
-	object_style: extOptions.objectStyle,
-	preserve_newlines: extOptions.preserveNewlines,
-	space_before_conditional: extOptions.spaceBeforeConditional,
-	space_after_double_colon: extOptions.spaceAfterDoubleColon,
-	space_in_empty_paren: extOptions.spaceInEmptyParen,
-	space_in_other: extOptions.spaceInOther,
-	space_in_paren: extOptions.spaceInParen,
-	switch_case_alignment: extOptions.switchCaseAlignment,
-	symbol_with_same_case: extOptions.symbolWithSameCase,
-	white_space_before_inline_comment: extOptions.whitespaceBeforeInlineComment,
-	wrap_line_length: extOptions.wrapLineLength,
-});
+export const mapToInternalFormatOptions = (extOptions: Partial<FormatOptions>): InternalFormatOptions => {
+	const defaultOptions = newInternalFormatOptions();
+	return {
+		array_style: extOptions.arrayStyle ?? defaultOptions.array_style,
+		brace_style: extOptions.braceStyle ?? defaultOptions.brace_style,
+		break_chained_methods: extOptions.breakChainedMethods ?? defaultOptions.break_chained_methods,
+		ignore_comment: extOptions.ignoreComment ?? defaultOptions.ignore_comment,
+		indent_string: extOptions.indentString ?? defaultOptions.indent_string,
+		indent_between_hotif_directive: extOptions.indentBetweenHotIfDirectives ?? defaultOptions.indent_between_hotif_directive,
+		keyword_start_with_uppercase: extOptions.keywordStartWithUppercase ?? defaultOptions.keyword_start_with_uppercase,
+		max_preserve_newlines: extOptions.maxPreserveNewlines ?? defaultOptions.max_preserve_newlines,
+		object_style: extOptions.objectStyle ?? defaultOptions.object_style,
+		preserve_newlines: extOptions.preserveNewlines ?? defaultOptions.preserve_newlines,
+		space_before_conditional: extOptions.spaceBeforeConditional ?? defaultOptions.space_before_conditional,
+		space_after_double_colon: extOptions.spaceAfterDoubleColon ?? defaultOptions.space_after_double_colon,
+		space_in_empty_paren: extOptions.spaceInEmptyParen ?? defaultOptions.space_in_empty_paren,
+		space_in_other: extOptions.spaceInOther ?? defaultOptions.space_in_other,
+		space_in_paren: extOptions.spaceInParen ?? defaultOptions.space_in_paren,
+		switch_case_alignment: extOptions.switchCaseAlignment ?? defaultOptions.switch_case_alignment,
+		symbol_with_same_case: extOptions.symbolWithSameCase ?? defaultOptions.symbol_with_same_case,
+		white_space_before_inline_comment: extOptions.whitespaceBeforeInlineComment ?? defaultOptions.white_space_before_inline_comment,
+		wrap_line_length: extOptions.wrapLineLength ?? defaultOptions.wrap_line_length,
+	}
+};
 
 namespace SymbolNode {
 	export function create(name: string, kind: SymbolKind, range: Range, selectionRange: Range, children?: AhkSymbol[]): AhkSymbol {
@@ -426,7 +429,7 @@ class ParseStopError {
 export class Lexer {
 	public actionWhenV1Detected?: ActionType = 'Continue';
 	public actived = false;
-	public beautify: (options: FormatOptions, range?: Range) => string;
+	public beautify: (options: Partial<FormatOptions>, range?: Range) => string;
 	public checkmember: boolean | undefined;
 	public children: AhkSymbol[] = [];
 	public d = 0;
@@ -568,7 +571,7 @@ export class Lexer {
 			return !ignore && _this.findStrOrComment(offset) || eof;
 		}
 
-		this.beautify = function (options: FormatOptions, range?: Range) {
+		this.beautify = function (options: Partial<FormatOptions>, range?: Range) {
 			let end_pos: number;
 			!_this.isparsed && _this.parseScript();
 
