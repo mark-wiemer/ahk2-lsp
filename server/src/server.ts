@@ -179,7 +179,7 @@ documents.onDidOpen(e => {
 	Object.defineProperty(lexer.include, '', { value: '', enumerable: false });
 	lexer.actived = true;
 	if (to_ahk2)
-		lexer.actionwhenv1 = 'Continue';
+		lexer.actionWhenV1Detected = 'Continue';
 	if (shouldIncludeLocalLib())
 		parseproject(uri).then(() => lexer.last_diags &&
 			Object.keys(lexer.included).length && lexer.update());
