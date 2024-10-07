@@ -60,8 +60,7 @@ import { getConfigIDE, getConfigRoot } from './config';
 
 let client: LanguageClient, outputchannel: OutputChannel, ahkStatusBarItem: StatusBarItem;
 const ahkprocesses = new Map<number, ChildProcess & { path?: string }>();
-
-let interpreterPath: string = getConfigIDE(CfgKey.InterpreterPath, ''), server_is_ready = false;
+let interpreterPath: string = getConfigIDE<string>(CfgKey.InterpreterPath, ''), server_is_ready = false;
 const textdecoders = [new TextDecoder('utf8', { fatal: true }), new TextDecoder('utf-16le', { fatal: true })];
 const isWindows = process.platform === 'win32';
 let extlist: string[] = [], debugexts: Record<string, string> = {}, langs: string[] = [];
@@ -469,11 +468,11 @@ function getDebugConfigs() {
 async function beginDebug(type: 'f' | 'c' | 'p' | 'a') {
 	let extname: string | undefined;
 	const editor = window.activeTextEditor;
-	let config = { 
-		...getConfigIDE<Record<string, unknown>>(CfgKey.DebugConfiguration, {}),
+	let debugConfig = {
+		...getConfigIDE<Partial<DebugConfiguration>>(CfgKey.DebugConfiguration, {}),
 		request: 'launch',
-		__ahk2debug: true
-	} as unknown as DebugConfiguration;
+		__ahk2debug: true,
+	} as DebugConfiguration;
 	if (!extlist.length) {
 		window.showErrorMessage(localize('ahk2.debugextnotexist'));
 		extname = await window.showQuickPick(['zero-plusplus.vscode-autohotkey-debug', 'helsmy.autohotkey-debug', 'mark-wiemer.vscode-autohotkey-plus-plus', 'cweijan.vscode-autohotkey-plus']);
@@ -486,7 +485,7 @@ async function beginDebug(type: 'f' | 'c' | 'p' | 'a') {
 			window.showErrorMessage('zero-plusplus.vscode-autohotkey-debug was not found!');
 			return;
 		}
-		config.type = Object.entries(debugexts).find(([, v]) => v === extname)![0];
+		debugConfig.type = Object.entries(debugexts).find(([, v]) => v === extname)![0];
 		if (type === 'p') {
 			let input = await window.showInputBox({ prompt: localize('ahk2.entercmd') });
 			if (input === undefined)
@@ -497,9 +496,9 @@ async function beginDebug(type: 'f' | 'c' | 'p' | 'a') {
 					args.push(m[4] || m[2]);
 					return '';
 				});
-				config.args = args;
+				debugConfig.args = args;
 			}
-		} else config.request = 'attach';
+		} else debugConfig.request = 'attach';
 	} else if (type === 'c') {
 		const configs = getDebugConfigs();
 		if (configs?.length) {
@@ -513,12 +512,12 @@ async function beginDebug(type: 'f' | 'c' | 'p' | 'a') {
 			pick.dispose();
 			if (!pickedDebugConfig)
 				return;
-			config = pickedDebugConfig;
+			debugConfig = pickedDebugConfig;
 		}
-	} else config.program = '${file}';
-	config.type ||= Object.keys(debugexts).sort().pop()!;
-	config.name ||= `AutoHotkey ${config.request === 'attach' ? 'Attach' : 'Debug'}`;
-	debug.startDebugging(editor && workspace.getWorkspaceFolder(editor.document.uri), config);
+	} else debugConfig.program = '${file}';
+	debugConfig.type ||= Object.keys(debugexts).sort().pop()!;
+	debugConfig.name ||= `AutoHotkey ${debugConfig.request === 'attach' ? 'Attach' : 'Debug'}`;
+	debug.startDebugging(editor && workspace.getWorkspaceFolder(editor.document.uri), debugConfig);
 }
 
 /**

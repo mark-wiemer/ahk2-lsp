@@ -406,7 +406,7 @@ class ParseStopError {
 }
 
 export class Lexer {
-	public actionWhenV1Detected?: ActionType = getCfg(CfgKey.ActionWhenV1Detected);
+	public actionWhenV1Detected?: ActionType = 'Continue';
 	public actived = false;
 	public beautify: (options: FormatOptions, range?: Range) => string;
 	public checkmember: boolean | undefined;
@@ -7923,7 +7923,6 @@ export function updateCommentTagRegex(newCommentTagRegex: string): RegExp {
 /**
  * Updates the provided options in-place (not pure).
  * Convert the provided format config from user settings to in-memory interface.
- * This is mostly just converting strings to numbers.
  */
 export function fixupFormatConfig(options: { brace_style?: string | undefined }) {
 	switch (options.brace_style) {
