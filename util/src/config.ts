@@ -1,4 +1,5 @@
 //* Utility functions to access the config variable from either client or server
+//* All exported values here match contributed settings/configurations in package.json
 export enum CfgKey {
 	ActionWhenV1Detected = 'v2.general.actionWhenV1Detected',
 	ArrayStyle = 'v2.formatter.arrayStyle',
@@ -65,10 +66,7 @@ export enum CallWithoutParentheses {
 	On = 'On',
 }
 
-/**
- * Possible values for `array_style` and `object_style`
- * Defined in package.json, do not change.
- */
+/** Possible values for `array_style` and `object_style` */
 export type BlockStyle = 'collapse' | 'expand' | 'none';
 
 export type BraceStyle =
@@ -286,7 +284,7 @@ export const setCfg = <T>(
 };
 
 /**
- * Replace the root config with the provided config.
+ * Assign the provided config to the root config.
  * Assumes the provided config is valid.
  */
 export const setConfigRoot = (config: AHKLSConfig): void => {
