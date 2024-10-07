@@ -698,7 +698,7 @@
 		"vscode-tmgrammar-test": "^0.1.3"
 	},
 	"engines": {
-		"vscode": "^1.82.0"
+		"vscode": "^1.93.0"
 	},
 	"icon": "icon.png"
 }
