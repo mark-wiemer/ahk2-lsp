@@ -122,7 +122,7 @@ function build_watch(web = false) {
 	if (web) opts = browser_opts(false);
 	else {
 		server_opt.entryPoints = ['server/src/*.ts'];
-		server_opt.outdir = 'server/out';
+		server_opt.outdir = 'server/dist';
 		opts = [client_opt, server_opt, util_opt];
 	}
 	for (const opt of opts) {
