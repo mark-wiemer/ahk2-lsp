@@ -4,7 +4,7 @@ import { readdirSync, readFileSync, existsSync, statSync, promises as fs } from 
 import { Connection, MessageConnection } from 'vscode-languageserver';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { CompletionItem, CompletionItemKind, Hover, InsertTextFormat, Range, SymbolKind } from 'vscode-languageserver-types';
-import { AhkSymbol, Lexer, fixupFormatConfig, updateCommentTagRegex } from './lexer';
+import { AhkSymbol, Lexer, fixupFormatConfig, updateCommentTagRegex } from './Lexer1';
 import { diagnostic } from './localize';
 import { jsDocTagNames } from './constants';
 import { AHKLSConfig, CfgKey, getCfg, LibIncludeType, setCfg, setConfigRoot } from '../../util/src/config';
@@ -16,7 +16,7 @@ export * from './constants';
 export * from './definitionProvider';
 export * from './formattingProvider';
 export * from './hoverProvider';
-export * from './lexer';
+export * from './Lexer1';
 export * from './localize';
 export * from './referencesProvider';
 export * from './renameProvider';
