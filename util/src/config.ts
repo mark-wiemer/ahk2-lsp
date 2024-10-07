@@ -242,10 +242,16 @@ export const getCfg = <T = string>(
 	let value: any = config;
 	for (const k of keyPath) {
 		if (!value) {
-			console.warn('Failed to get config', key);
+			if (config === ahklsConfig) {
+				console.warn(`Failed to get config`, key);
+			}
 			return undefined as T;
 		}
 		value = value?.[k];
+	}
+
+	if (config === ahklsConfig) {
+		console.log(`Get config`, key, value);
 	}
 	return value;
 };
@@ -267,10 +273,16 @@ export const setCfg = <T>(
 		obj = obj?.[k];
 	}
 	if (!obj) {
-		console.warn('Failed to set config', key, value);
+		if (config === ahklsConfig) {
+			console.warn(`(Global) Failed to set config`, key, value);
+		}
 		return;
 	}
 	obj[keyPath[keyPath.length - 1]] = value;
+
+	if (config === ahklsConfig) {
+		console.log(`Set config`, key, value);
+	}
 };
 
 /**
