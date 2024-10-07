@@ -25,8 +25,7 @@ import {
 	hoverCache, isahk2_h, lexers, libdirs, libfuncs, locale, openAndParse, openFile,
 	restorePath, rootdir, setTextDocumentLanguage, symbolProvider, utils, workspaceFolders
 } from './common';
-import { ActionType, BlockStyle, BraceStyle, CfgKey, FormatOptions, getCfg } from '../../util/src/config';
-import { CallWithoutParentheses } from './config';
+import { ActionType, BlockStyle, BraceStyle, CallWithoutParentheses, CfgKey, FormatOptions, getCfg } from '../../util/src/config';
 
 export interface ParamInfo {
 	offset: number
@@ -287,8 +286,27 @@ export const newInternalFormatOptions = (partial: Partial<InternalFormatOptions>
  * But if `InternalFormatOptions` type ever changes (to have camelCase keys, for example),
  * we can update this function instead of pushing breaking changes to user settings.
  */
-// todo for AHK++
-export const mapToInternalFormatOptions = newInternalFormatOptions;
+export const mapToInternalFormatOptions = (extOptions: FormatOptions): InternalFormatOptions => ({
+	array_style: extOptions.arrayStyle,
+	brace_style: extOptions.braceStyle,
+	break_chained_methods: extOptions.breakChainedMethods,
+	ignore_comment: extOptions.ignoreComment,
+	indent_string: extOptions.indentString,
+	indent_between_hotif_directive: extOptions.indentBetweenHotIfDirectives,
+	keyword_start_with_uppercase: extOptions.keywordStartWithUppercase,
+	max_preserve_newlines: extOptions.maxPreserveNewlines,
+	object_style: extOptions.objectStyle,
+	preserve_newlines: extOptions.preserveNewlines,
+	space_before_conditional: extOptions.spaceBeforeConditional,
+	space_after_double_colon: extOptions.spaceAfterDoubleColon,
+	space_in_empty_paren: extOptions.spaceInEmptyParen,
+	space_in_other: extOptions.spaceInOther,
+	space_in_paren: extOptions.spaceInParen,
+	switch_case_alignment: extOptions.switchCaseAlignment,
+	symbol_with_same_case: extOptions.symbolWithSameCase,
+	white_space_before_inline_comment: extOptions.whitespaceBeforeInlineComment,
+	wrap_line_length: extOptions.wrapLineLength,
+});
 
 namespace SymbolNode {
 	export function create(name: string, kind: SymbolKind, range: Range, selectionRange: Range, children?: AhkSymbol[]): AhkSymbol {
@@ -7924,15 +7942,15 @@ export function updateCommentTagRegex(newCommentTagRegex: string): RegExp {
  * Updates the provided options in-place (not pure).
  * Convert the provided format config from user settings to in-memory interface.
  */
-export function fixupFormatConfig(options: { brace_style?: string | undefined }) {
-	switch (options.brace_style) {
+export function fixupFormatConfig(options: { braceStyle?: string | undefined }) {
+	switch (options.braceStyle) {
 		case 'Allman':
-		case '0': options.brace_style = 'Allman'; break;
+		case '0': options.braceStyle = 'Allman'; break;
 		case 'One True Brace':
-		case '1': options.brace_style = 'One True Brace'; break;
+		case '1': options.braceStyle = 'One True Brace'; break;
 		case 'One True Brace Variant':
-		case '-1': options.brace_style = 'One True Brace Variant'; break;
-		default: options.brace_style = 'Preserve'; break;
+		case '-1': options.braceStyle = 'One True Brace Variant'; break;
+		default: options.braceStyle = 'Preserve'; break;
 	}
 	return options;
 }
@@ -7943,7 +7961,7 @@ export function fixupFormatConfig(options: { brace_style?: string | undefined })
  * Whitespace-insensitive.
  * Does not validate that keys are valid FormatOptions keys.
  */
-export function parseFormatDirective(directive: string): Partial<FormatOptions> {
+export function parseFormatDirective(directive: string): Record<string, string> {
 	// Run regex against the directive to confirm it matches
 	const m = directive.match(/^;\s*@format\b/i);
 	if (!m) return {};
@@ -7962,7 +7980,7 @@ export function parseFormatDirective(directive: string): Partial<FormatOptions> 
  * Example: `;@format array_style: expand, object_style: expand`
  * See `client/src/test/formatting/array_object_style.ahk` for an in-code example.
  */
-export function applyFormatDirective(directive: string, flags: Partial<Flag>, opt: Partial<FormatOptions>) {
+export function applyFormatDirective(directive: string, flags: Partial<Flag>, opt: Partial<InternalFormatOptions>) {
 	const parsedDirective = parseFormatDirective(directive);
 	for (const k of ['array_style', 'object_style'] as const) {
 		if (k in parsedDirective) {

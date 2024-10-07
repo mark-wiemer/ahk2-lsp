@@ -105,7 +105,7 @@ suite('fixupFormatConfig', () => {
 	tests.forEach(([name, value, expected]) => {
 		test(name, () => {
 			assert.deepStrictEqual(
-				fixupFormatConfig({ brace_style: value }).brace_style,
+				fixupFormatConfig({ braceStyle: value }).braceStyle,
 				expected,
 			);
 		});

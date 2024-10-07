@@ -1,54 +1,48 @@
 //* Utility functions to access the config variable from either client or server
 export enum CfgKey {
-	// todo update for AHK++
-	/** Unique to AHK++ */
-	InterpreterPathV1 = 'v1.file.interpreterPath',
-
-	// thqby values
-	ActionWhenV1Detected = 'ActionWhenV1IsDetected',
-	ArrayStyle = 'FormatOptions.array_style',
-	BraceStyle = 'FormatOptions.brace_style',
-	BreakChainedMethods = 'FormatOptions.break_chained_methods',
-	CallWithoutParentheses = 'Warn.CallWithoutParentheses',
-	ClassNonDynamicMemberCheck = 'Diagnostics.ClassNonDynamicMemberCheck',
+	ActionWhenV1Detected = 'v2.general.actionWhenV1Detected',
+	ArrayStyle = 'v2.formatter.arrayStyle',
+	BraceStyle = 'v2.formatter.braceStyle',
+	BreakChainedMethods = 'v2.formatter.breakChainedMethods',
+	CallWithoutParentheses = 'v2.warn.callWithoutParentheses',
+	ClassNonDynamicMemberCheck = 'v2.diagnostics.classNonDynamicMemberCheck',
 	Commands = 'commands',
-	CommentTagRegex = 'CommentTags',
-	CompleteFunctionCalls = 'CompleteFunctionParens',
-	CompletionCommitCharacters = 'CompletionCommitCharacters',
+	CommentTagRegex = 'v2.general.commentTagRegex',
+	CompleteFunctionCalls = 'v2.general.completeFunctionCalls',
+	CompletionCommitCharacters = 'v2.completionCommitCharacters',
 	DebugConfiguration = 'DebugConfiguration',
-	Exclude = 'Files.Exclude',
+	Exclude = 'v2.exclude',
 	ExtensionUri = 'extensionUri',
-	Formatter = 'FormatOptions',
-	IgnoreComment = 'FormatOptions.ignore_comment',
-	IndentBetweenHotIfDirective = 'FormatOptions.indent_between_hotif_directive',
-	IndentString = 'FormatOptions.indent_string',
-	InterpreterPath = 'InterpreterPath',
-	KeywordStartWithUppercase = 'FormatOptions.keyword_start_with_uppercase',
-	LibrarySuggestions = 'AutoLibInclude',
-	LocalSameAsGlobal = 'Warn.LocalSameAsGlobal',
+	Formatter = 'v2.formatter',
+	IgnoreComment = 'v2.formatter.ignoreComment',
+	IndentBetweenHotIfDirective = 'v2.formatter.indentBetweenHotIfDirectives',
+	IndentString = 'v2.formatter.indent_string',
+	InterpreterPath = 'v2.file.interpreterPath',
+	InterpreterPathV1 = 'v1.file.interpreterPath', // unique to AHK++
+	KeywordStartWithUppercase = 'v2.formatter.keywordStartWithUppercase',
+	LibrarySuggestions = 'v2.general.librarySuggestions',
+	LocalSameAsGlobal = 'v2.warn.localSameAsGlobal',
 	Locale = 'locale',
-	MaxPreserveNewlines = 'FormatOptions.max_preserve_newlines',
-	MaxScanDepth = 'Files.ScanMaxDepth',
-	ObjectStyle = 'FormatOptions.object_style',
-	/** Not supported, kept to show warning to users that still have it */
-	OneTrueBrace = 'FormatOptions.one_true_brace',
-	ParamsCheck = 'Diagnostics.ParamsCheck',
-	PreserveNewlines = 'FormatOptions.preserve_newlines',
-	/** Unique to AHK++ */
-	ShowOutput = 'general.showOutput',
-	SpaceAfterDoubleColon = 'FormatOptions.space_after_double_colon',
-	SpaceBeforeConditional = 'FormatOptions.space_before_conditional',
-	SpaceInEmptyParen = 'FormatOptions.space_in_empty_paren',
-	SpaceInOther = 'FormatOptions.space_in_other',
-	SpaceInParen = 'FormatOptions.space_in_paren',
-	SwitchCaseAlignment = 'FormatOptions.switch_case_alignment',
-	SymbolFoldingFromOpenBrace = 'SymbolFoldingFromOpenBrace',
-	SymbolWithSameCase = 'FormatOptions.symbol_with_same_case',
-	Syntaxes = 'Syntaxes',
-	VarUnset = 'Warn.varUnset',
-	WhiteSpaceBeforeInlineComment = 'FormatOptions.white_space_before_inline_comment',
-	WorkingDirectories = 'WorkingDirs',
-	WrapLineLength = 'FormatOptions.wrap_line_length',
+	MaxPreserveNewlines = 'v2.formatter.maxPreserveNewlines',
+	MaxScanDepth = 'v2.file.maxScanDepth',
+	ObjectStyle = 'v2.formatter.objectStyle',
+	OneTrueBrace = 'v2.formatter.one_true_brace', // deprecated, not used
+	ParamsCheck = 'v2.diagnostics.paramsCheck',
+	PreserveNewlines = 'v2.formatter.preserveNewlines',
+	ShowOutput = 'general.showOutput', // unique to AHK++
+	SpaceAfterDoubleColon = 'v2.formatter.spaceAfterDoubleColon',
+	SpaceBeforeConditional = 'v2.formatter.spaceBeforeConditional',
+	SpaceInEmptyParen = 'v2.formatter.spaceInEmptyParen',
+	SpaceInOther = 'v2.formatter.spaceInOther',
+	SpaceInParen = 'v2.formatter.spaceInParen',
+	SwitchCaseAlignment = 'v2.formatter.switchCaseAlignment',
+	SymbolFoldingFromOpenBrace = 'v2.general.symbolFoldingFromOpenBrace',
+	SymbolWithSameCase = 'v2.formatter.symbolWithSameCase',
+	Syntaxes = 'v2.general.syntaxes',
+	VarUnset = 'v2.warn.varUnset',
+	WhiteSpaceBeforeInlineComment = 'v2.formatter.whitespaceBeforeInlineComment',
+	WorkingDirectories = 'v2.workingDirectories',
+	WrapLineLength = 'v2.formatter.wrapLineLength',
 }
 
 export type ActionType =
@@ -59,7 +53,7 @@ export type ActionType =
 	| 'Stop';
 
 export enum LibIncludeType {
-	Disabled = 'Disabled',
+	Disabled = 'Off',
 	Local = 'Local',
 	UserAndStandard = 'User and Standard',
 	All = 'All',
@@ -84,92 +78,139 @@ export type BraceStyle =
 	| 'Preserve';
 
 export interface FormatOptions {
-	array_style?: BlockStyle;
-	brace_style?: BraceStyle;
-	break_chained_methods?: boolean;
-	ignore_comment?: boolean;
-	indent_string?: string;
-	indent_between_hotif_directive?: boolean;
-	keyword_start_with_uppercase?: boolean;
-	max_preserve_newlines?: number;
-	object_style?: BlockStyle;
-	preserve_newlines?: boolean;
-	space_before_conditional?: boolean;
-	space_after_double_colon?: boolean;
-	space_in_empty_paren?: boolean;
-	space_in_other?: boolean;
-	space_in_paren?: boolean;
-	switch_case_alignment?: boolean;
-	symbol_with_same_case?: boolean;
-	white_space_before_inline_comment?: string;
-	wrap_line_length?: number;
+	arrayStyle: BlockStyle;
+	braceStyle: BraceStyle;
+	breakChainedMethods: boolean;
+	ignoreComment: boolean;
+	indentString: string;
+	indentBetweenHotIfDirectives: boolean;
+	keywordStartWithUppercase: boolean;
+	maxPreserveNewlines: number;
+	objectStyle: BlockStyle;
+	preserveNewlines: boolean;
+	spaceBeforeConditional: boolean;
+	spaceAfterDoubleColon: boolean;
+	spaceInEmptyParen: boolean;
+	spaceInOther: boolean;
+	spaceInParen: boolean;
+	switchCaseAlignment: boolean;
+	symbolWithSameCase: boolean;
+	whitespaceBeforeInlineComment: string;
+	wrapLineLength: number;
+}
+
+export interface CompletionCommitCharacters {
+	Class: string;
+	Function: string;
 }
 
 /** Matches the contributed extension configuration in package.json */
 export interface AHKLSConfig {
+	v2: {
+		general: {
+			actionWhenV1Detected: ActionType;
+			/** The regex denoting a custom symbol. Defaults to `;;` */
+			commentTagRegex?: string;
+			/** Automatically insert parentheses on function call */
+			completeFunctionCalls: boolean;
+			/** Suggest library functions */
+			librarySuggestions: LibIncludeType;
+			symbolFoldingFromOpenBrace: boolean;
+			syntaxes: string;
+		};
+		completionCommitCharacters: CompletionCommitCharacters;
+		diagnostics: {
+			classNonDynamicMemberCheck: boolean;
+			paramsCheck: boolean;
+		};
+		/** Glob pattern of files to ignore */
+		exclude: string[];
+		file: {
+			/** Path to the AHK v2 intepreter */
+			interpreterPath: string;
+			/** Depth of folders to scan for IntelliSense */
+			maxScanDepth: number;
+		};
+		/** Config of the v2 formatter */
+		formatter: FormatOptions;
+		warn: {
+			/** Ref to a potentially-unset variable */
+			varUnset: boolean;
+			/** Undeclared local has same name as global */
+			localSameAsGlobal: boolean;
+			/** Function call without parentheses */
+			callWithoutParentheses: CallWithoutParentheses;
+		};
+		/** Directories containing AHK files that can be #included */
+		workingDirectories: string[];
+	};
 	locale?: string;
 	commands?: string[];
 	extensionUri?: string;
-	ActionWhenV1IsDetected: ActionType;
-	AutoLibInclude: LibIncludeType;
-	CommentTags?: string;
-	CompleteFunctionParens: boolean;
-	CompletionCommitCharacters?: {
-		Class: string;
-		Function: string;
-	};
-	/** Only used in client */
-	DebugConfiguration?: Record<string, unknown>;
-	Diagnostics: {
-		ClassNonDynamicMemberCheck: boolean;
-		ParamsCheck: boolean;
-	};
-	Files?: {
-		Exclude: string[];
-		MaxDepth: number;
-	};
-	FormatOptions: FormatOptions;
-	InterpreterPath: string;
-	Syntaxes?: string;
-	SymbolFoldingFromOpenBrace: boolean;
-	Warn: {
-		VarUnset: boolean;
-		LocalSameAsGlobal: boolean;
-		CallWithoutParentheses: CallWithoutParentheses;
-	};
-	WorkingDirs: string[];
+	GlobalStorage?: string;
 }
 
 /**
- * With no arg provided, returns initial values of the config object.
- * Any values provided in the arg are preserved in the new object.
+ * Returns a formatter config built from the given config and defaults.
+ * Defaults defined in package.json
  */
+export const newFormatOptions = (
+	config: Partial<FormatOptions> = {},
+): FormatOptions => ({
+	arrayStyle: 'none',
+	braceStyle: 'One True Brace',
+	breakChainedMethods: false,
+	ignoreComment: false,
+	indentString: '    ',
+	indentBetweenHotIfDirectives: false,
+	keywordStartWithUppercase: false,
+	maxPreserveNewlines: 2,
+	objectStyle: 'none',
+	preserveNewlines: true,
+	spaceBeforeConditional: true,
+	spaceAfterDoubleColon: true,
+	spaceInEmptyParen: false,
+	spaceInOther: true,
+	spaceInParen: false,
+	switchCaseAlignment: false,
+	symbolWithSameCase: false,
+	whitespaceBeforeInlineComment: '',
+	wrapLineLength: 120,
+	...config,
+});
+
+/** Defaults according to package.json */
 export const newConfig = (config: Partial<AHKLSConfig> = {}): AHKLSConfig => ({
-	ActionWhenV1IsDetected: 'Warn',
-	AutoLibInclude: LibIncludeType.Disabled,
-	CommentTags: '^;;\\s*(.*)',
-	CompleteFunctionParens: false,
-	CompletionCommitCharacters: {
-		Class: '.(',
-		Function: '(',
+	v2: {
+		general: {
+			actionWhenV1Detected: 'SwitchToV1',
+			commentTagRegex: '^;;\\s*(.*)',
+			completeFunctionCalls: false,
+			librarySuggestions: LibIncludeType.Disabled,
+			symbolFoldingFromOpenBrace: false,
+			syntaxes: '',
+		},
+		completionCommitCharacters: {
+			Class: '.(',
+			Function: '(',
+		},
+		diagnostics: {
+			classNonDynamicMemberCheck: true,
+			paramsCheck: true,
+		},
+		exclude: [],
+		file: {
+			interpreterPath: 'C:\\Program Files\\AutoHotkey\\v2\\AutoHotkey.exe',
+			maxScanDepth: 2,
+		},
+		formatter: newFormatOptions(),
+		warn: {
+			varUnset: true,
+			localSameAsGlobal: false,
+			callWithoutParentheses: CallWithoutParentheses.Off,
+		},
+		workingDirectories: [],
 	},
-	Diagnostics: {
-		ClassNonDynamicMemberCheck: true,
-		ParamsCheck: true,
-	},
-	Files: {
-		Exclude: [],
-		MaxDepth: 2,
-	},
-	FormatOptions: {},
-	InterpreterPath: 'C:\\Program Files\\AutoHotkey\\v2\\AutoHotkey.exe',
-	SymbolFoldingFromOpenBrace: false,
-	Warn: {
-		VarUnset: true,
-		LocalSameAsGlobal: false,
-		CallWithoutParentheses: CallWithoutParentheses.Off,
-	},
-	WorkingDirs: [],
 	...config,
 });
 
