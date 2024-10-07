@@ -247,10 +247,6 @@ export const getCfg = <T = string>(
 		}
 		value = value?.[k];
 	}
-
-	if (config === ahklsConfig) {
-		console.log(`Get config`, key, value);
-	}
 	return value;
 };
 
@@ -277,10 +273,6 @@ export const setCfg = <T>(
 		return;
 	}
 	obj[keyPath[keyPath.length - 1]] = value;
-
-	if (config === ahklsConfig) {
-		console.log(`Set config`, key, value);
-	}
 };
 
 /**
@@ -299,7 +291,6 @@ export const shouldIncludeUserStdLib = (
 			LibIncludeType.UserAndStandard ||
 		getCfg<LibIncludeType>(CfgKey.LibrarySuggestions, config) ===
 			LibIncludeType.All;
-	console.log(`Should suggest user and standard lib: ${result}`);
 	return result;
 };
 
@@ -311,7 +302,6 @@ export const shouldIncludeLocalLib = (
 			LibIncludeType.Local ||
 		getCfg<LibIncludeType>(CfgKey.LibrarySuggestions, config) ===
 			LibIncludeType.All;
-	console.log(`Should suggest local lib: ${result}`);
 	return result;
 };
 

@@ -14,7 +14,6 @@ export function getConfigIDE<T = unknown>(
 	defaultValue: T,
 ): typeof defaultValue {
 	const rawResult = getConfigRoot().get<T>(key);
-	console.log('getConfigIDE', key, rawResult, defaultValue);
 	if (rawResult === undefined) return defaultValue;
 	return rawResult;
 }

@@ -369,7 +369,6 @@ export function enum_ahkfiles(dirpath: string) {
  * Does not update user settings.
  */
 export function updateConfig(newConfig: AHKLSConfig): void {
-	console.log('Updating config:', newConfig);
 	const newConfigLibSuggestions = getCfg(CfgKey.LibrarySuggestions, newConfig);
 	if (typeof newConfigLibSuggestions === 'boolean')
 		setCfg(CfgKey.LibrarySuggestions, newConfigLibSuggestions ? LibIncludeType.All : LibIncludeType.Disabled, newConfig);
