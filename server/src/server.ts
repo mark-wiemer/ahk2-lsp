@@ -254,7 +254,11 @@ async function initpathenv(samefolder = false, retry = true): Promise<boolean> {
 		if ((await getAHKversion([path]))[0].endsWith('[UIAccess]')) {
 			let ret = false, n = path.replace(/_uia\.exe$/i, '.exe');
 			fail = 2;
-			if (path !== n && (n = resolvePath(n, true)) && !(await getAHKversion([n]))[0].endsWith('[UIAccess]')) {
+			if (
+				path !== n &&
+				(n = resolvePath(n, true)) &&
+				!(await getAHKversion([n]))[0].endsWith('[UIAccess]')
+			) {
 				setInterpreterPath(n);
 				if ((ret = await initpathenv(samefolder)))
 					fail = 0;
