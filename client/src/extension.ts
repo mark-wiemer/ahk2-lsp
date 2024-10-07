@@ -52,6 +52,9 @@ import {
 	serverGetAHKVersion,
 	serverGetContent,
 	serverGetVersionInfo,
+	extExtractSymbols,
+	extSwitchAHKVersion,
+	serverResetInterpreterPath,
 } from '../../util/src/env';
 import { getConfigIDE, getConfigRoot } from './config';
 
@@ -287,11 +290,11 @@ export function activate(context: ExtensionContext): Promise<LanguageClient> {
 				ed.size && workspace.applyEdit(ed);
 			}
 		}),
-		commands.registerTextEditorCommand('ahk++.switchAhkVersion', textEditor => {
+		commands.registerTextEditorCommand(extSwitchAHKVersion, textEditor => {
 			const doc = textEditor.document;
 			languages.setTextDocumentLanguage(doc, doc.languageId === 'ahk2' ? 'ahk' : 'ahk2');
 		}),
-		commands.registerTextEditorCommand('ahk2.extract.symbols', textEditor => {
+		commands.registerTextEditorCommand(extExtractSymbols, textEditor => {
 			const doc = textEditor.document;
 			if (doc.languageId !== 'ahk2')
 				return;
@@ -572,7 +575,7 @@ async function setInterpreter() {
 			getConfigRoot().update(CfgKey.InterpreterPath, interpreterPath, from);
 			ahkStatusBarItem.text = sel.label ||= (await getAHKVersion([interpreterPath]))[0];
 			if (server_is_ready)
-				commands.executeCommand('ahk2.resetinterpreterpath', interpreterPath);
+				commands.executeCommand(serverResetInterpreterPath, interpreterPath);
 		}
 	});
 	pick.onDidHide(() => pick.dispose());

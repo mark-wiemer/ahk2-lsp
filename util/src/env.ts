@@ -54,6 +54,9 @@ export const serverGetContent = `${serverCommandPrefix}getContent`;
 
 export const serverGetVersionInfo = `${serverCommandPrefix}getVersionInfo`;
 
+/** Set the path to the AHK v2 interpreter to match the provided value */
+export const serverResetInterpreterPath = `${serverCommandPrefix}setV2Interpreter`;
+
 //* External commands (contributed by package.json)
 //* These should not change unless package.json changes
 
@@ -95,3 +98,9 @@ export const extSelectSyntaxes = `${extCommandPrefix}selectSyntaxes`;
 
 /** Update version info file header comment */
 export const extUpdateVersionInfo = `${extCommandPrefix}updateVersionInfo`;
+
+/** Extract the symbols from the active editor */
+export const extExtractSymbols = `${extCommandPrefix}extract.symbols`;
+
+/** Switch the current editor from AHK v1 to AHK v2 and vice versa */
+export const extSwitchAHKVersion = `${extCommandPrefix}switchAhkVersion`;

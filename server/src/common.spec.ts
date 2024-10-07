@@ -3,13 +3,13 @@ import { updateConfig } from './common';
 import * as assert from 'assert';
 import {
 	BraceStyle,
+	CallWithoutParentheses,
 	CfgKey,
 	getCfg,
 	LibIncludeType,
 	newConfig,
 	setCfg,
 } from '../../util/src/config';
-import { CallWithoutParentheses } from './config';
 
 suite('updateConfig', () => {
 	suite('LibrarySuggestions', () => {

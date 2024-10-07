@@ -23,9 +23,9 @@ import {
 } from './common';
 import { PEFile, RESOURCE_TYPE, searchAndOpenPEFile } from './PEFile';
 import { resolvePath, runscript } from './scriptrunner';
-import { AHKLSConfig, CfgKey, configPrefix, getCfg, ahklsConfig, shouldIncludeUserStdLib, shouldIncludeLocalLib, setCfg } from '../../util/src/config';
+import { AHKLSConfig, CfgKey, configPrefix, getCfg, shouldIncludeUserStdLib, shouldIncludeLocalLib, setCfg } from '../../util/src/config';
 import { klona } from 'klona/json';
-import { clientExecuteCommand, clientUpdateStatusBar, extSetInterpreter, serverExportSymbols, serverGetAHKVersion, serverGetContent, serverGetVersionInfo } from '../../util/src/env';
+import { clientExecuteCommand, clientUpdateStatusBar, extSetInterpreter, serverExportSymbols, serverGetAHKVersion, serverGetContent, serverGetVersionInfo, serverResetInterpreterPath } from '../../util/src/env';
 
 const languageServer = 'ahk2-language-server';
 const documents = new TextDocuments(TextDocument);
@@ -35,8 +35,9 @@ let hasConfigurationCapability = false,
 	hasWorkspaceFolderCapability = false;
 let uri_switch_to_ahk2 = '';
 
-commands['ahk++.v2.setIntepreterPath'] = (args: string[]) =>
-	setInterpreter(args[0].replace(/^[A-Z]:/, (m) => m.toLowerCase()));
+// Cannot be done on browser, so added here
+commands[serverResetInterpreterPath] = (args: string[]) =>
+	setInterpreter((args[0]).replace(/^[A-Z]:/, m => m.toLowerCase()));
 
 connection.onInitialize(async (params) => {
 	const capabilities = params.capabilities;
@@ -159,8 +160,9 @@ connection.onDidChangeConfiguration(async change => {
 		connection.window.showWarningMessage('Failed to obtain the configuration');
 		return;
 	}
-	const oldConfig = klona(ahklsConfig);
-	updateConfig(newConfig);
+	// clone the old config to compare
+	const oldConfig = klona(getCfg<AHKLSConfig>());
+	updateConfig(newConfig); // this updates the object in-place, hence the clone above
 	set_WorkspaceFolders(workspaceFolders);
 	const newInterpreterPath = getCfg(CfgKey.InterpreterPath);
 	if (newInterpreterPath !== getCfg(CfgKey.InterpreterPath, oldConfig)) {
@@ -286,7 +288,8 @@ async function initpathenv(samefolder = false, retry = true): Promise<boolean> {
 				!(await getAHKversion([n]))[0].endsWith('[UIAccess]')
 			) {
 				setInterpreterPath(n);
-				if ((ret = await initpathenv(samefolder))) fail = 0;
+				if ((ret = await initpathenv(samefolder)))
+					fail = 0;
 				setInterpreterPath(path);
 			}
 			if (fail) connection.window.showWarningMessage(setting.uialimit());
@@ -415,9 +418,11 @@ async function changeInterpreter(oldpath: string, newpath: string) {
 
 async function setInterpreter(path: string) {
 	const old = interpreterPath;
-	if (!path || path.toLowerCase() === old.toLowerCase()) return false;
+	if (!path || path.toLowerCase() === old.toLowerCase())
+		return false;
 	setInterpreterPath(path);
-	if (!(await changeInterpreter(old, path))) setInterpreterPath(old);
+	if (!(await changeInterpreter(old, path)))
+		setInterpreterPath(old);
 	return true;
 }
 
