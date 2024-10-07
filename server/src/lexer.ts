@@ -281,11 +281,6 @@ export const newInternalFormatOptions = (partial: Partial<InternalFormatOptions>
 	...partial
 });
 
-/**
- * For now, just uses the same keys.
- * But if `InternalFormatOptions` type ever changes (to have camelCase keys, for example),
- * we can update this function instead of pushing breaking changes to user settings.
- */
 export const mapToInternalFormatOptions = (extOptions: Partial<FormatOptions>): InternalFormatOptions => {
 	const defaultOptions = newInternalFormatOptions();
 	return {
