@@ -347,33 +347,37 @@ async function runScript(textEditor: TextEditor, selection = false) {
 			.then(r => r ? setInterpreter() : undefined);
 		return;
 	}
-	let selecttext = '', path = '*', command = `"${executePath}" /ErrorStdOut=utf-8 `;
+	let selectedText = '', path = '*', command = `"${executePath}" /ErrorStdOut=utf-8 `;
 	let startTime: Date;
 	outputchannel.show(true);
 	if (!ahkprocesses.size)
 		outputchannel.clear();
+
+	// Build the command
 	if (selection)
-		selecttext = textEditor.selections.map(textEditor.document.getText).join('\n');
+		selectedText = textEditor.selections.map(textEditor.document.getText).join('\n');
 	else if (textEditor.document.isUntitled || !textEditor.document.uri.toString().startsWith('file:///'))
-		selecttext = textEditor.document.getText();
+		selectedText = textEditor.document.getText();
 	executePath.replace(/^(.+[\\/])AutoHotkeyUX\.exe$/i, (...m) => {
 		const lc = m[1] + 'launcher.ahk';
 		if (existsSync(lc))
 			command = `"${executePath}" "${lc}" `;
 		return '';
 	})
+
+	// Spawn the process
 	let process: ChildProcess & { path?: string };
-	if (selecttext !== '') {
+	if (selectedText !== '') {
 		if (ahkStatusBarItem.text.endsWith('[UIAccess]')) {
 			path = resolve(__dirname, 'temp.ahk');
-			writeFileSync(path, selecttext);
+			writeFileSync(path, selectedText);
 			command += `"${path}"`, startTime = new Date();
 			process = spawn(command, { cwd: `${resolve(textEditor.document.fileName, '..')}`, shell: true });
 			unlinkSync(path);
 		} else {
 			command += path, startTime = new Date();
 			process = spawn(command, { cwd: `${resolve(textEditor.document.fileName, '..')}`, shell: true });
-			process.stdin?.write(selecttext), process.stdin?.end();
+			process.stdin?.write(selectedText), process.stdin?.end();
 		}
 	} else {
 		if (textEditor.document.isUntitled)
@@ -382,6 +386,7 @@ async function runScript(textEditor: TextEditor, selection = false) {
 		path = textEditor.document.fileName, command += `"${path}"`, startTime = new Date();
 		process = spawn(command, { cwd: resolve(path, '..'), shell: true });
 	}
+
 	if (process.pid) {
 		outputchannel.appendLine(`[Running] [pid:${process.pid}] ${command}`);
 		ahkprocesses.set(process.pid, process);
@@ -619,6 +624,11 @@ async function beginDebug(type: 'f' | 'c' | 'p' | 'a') {
 	debug.startDebugging(editor && workspace.getWorkspaceFolder(editor.document.uri), debugConfig);
 }
 
+/**
+ * Sets the v2 interpreter path via quick pick.
+ * Updates the most local configuration target that has a custom interpreter path.
+ * If no target has a custom path, updates workspace folder config.
+ */
 async function setInterpreter() {
 	// eslint-disable-next-line prefer-const
 	let index = -1, { path: ahkpath, from } = getInterpreterPath();
@@ -776,7 +786,7 @@ async function onDidChangeInterpreter() {
  * Resolves a given path to an absolute path.
  * Returns empty string if the file does not exist or has no access rights.
  */
-function resolvePath(path: string, workspace?: string, resolveSymbolicLink = true): string {
+function resolvePath(path: string | undefined, workspace?: string, resolveSymbolicLink = true): string {
 	if (!path)
 		return '';
 	const paths: string[] = [];
