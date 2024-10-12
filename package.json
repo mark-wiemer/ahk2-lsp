@@ -217,6 +217,16 @@
 					},
 					"markdownDescription": "Learn more about [MPRESS](https://www.autohotkey.com/mpress/mpress_web.htm)"
 				},
+				"AHK++.exclude": {
+					"scope": "window",
+					"type": "array",
+					"default": [],
+					"items": {
+						"type": "string"
+					},
+					"uniqueItems": true,
+					"markdownDescription": "%ahk++.config.exclude%"
+				},
 				"AHK++.general": {
 					"type": "object",
 					"properties": {
@@ -431,16 +441,6 @@
 					"additionalProperties": {
 						"type": "string"
 					}
-				},
-				"AHK++.v2.exclude": {
-					"scope": "window",
-					"type": "array",
-					"default": [],
-					"items": {
-						"type": "string"
-					},
-					"uniqueItems": true,
-					"markdownDescription": "%ahk++.config.v2.file.exclude%"
 				},
 				"AHK++.v2.file": {
 					"type": "object",
