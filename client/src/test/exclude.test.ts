@@ -10,4 +10,9 @@ before(async () => {
 
 test.only('should be running', () => {
 	assert.equal(client?.isRunning(), true);
+	// open a file
+
+	// trigger a suggestion
+
+	// ensure that the right files are excluded
 });
