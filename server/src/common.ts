@@ -339,11 +339,11 @@ export function loadAHK2(filename = 'ahk2', d = 3) {
 	}
 }
 
-
-let scanExclude: { file?: RegExp[], folder?: RegExp[] } = {};
-export function enum_ahkfiles(dirpath: string): AsyncGenerator<string> {
+interface ScanExclude { file?: RegExp[], folder?: RegExp[] };
+let globalScanExclude: ScanExclude = {};
+export function enum_ahkfiles(dirpath: string, localScanExclude: ScanExclude = globalScanExclude): AsyncGenerator<string> {
 	const maxScanDepth = getCfg<number>(CfgKey.MaxScanDepth);
-	const { file: fileExclude, folder: folderExclude } = scanExclude;
+	const { file: fileExclude, folder: folderExclude } = localScanExclude;
 	return enumfile(restorePath(dirpath), 0);
 	async function* enumfile(dirpath: string, depth: number): AsyncGenerator<string> {
 		try {
@@ -386,7 +386,7 @@ export function updateConfig(newConfig: AHKLSConfig): void {
 			(dir = URI.file(dir.includes(':') ? dir : resolve(dir)).toString().toLowerCase())
 				.endsWith('/') ? dir : dir + '/'), newConfig);
 	else setCfg(CfgKey.WorkingDirectories, [], newConfig);
-	scanExclude = {};
+	globalScanExclude = {};
 	if (getCfg(CfgKey.Exclude, newConfig)) {
 		const file: RegExp[] = [], folder: RegExp[] = [];
 		for (const s of getCfg(CfgKey.Exclude, newConfig))
@@ -396,9 +396,9 @@ export function updateConfig(newConfig: AHKLSConfig): void {
 				console.log(`[Error] Invalid glob pattern: ${s}`);
 			}
 		if (file.length)
-			scanExclude.file = file;
+			globalScanExclude.file = file;
 		if (folder.length)
-			scanExclude.folder = folder;
+			globalScanExclude.folder = folder;
 		let maxScanDepth = getCfg<number | undefined>(CfgKey.MaxScanDepth, newConfig);
 		if (maxScanDepth === undefined) {
 			maxScanDepth = 2;
