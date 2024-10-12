@@ -341,7 +341,7 @@ export function loadAHK2(filename = 'ahk2', d = 3) {
 
 
 let scanExclude: { file?: RegExp[], folder?: RegExp[] } = {};
-export function enum_ahkfiles(dirpath: string) {
+export function enum_ahkfiles(dirpath: string): AsyncGenerator<string> {
 	const maxScanDepth = getCfg<number>(CfgKey.MaxScanDepth);
 	const { file: fileExclude, folder: folderExclude } = scanExclude;
 	return enumfile(restorePath(dirpath), 0);
