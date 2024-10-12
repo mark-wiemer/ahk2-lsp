@@ -48,9 +48,10 @@ import { newConfig } from '../../../util/src/config';
 
 let client: LanguageClient;
 before(async () => {
-	client = await vscode.extensions
-		.getExtension('thqby.vscode-autohotkey2-lsp')
-		?.activate();
+	client = (await vscode.extensions
+		.getExtension<LanguageClient>('thqby.vscode-autohotkey2-lsp')
+		?.activate()) as LanguageClient;
+	if (!client) throw new Error('Failed to activate language client');
 	await vscode.commands.executeCommand('workbench.action.closeAllEditors');
 });
 
