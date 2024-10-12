@@ -19,7 +19,7 @@ export default defineConfig({
 	workspaceFolder: 'e2e',
 	mocha: {
 		failZero: true,
-		timeout: 0,
+		timeout: 60_000,
 	},
 	useInstallation: vscode_path && {
 		fromPath: vscode_path,
