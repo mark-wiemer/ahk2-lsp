@@ -58,6 +58,7 @@ import {
 	extExtractSymbols,
 	extSwitchAHKVersion,
 	serverResetInterpreterPath,
+	ahkIsRunningContext,
 } from '../../util/src/env';
 import { getConfigIDE, getConfigRoot } from './config';
 
@@ -229,7 +230,7 @@ export function activate(context: ExtensionContext): Promise<LanguageClient> {
 	}
 	update_extensions_info();
 
-	commands.executeCommand('setContext', 'ahk2:isRunning', false);
+	commands.executeCommand('setContext', ahkIsRunningContext, false);
 	ahkStatusBarItem = window.createStatusBarItem(StatusBarAlignment.Left, 75);
 	ahkStatusBarItem.command = extSetInterpreter;
 	for (const it of [
@@ -391,7 +392,7 @@ async function runScript(textEditor: TextEditor, selection = false) {
 		outputchannel.appendLine(`[Running] [pid:${process.pid}] ${command}`);
 		ahkprocesses.set(process.pid, process);
 		process.path = path;
-		commands.executeCommand('setContext', 'ahk2:isRunning', true);
+		commands.executeCommand('setContext', ahkIsRunningContext, true);
 		process.stderr?.on('data', (data) => {
 			outputchannel.appendLine(decode(data));
 		});
@@ -406,7 +407,7 @@ async function runScript(textEditor: TextEditor, selection = false) {
 			outputchannel.appendLine(`[Done] [pid:${process.pid}] exited with code=${code} in ${((new Date()).getTime() - startTime.getTime()) / 1000} seconds`);
 			ahkprocesses.delete(process.pid!);
 			if (!ahkprocesses.size)
-				commands.executeCommand('setContext', 'ahk2:isRunning', false);
+				commands.executeCommand('setContext', ahkIsRunningContext, false);
 		});
 	} else
 		outputchannel.appendLine(`[Fail] ${command}`);
