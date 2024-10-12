@@ -11,15 +11,15 @@
 ;     x := 2
 ; }
 global x
-if true {
-    x := 1
+if true
+{
+	x := 1
 } else {
-    x := 2
+	x := 2
 }
 
 ;* wrapLineLength 120
-MyFunc(argument1, argument2, argument3, argument4, argument5, argument6, argument7, argument8, argument9, argument10,
-    arg11) {
+MyFunc(argument1, argument2, argument3, argument4, argument5, argument6, argument7, argument8, argument9, argument10, arg11) {
 
 }
 
