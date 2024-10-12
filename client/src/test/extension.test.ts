@@ -45,13 +45,11 @@ import { readdirSync } from 'fs';
 import { suite, before, test } from 'mocha';
 import { serverGetContent } from '../../../util/src/env';
 import { newConfig } from '../../../util/src/config';
+import { getClient } from './utils';
 
 let client: LanguageClient;
 before(async () => {
-	client = (await vscode.extensions
-		.getExtension<LanguageClient>('thqby.vscode-autohotkey2-lsp')
-		?.activate()) as LanguageClient;
-	if (!client) throw new Error('Failed to activate language client');
+	client = (await getClient()) as LanguageClient;
 	await vscode.commands.executeCommand('workbench.action.closeAllEditors');
 });
 
