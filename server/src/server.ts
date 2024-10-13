@@ -203,12 +203,12 @@ documents.onDidOpen(e => {
 	const to_ahk2 = uri_switch_to_ahk2 === e.document.uri;
 	const uri = e.document.uri.toLowerCase();
 	let lexer = lexers[uri];
+	// don't add excluded documents
 	if (globalScanExclude.file?.some(re => re.test(e.document.uri))) {
 		console.log(`Skipping: ${e.document.uri}`);
 		return;
 	}
 	if (lexer) lexer.document = e.document;
-	// don't add excluded documents
 	else {
 		lexers[uri] = lexer = new Lexer(e.document);
 	}
