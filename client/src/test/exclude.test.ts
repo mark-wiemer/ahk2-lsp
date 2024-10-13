@@ -8,7 +8,8 @@ before(async () => {
 	client = (await getClient()) as LanguageClient;
 });
 
-test.only('should be running', () => {
+// todo copy from ahkpp
+test('should be running', () => {
 	assert.equal(client?.isRunning(), true);
 	// open a file
 
