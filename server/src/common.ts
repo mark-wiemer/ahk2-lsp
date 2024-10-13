@@ -340,7 +340,7 @@ export function loadAHK2(filename = 'ahk2', d = 3) {
 }
 
 interface ScanExclude { file?: RegExp[], folder?: RegExp[] };
-let globalScanExclude: ScanExclude = {};
+export let globalScanExclude: ScanExclude = {};
 export function enum_ahkfiles(dirpath: string, localScanExclude: ScanExclude = globalScanExclude): AsyncGenerator<string> {
 	const maxScanDepth = getCfg<number>(CfgKey.MaxScanDepth);
 	const { file: fileExclude, folder: folderExclude } = localScanExclude;
@@ -395,10 +395,14 @@ export function updateConfig(newConfig: AHKLSConfig): void {
 			} catch (e) {
 				console.log(`[Error] Invalid glob pattern: ${s}`);
 			}
-		if (file.length)
+		if (file.length) {
 			globalScanExclude.file = file;
-		if (folder.length)
+		}
+		if (folder.length) {
 			globalScanExclude.folder = folder;
+		}
+		console.log(`Excluded files: ${globalScanExclude.file?.map(re => re.source).join('\n') ?? '(none)'}`);
+		console.log(`Excluded folders: ${globalScanExclude.folder?.map(re => re.source).join('\n') ?? '(none)'}`);
 		let maxScanDepth = getCfg<number | undefined>(CfgKey.MaxScanDepth, newConfig);
 		if (maxScanDepth === undefined) {
 			maxScanDepth = 2;
