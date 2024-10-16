@@ -1,5 +1,3 @@
-import { resolve } from 'path';
-
 /** The regular expressions to check for exclusion */
 export interface ScanExclude {
 	file: RegExp[];
@@ -9,8 +7,8 @@ export interface ScanExclude {
 export const globalScanExclude: ScanExclude = { file: [], folder: [] };
 
 /**
- * Resolves the provided path and
- * returns whether it should be excluded from scanning based on its name.
+ * Returns whether the provided path should be excluded from scanning based on its name.
+ * Assumes the path is already resolved.
  */
 export const shouldExclude = (
 	path: string,
@@ -19,11 +17,10 @@ export const shouldExclude = (
 	/** The patterns to use for exclusion testing. Defaults to global patterns, matching user settings */
 	exclude: ScanExclude = globalScanExclude,
 ): boolean => {
-	const resolvedPath = resolve(path);
-	if (exclude.folder.some((re) => re.test(resolvedPath))) {
+	if (exclude.folder.some((re) => re.test(path))) {
 		return true;
 	}
-	if (options === 'all' && exclude.file.some((re) => re.test(resolvedPath))) {
+	if (options === 'all' && exclude.file.some((re) => re.test(path))) {
 		return true;
 	}
 	return false;
