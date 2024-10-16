@@ -204,7 +204,9 @@ documents.onDidOpen(e => {
 	const uri = e.document.uri.toLowerCase();
 	let lexer = lexers[uri];
 	// don't add excluded documents
-	if (globalScanExclude.file?.some(re => re.test(e.document.uri))) {
+	if (globalScanExclude.folder?.some(re => re.test(e.document.uri))
+		|| globalScanExclude.file?.some(re => re.test(e.document.uri)))
+	{
 		console.log(`Skipping: ${e.document.uri}`);
 		return;
 	}
