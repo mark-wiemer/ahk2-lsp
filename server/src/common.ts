@@ -8,6 +8,7 @@ import { AhkSymbol, Lexer, fixupFormatConfig, updateCommentTagRegex } from './le
 import { diagnostic } from './localize';
 import { jsDocTagNames } from './constants';
 import { AHKLSConfig, CfgKey, getCfg, LibIncludeType, setCfg, setConfigRoot } from '../../util/src/config';
+import { globalScanExclude, ScanExclude, shouldExclude } from '../../util/src/exclude';
 export * from './codeActionProvider';
 export * from './colorProvider';
 export * from './commandProvider';
@@ -95,7 +96,8 @@ export function openFile(path: string, showError = true): TextDocument | undefin
 	}
 }
 
-export function openAndParse(path: string, showError = true, cache = true) {
+export function openAndParse(path: string, showError = true, cache = true): Lexer | undefined {
+	if (shouldExclude(path)) return undefined;
 	const td = openFile(path, showError);
 	if (td) {
 		const lex = new Lexer(td);
@@ -339,8 +341,6 @@ export function loadAHK2(filename = 'ahk2', d = 3) {
 	}
 }
 
-interface ScanExclude { file?: RegExp[], folder?: RegExp[] };
-export let globalScanExclude: ScanExclude = {};
 export function enum_ahkfiles(dirpath: string, localScanExclude: ScanExclude = globalScanExclude): AsyncGenerator<string> {
 	const maxScanDepth = getCfg<number>(CfgKey.MaxScanDepth);
 	const { file: fileExclude, folder: folderExclude } = localScanExclude;
@@ -386,7 +386,6 @@ export function updateConfig(newConfig: AHKLSConfig): void {
 			(dir = URI.file(dir.includes(':') ? dir : resolve(dir)).toString().toLowerCase())
 				.endsWith('/') ? dir : dir + '/'), newConfig);
 	else setCfg(CfgKey.WorkingDirectories, [], newConfig);
-	globalScanExclude = {};
 	if (getCfg(CfgKey.Exclude, newConfig)) {
 		const file: RegExp[] = [], folder: RegExp[] = [];
 		for (const s of getCfg(CfgKey.Exclude, newConfig))
@@ -395,12 +394,8 @@ export function updateConfig(newConfig: AHKLSConfig): void {
 			} catch (e) {
 				console.log(`[Error] Invalid glob pattern: ${s}`);
 			}
-		if (file.length) {
-			globalScanExclude.file = file;
-		}
-		if (folder.length) {
-			globalScanExclude.folder = folder;
-		}
+		globalScanExclude.file = file;
+		globalScanExclude.folder = folder;
 		console.log(`Excluded files: ${globalScanExclude.file?.map(re => re.source).join('\n') ?? '(none)'}`);
 		console.log(`Excluded folders: ${globalScanExclude.folder?.map(re => re.source).join('\n') ?? '(none)'}`);
 		let maxScanDepth = getCfg<number | undefined>(CfgKey.MaxScanDepth, newConfig);
