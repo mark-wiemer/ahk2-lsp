@@ -164,16 +164,17 @@ connection.onDidChangeConfiguration(async change => {
 	// clone the old config to compare
 	const oldConfig = klona(getCfg<AHKLSConfig>());
 	updateConfig(newConfig); // this updates the object in-place, hence the clone above
+	const excludeChanged = getCfg(CfgKey.Exclude) !== getCfg(CfgKey.Exclude, oldConfig);
 	set_WorkspaceFolders(workspaceFolders);
 	const newInterpreterPath = getCfg(CfgKey.InterpreterPath);
 	if (newInterpreterPath !== getCfg(CfgKey.InterpreterPath, oldConfig)) {
 		if (await setInterpreter(resolvePath(newInterpreterPath)))
 			connection.sendRequest(clientUpdateStatusBar, [newInterpreterPath]);
 	}
-	if (getCfg(CfgKey.LibrarySuggestions) !== getCfg(CfgKey.LibrarySuggestions, oldConfig)) {
-		if (shouldIncludeUserStdLib() && !shouldIncludeUserStdLib(oldConfig))
+	if (excludeChanged || getCfg(CfgKey.LibrarySuggestions) !== getCfg(CfgKey.LibrarySuggestions, oldConfig)) {
+		if (shouldIncludeUserStdLib() && (excludeChanged || !shouldIncludeUserStdLib(oldConfig)))
 			parseuserlibs();
-		if (shouldIncludeLocalLib() && !shouldIncludeLocalLib(oldConfig))
+		if (shouldIncludeLocalLib() && (excludeChanged || !shouldIncludeLocalLib(oldConfig)))
 			documents.all().forEach(e => parseproject(e.uri.toLowerCase()));
 	}
 	if (getCfg(CfgKey.Syntaxes) !== getCfg(CfgKey.Syntaxes, oldConfig)) {
