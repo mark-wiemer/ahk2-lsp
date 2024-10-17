@@ -106,7 +106,7 @@
 		},
 		{
 			"body": "#Warn ${1|All,VarUnset,LocalSameAsGlobal,Unreachable|}, ${2|MsgBox,StdOut,OutputDebug,Off|}",
-			"description": "Enable or disable warnings for certain critera. Can catch multiple types of s.",
+			"description": "Enable or disable warnings for certain criteria. Can catch multiple types of s.",
 			"prefix": "#Warn"
 		},
 		{
@@ -315,12 +315,12 @@
 		},
 		{
 			"body": "loop files ${2:FilePattern}, '${1|>File\\,Directory\\,Recurse,F,D,FD,FR,DR,FDR|}'",
-			"description": "Loop through a directory's files and/or sub-folders.\n- FilePattern = A file path to check. Wildcards * can be used to match all.\n- MODES:\n  D = Get directories.\n  F = Get files.\n  R = Recurse into sub-folders.\n\nBuilt-in loop vars:\n- A_LoopFileName = File name and extension, no path.\n- A_LoopFileExt = File extension.\n- A_LoopFilePath = Path using aboslute or relative path.\n- A_LoopFileFullPath = Absolute path.\n- A_LoopFileShortPath = 8.3 path if supported.\n- A_LoopFileShortName = 8.3 file name if supported.\n- A_LoopFileDir = Directory of the current file or sub-directory.\n- A_LoopFileTimeModified = Last modification time of file.\n- A_LoopFileTimeCreated = Creation time of file.\n- A_LoopFileTimeAccessed = Last access time of file.\n- A_LoopFileAttrib = List of file's attributes.\n- A_LoopFileSize = Size of file in bytes.\n- A_LoopFileSizeKB = Size of file in kilobytes.\n- A_LoopFileSizeMB = Size of file in megabytes.",
+			"description": "Loop through a directory's files and/or sub-folders.\n- FilePattern = A file path to check. Wildcards * can be used to match all.\n- MODES:\n  D = Get directories.\n  F = Get files.\n  R = Recurse into sub-folders.\n\nBuilt-in loop vars:\n- A_LoopFileName = File name and extension, no path.\n- A_LoopFileExt = File extension.\n- A_LoopFilePath = Path using absolute or relative path.\n- A_LoopFileFullPath = Absolute path.\n- A_LoopFileShortPath = 8.3 path if supported.\n- A_LoopFileShortName = 8.3 file name if supported.\n- A_LoopFileDir = Directory of the current file or sub-directory.\n- A_LoopFileTimeModified = Last modification time of file.\n- A_LoopFileTimeCreated = Creation time of file.\n- A_LoopFileTimeAccessed = Last access time of file.\n- A_LoopFileAttrib = List of file's attributes.\n- A_LoopFileSize = Size of file in bytes.\n- A_LoopFileSizeKB = Size of file in kilobytes.\n- A_LoopFileSizeMB = Size of file in megabytes.",
 			"prefix": "loop files"
 		},
 		{
 			"body": "loop parse ${1:Text}, ${2:DelimitChar}, ${3:OmitChar}",
-			"description": "Loop through a string by character or substrings.\n- Text = The text to parse through.\n- Delimiter = The character that's separating each desired substring. Omit delimeter to parse through each character.\n- `Omit` = Characters to ignore at the beginning and end of each substring.\n\n- Built-in loop vars:\n- A_Index = Tracks the current iteration Number.\n- A_LoopField = Contains the current substring or character.",
+			"description": "Loop through a string by character or substrings.\n- Text = The text to parse through.\n- Delimiter = The character that's separating each desired substring. Omit delimiter to parse through each character.\n- `Omit` = Characters to ignore at the beginning and end of each substring.\n\n- Built-in loop vars:\n- A_Index = Tracks the current iteration Number.\n- A_LoopField = Contains the current substring or character.",
 			"prefix": "loop parse"
 		},
 		{
@@ -349,7 +349,7 @@
 		},
 		{
 			"body": "default: ",
-			"description": "Used with Swtich statements. This case must be defined after all other cases and contains any code that should run if no other cases make a match.\nThe Default: case is optional and does not need to be included.",
+			"description": "Used with switch statements. This case must be defined after all other cases and contains any code that should run if no other cases make a match.\nThe `default:` case is optional and does not need to be included.",
 			"prefix": "default:"
 		},
 		{
@@ -377,7 +377,7 @@
 		},
 		{
 			"body": "while ($1)",
-			"description": "Defines a loop that continues running as long as the provided evaulate remains true.\n\n- Built-in loop vars:\n- A_Index = Tracks the current iteration Number.",
+			"description": "Defines a loop that continues running as long as the provided evaluate remains true.\n\n- Built-in loop vars:\n- A_Index = Tracks the current iteration Number.",
 			"prefix": "while"
 		}
 	],
