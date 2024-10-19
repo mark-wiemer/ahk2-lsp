@@ -7,7 +7,7 @@ import {
 	parseFormatDirective,
 	updateCommentTagRegex,
 } from './lexer';
-import { BraceStyle } from '../../util/src/config';
+import { BraceStyle } from '../../../util/src/config';
 
 suite('updateCommentTagRegex', () => {
 	test('should update the comment tag regex', () => {
