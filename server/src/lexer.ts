@@ -18,15 +18,15 @@ import {
 
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { URI } from 'vscode-uri';
-import { builtin_ahkv1_commands, builtin_variable, builtin_variable_h } from '../constants';
-import { action, completionitem, diagnostic, warn } from '../localize';
+import { builtin_ahkv1_commands, builtin_variable, builtin_variable_h } from './constants';
+import { action, completionitem, diagnostic, warn } from './localize';
 import {
 	a_vars, ahk_version, ahkuris, ahkvars, alpha_3, connection,
 	hoverCache, isahk2_h, lexers, libdirs, libfuncs, locale, openAndParse, openFile,
 	restorePath, rootdir, setTextDocumentLanguage, symbolProvider, utils, workspaceFolders
-} from '../common';
-import { ActionType, BlockStyle, BraceStyle, CallWithoutParentheses, CfgKey, FormatOptions, getCfg } from '../../../util/src/config';
-import { shouldExclude } from '../../../util/src/exclude';
+} from './common';
+import { ActionType, BlockStyle, BraceStyle, CallWithoutParentheses, CfgKey, FormatOptions, getCfg } from '../../util/src/config';
+import { shouldExclude } from '../../util/src/exclude';
 
 export interface ParamInfo {
 	offset: number
@@ -5509,7 +5509,7 @@ export class Lexer {
 				const style = flags.array_style ?? opt.array_style;
 				if (style === OBJECT_STYLE.collapse || last_text === '[' || flags.indentation_level >= previous_flags.indentation_level)
 					trim_newlines();
-				else if (style || input_wanted_newline && opt.preserve_newlines)
+				else if (style !== 'none' || input_wanted_newline && opt.preserve_newlines)
 					print_newline(true);
 			} else if ((last_type === 'TK_END_EXPR' || last_type === 'TK_END_BLOCK') && flags.indentation_level >= previous_flags.indentation_level)
 				trim_newlines();
@@ -5576,7 +5576,7 @@ export class Lexer {
 				const style = flags.object_style ?? opt.object_style;
 				if (style === OBJECT_STYLE.collapse || last_text === '{')
 					trim_newlines();
-				else if (style || input_wanted_newline && opt.preserve_newlines)
+				else if (style !== 'none' || input_wanted_newline && opt.preserve_newlines)
 					print_newline(true);
 				output_space_before_token = space_in_other && last_text !== '{';
 			} else if (opt.brace_style !== 'Preserve' || input_wanted_newline)
