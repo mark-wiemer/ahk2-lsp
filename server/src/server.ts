@@ -276,6 +276,8 @@ async function patherr(msg: string) {
 }
 
 async function initpathenv(samefolder = false, retry = true): Promise<boolean> {
+	const funcName = 'initpathenv';
+	console.log(`Starting ${funcName}(${samefolder}, ${retry})`);
 	const script = `
 	#NoTrayIcon
 	#Warn All, Off
@@ -289,6 +291,7 @@ async function initpathenv(samefolder = false, retry = true): Promise<boolean> {
 	}`;
 	let fail = 0,
 		data = runscript(script);
+	console.log(`data:`, data);
 	if (data === undefined) {
 		if (retry) return initpathenv(samefolder, false);
 		patherr(setting.ahkpatherr());
@@ -319,7 +322,11 @@ async function initpathenv(samefolder = false, retry = true): Promise<boolean> {
 			connection.window.showErrorMessage(setting.getenverr());
 		return false;
 	}
-	Object.assign(a_vars, Object.fromEntries(data.replace(/|[A-Z]:\\/g, m => m.toLowerCase()).split('\n').map(l => l.split('|'))));
+	const intermediateData = data.replace(/|[A-Z]:\\/g, m => m.toLowerCase()).split('\n').map(l => l.split('|'));
+	console.log('intermediateData', intermediateData);
+	const finalData = Object.fromEntries(intermediateData);
+	console.log('finalData', finalData);
+	Object.assign(a_vars, finalData);
 	a_vars.ahkpath ??= interpreterPath;
 	set_version(a_vars.ahkversion ??= '2.0.0');
 	if (a_vars.ahkversion.startsWith('1.'))
