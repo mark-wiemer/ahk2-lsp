@@ -319,7 +319,7 @@ async function initpathenv(samefolder = false, retry = true): Promise<boolean> {
 		} else fail = 1;
 		if (fail !== 2 && retry) return initpathenv(samefolder, false);
 		if (!a_vars.mydocuments)
-			connection.window.showErrorMessage(setting.getenverr());
+			connection.window.showWarningMessage(setting.getenverr());
 		return false;
 	}
 	const intermediateData = data.replace(/|[A-Z]:\\/g, m => m.toLowerCase()).split('\n').map(l => l.split('|'));
