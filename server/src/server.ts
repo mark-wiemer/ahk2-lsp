@@ -319,6 +319,7 @@ async function initpathenv(samefolder = false, retry = true): Promise<boolean> {
 		} else fail = 1;
 		if (fail !== 2 && retry) return initpathenv(samefolder, false);
 		if (!a_vars.mydocuments)
+			console.log('a_vars',  a_vars);
 			connection.window.showWarningMessage(setting.getenverr());
 		return false;
 	}
