@@ -13,6 +13,8 @@
 AutoHotkey v2 语言支持 for VS Code, 功能实现基于 v2 语法分析。
 支持在`Chrome/Edge`等浏览器中使用 https://vscode.dev 或 https://github.dev/github/dev
 
+如果你想捐款，捐款可以寄到这里: [支付宝转账](https://qr.alipay.com/fkx19566u7ctegoppmu5i13) 或 [支付宝二维码](./pic/alipay.jpg) 或 [paypal](https://paypal.me/thqby)
+
 - [AutoHotkey v2 语言支持](#autohotkey-v2-语言支持)
   - [语言特性](#语言特性)
     - [重命名符号](#重命名符号)
@@ -159,7 +161,7 @@ code
 
 ### 声明文件
 
-声明文件是以 .d.ahk 为文件名后缀的文件, 用来描述已实现的函数或类等, 不包含代码的实现部分, 默认被同名的ahk文件引用, 语法参考扩展提供的 `ahk2.d.ahk`. 声明文件可以扩展或改写ahk内置函数或类的声明, 也可以将注释文档从源码中分离来提供多语言版本的智能感知等.
+声明文件是以 .d.ahk 为文件名后缀的文件, 用来描述已实现的函数或类等, 不包含代码的实现部分, 默认被同名的ahk文件引用, 语法参考扩展提供的 `ahk2.d.ahk`. 声明文件可以扩展或改写ahk内置函数或类的声明, 也可以将注释文档从源码中分离来提供多语言版本的智能感知等. 另外, 可以修改扩展的`AutoHotkey2.Syntaxes`设置项将内置声明文件替换为第三方的声明文件, 如[GroggyOtter's ahkv2_definition_rewrite](https://github.com/GroggyOtter/ahkv2_definition_rewrite).
 
 ```
 ; array.d.ahk

@@ -1,7 +1,7 @@
 {
 	"name": "vscode-autohotkey2-lsp",
 	"displayName": "AutoHotkey v2 Language Support",
-	"version": "2.5.3",
+	"version": "2.5.4",
 	"description": "AutoHotkey v2 Language Support, based on vscode-lsp.",
 	"categories": [
 		"Formatters",
@@ -801,7 +801,7 @@
 					".ah2",
 					".ahk2"
 				],
-				"configuration": "./ahk2.configuration.json",
+				"configuration": "./language-configuration.json",
 				"icon": {
 					"dark": "icon_filetype.png",
 					"light": "icon_filetype.png"
