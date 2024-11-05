@@ -66,13 +66,13 @@ const textdecoders = [new TextDecoder('utf8', { fatal: true }), new TextDecoder(
 const isWindows = process.platform === 'win32';
 let extlist: string[] = [], debugexts: Record<string, string> = {}, langs: string[] = [];
 const loadedCollection = {
-	'ahk2.browse': 'Browse your file system to find AutoHotkey2 interpreter',
+	'ahk2.browse': 'Browse your file system to find AHK v2 interpreter',
 	'ahk2.compiledfailed': 'Compiled failed!',
 	'ahk2.compiledsuccessfully': 'Compiled successfully!',
 	'ahk2.current': 'Current: {0}',
 	'ahk2.debugextnotexist': 'The debug extension was not found, please install the debug extension first!',
 	'ahk2.diagnose.all': 'Diagnostic All',
-	'ahk2.enterahkpath': 'Enter path to AutoHotkey2 interpreter',
+	'ahk2.enterahkpath': 'Enter path to AHK v2 interpreter',
 	'ahk2.entercmd': 'Enter the command line parameters that need to be passed',
 	'ahk2.enterorfind': 'Enter path or find an existing interpreter',
 	'ahk2.enterversion': 'Enter version',
@@ -80,7 +80,7 @@ const loadedCollection = {
 	'ahk2.find': 'Find...',
 	'ahk2.savebeforecompilation': 'Please save the script before compilation',
 	'ahk2.select': 'Select',
-	'ahk2.set.interpreter': 'Select AutoHotkey2 Interpreter',
+	'ahk2.set.interpreter': 'Select AHK v2 Interpreter',
 	'ahk2.unknownversion': 'Unknown version',
 };
 
