@@ -255,6 +255,7 @@ export const getCfg = <T = string>(
  * Sets the value of the key in the provided config.
  * If no config provided, updates the global config.
  * Does not update IDE settings.
+ * To update IDE settings, see /extension/config.ts
  */
 export const setCfg = <T>(
 	key: CfgKey,

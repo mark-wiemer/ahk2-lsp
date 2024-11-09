@@ -57,7 +57,7 @@ import {
 	serverResetInterpreterPath,
 	ahkIsRunningContext,
 } from '../../util/src/env';
-import { getConfigIDE, getConfigRoot } from './config';
+import { getConfigIDE, getConfigRoot, updateConfig } from './config';
 
 let client: LanguageClient, outputchannel: OutputChannel, ahkStatusBarItem: StatusBarItem;
 const ahkprocesses = new Map<number, ChildProcess & { path?: string }>();
@@ -572,7 +572,7 @@ async function setInterpreter() {
 		pick.dispose();
 		if (sel.detail) {
 			ahkStatusBarItem.tooltip = interpreterPath = sel.detail;
-			getConfigRoot().update(CfgKey.InterpreterPath, interpreterPath, from);
+			updateConfig(CfgKey.InterpreterPath, interpreterPath, true, from, outputchannel);
 			ahkStatusBarItem.text = sel.label ||= (await getAHKVersion([interpreterPath]))[0];
 			if (server_is_ready)
 				commands.executeCommand(serverResetInterpreterPath, interpreterPath);
@@ -617,7 +617,7 @@ async function selectSyntaxes() {
 	}
 	if (path === undefined || v.toLowerCase() === path.toLowerCase())
 		return;
-	getConfigRoot().update(CfgKey.Syntaxes, path || undefined, f);
+	updateConfig(CfgKey.Syntaxes, path || undefined, false, f, outputchannel);
 }
 
 function getAHKVersion(paths: string[]): Thenable<string[]> {
