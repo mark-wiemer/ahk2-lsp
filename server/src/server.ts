@@ -123,8 +123,10 @@ connection.onInitialize(async (params) => {
 	if (initialConfig)
 		updateConfig(initialConfig);
 	if (!getCfg(CfgKey.InterpreterPath)) setCfg(CfgKey.InterpreterPath, '');
-	if (!(await setInterpreter(resolvePath(getCfg(CfgKey.InterpreterPath)))))
-		patherr(setting.ahkpatherr());
+	// resolve the interpreter but fail silently, the user doesn't *need* to know at this point
+	if (!await setInterpreter(resolvePath(getCfg(CfgKey.InterpreterPath)))) {
+		console.log(setting.ahkpatherr());
+	}
 	set_WorkspaceFolders(workspaceFolders);
 	loadAHK2();
 	return result;
@@ -294,7 +296,7 @@ async function initpathenv(samefolder = false, retry = true): Promise<boolean> {
 	console.log(`data:`, data);
 	if (data === undefined) {
 		if (retry) return initpathenv(samefolder, false);
-		patherr(setting.ahkpatherr());
+		console.log(setting.ahkpatherr());
 		return false;
 	}
 	if (!(data = data.trim())) {
