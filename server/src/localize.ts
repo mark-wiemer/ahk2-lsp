@@ -31,6 +31,7 @@ export const diagnostic = {
 	didyoumean: localize('diagnostic.didyoumean', 'Did you mean to use \'{0}\'?'),
 	dupdeclaration: localize('diagnostic.dupdeclaration', 'Duplicate declaration'),
 	duplabel: localize('diagnostic.duplabel', 'Duplicate label'),
+	// Exact text is referenced in docs, update docs when updating `filenotexist` 
 	filenotexist: localize('diagnostic.filenotexist', '\'{0}\' does not exist'),
 	funccallerr: localize('diagnostic.funccallerr', 'Function calls require a space or \'(\', use comma only between parameters'),
 	funccallerr2: localize('diagnostic.funccallerr2', 'In the expression, the function call requires parentheses'),
