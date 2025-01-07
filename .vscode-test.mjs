@@ -15,7 +15,7 @@ else {
 }
 
 export default defineConfig({
-	files: 'client/dist/test/**/*.test.js',
+	files: 'client/dist/test/**/*.e2e.js',
 	workspaceFolder: 'e2e',
 	mocha: {
 		failZero: true,
