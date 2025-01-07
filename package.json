@@ -919,7 +919,7 @@
 		"useTabs": true
 	},
 	"mocha": {
-		"spec": "out/**/*.spec.js"
+		"spec": "out/**/*.test.js"
 	},
 	"dependencies": {
 		"klona": "^2.0.6",
