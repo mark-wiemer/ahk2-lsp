@@ -19641,17 +19641,20 @@ IniRead(FileLocation [,Section, Key, Default]) => String
  * Writes a value or section to a standard format .ini file.  
  * Values longer than 65,535 characters can be written to the file, but cannot be read correctly by {@link https://www.autohotkey.com/docs/v2/lib/IniRead.htm|IniRead()}.  
  * INI files are created as UTF-16 with BOM. To have the INI file encoded otherwise, create it before writing to it.  
- * @param {(String)} Value  
+ * @param {(String)} ValueOrPairs  
  * Either a single value to write to a key or an entire section of key=value pair(s).  
- * If writing a section of key=value pairs, `key = value` format should be used for each line and there can be no blank lines.  
+ * If writing a section of key=value pairs:
+ * - `key = value` format should be used for each line 
+ * - there can be no blank lines
+ * - the `Key` argument must be omitted
  * @param {(String)} FileLocation  
  * The file name or path to an .INI file.  
  * If a full path isn't used, FileLocation is assumed to start in {@link https://www.autohotkey.com/docs/v2/Variables.htm#WorkingDir|A_WorkingDir}.  
  * @param {(String)} Section  
  * The name of a section in the .INI file to write to.  
  * @param {(String)} Key  
- * The name of the key to assign `Value` to.  
- * Key **must** be omitted when `Value` is a section of key=value pairs.  
+ * The name of the key to assign `ValueOrPairs` to.  
+ * Key **must** be omitted when `ValueOrPairs` is a section of key=value pairs.  
  * @returns {(String)}  
  * An empty string is always returned.  
  * @throws OSError - Thrown on failure.  
@@ -19676,7 +19679,7 @@ IniRead(FileLocation [,Section, Key, Default]) => String
  * Some_Key_Name = Data goes right of equal sign
  * number_1000 = 1000
  */
-IniWrite(Value, FileLocation, Section, Key) => String
+IniWrite(ValueOrPairs, FileLocation, Section [, Key]) => String
 
 /**
  * @description {@link https://www.autohotkey.com/docs/v2/lib/InputBox.htm|`InputBox()`}  
