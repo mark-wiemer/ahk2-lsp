@@ -272,7 +272,7 @@
 				},
 				"AHK++.v1.file": {
 					"type": "object",
-					"markdownDescription": "[Learn more about the template snippet](https://github.com/mark-wiemer/ahkpp/tree/main/docs/TemplateSnippet.md)",
+					"markdownDescription": "[Learn more about the template snippet](https://github.com/mark-wiemer/ahkpp/tree/main/docs/template-snippet.md)",
 					"properties": {
 						"compileBaseFile": {
 							"type": "string",
