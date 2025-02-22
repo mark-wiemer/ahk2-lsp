@@ -263,6 +263,12 @@ class Object extends Any {
      *     MsgBox(my_obj%A_Index%.prop)
      */
     static Call() => Object
+
+    /**
+     * @description {@link https://www.autohotkey.com/docs/v2/Objects.htm#Custom_NewDelete|`__New()`}
+     * A method that is automatically called whenever an object is created.
+     */
+    __New() => Object
     
     /**
      * @description {@link https://www.autohotkey.com/docs/v2/lib/Object.htm#Clone|`Clone()`}  
