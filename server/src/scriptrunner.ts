@@ -7,12 +7,13 @@ import { resolve } from 'path';
  * Simple runner for LSP server initializiaton via AHK.
  * Not used for running user-defined scripts.
  */
-export function runscript(script: string): string | undefined {
-	const funcName = 'runscript';
+export function runScript(script: string): string | undefined {
+	const funcName = 'runScriptV2';
 	const executePath = resolvePath(interpreterPath, true);
 	console.log(`${funcName} executePath`, executePath);
 	if (!executePath)
 		return;
+	// CP65001 is UTF-8, ref https://www.autohotkey.com/docs/v1/lib/FileEncoding.htm
 	const process = spawnSync(`"${executePath}" /CP65001 /ErrorStdOut=utf-8 *`, [], { cwd: executePath.replace(/[\\/].+?$/, ''), shell: true, input: script });
 	const result = (process?.stdout ?? '').toString();
 	console.log(`${funcName} result`, result)

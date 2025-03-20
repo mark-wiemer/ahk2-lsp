@@ -22,7 +22,7 @@ import {
 	traverse_include, typeFormatting, updateConfig, utils, winapis, workspaceSymbolProvider,
 } from './common';
 import { PEFile, RESOURCE_TYPE, searchAndOpenPEFile } from './PEFile';
-import { resolvePath, runscript } from './scriptrunner';
+import { resolvePath, runScript } from './scriptrunner';
 import { AHKLSConfig, CfgKey, configPrefix, getCfg, shouldIncludeUserStdLib, shouldIncludeLocalLib, setCfg } from '../../util/src/config';
 import { klona } from 'klona/json';
 import { clientExecuteCommand, clientUpdateStatusBar, extSetInterpreter, serverExportSymbols, serverGetAHKVersion, serverGetContent, serverGetVersionInfo, serverResetInterpreterPath } from '../../util/src/env';
@@ -292,7 +292,7 @@ async function initpathenv(samefolder = false, retry = true): Promise<boolean> {
 		FileAppend %text%, %file%, %encode%
 	}`;
 	let fail = 0,
-		data = runscript(script);
+		data = runScript(script);
 	console.log(`data:`, data);
 	if (data === undefined) {
 		if (retry) return initpathenv(samefolder, false);
