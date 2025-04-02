@@ -21,14 +21,12 @@ const logLevelRecord: Record<string, LogLevel | undefined> = {
     none: LogLevel.None,
 };
 
-// Cache value once, only update on restart for perf
-const configLogLevelStr = getCfg<string>(CfgKey.LogLevel);
-
 /**
  * Logs message if provided log level is valid for configured log level.
  * Logs warning if configured log level is invalid.
- */
+*/
 const log = (value: Error | string, thisLogLevel: LogLevel, logFunc: (val: string) => void) => {
+    const configLogLevelStr = getCfg<string>(CfgKey.LogLevel);
     const configLogLevelValue = logLevelRecord[configLogLevelStr]
     if (configLogLevelValue === undefined) {
         logFunc(`Invalid setting AHK++.${CfgKey.LogLevel} "${configLogLevelStr}"`);
