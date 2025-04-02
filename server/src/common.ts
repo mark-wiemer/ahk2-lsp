@@ -9,6 +9,7 @@ import { diagnostic } from './localize';
 import { jsDocTagNames } from './constants';
 import { AHKLSConfig, CfgKey, getCfg, LibIncludeType, setCfg, setConfigRoot } from '../../util/src/config';
 import { globalScanExclude, ScanExclude, shouldExclude } from '../../util/src/exclude';
+import { debug, warn } from '../../util/src/log';
 export * from './codeActionProvider';
 export * from './colorProvider';
 export * from './commandProvider';
@@ -79,7 +80,7 @@ export function read_ahk_file(path: string, showError = true) {
 		if (showError) {
 			delete e.stack;
 			e.path = path;
-			console.log(e);
+			warn(e);
 		}
 	}
 }
@@ -381,10 +382,9 @@ export function updateConfig(newConfig: AHKLSConfig): void {
 	try {
 		updateCommentTagRegex(getCfg(CfgKey.CommentTagRegex, newConfig));
 	} catch (e) {
-		delete (e as { stack?: string }).stack;
 		// reset value of `newConfig` to avoid corrupting `ahklsConfig`
 		setCfg(CfgKey.CommentTagRegex, getCfg(CfgKey.CommentTagRegex), newConfig);
-		console.log(e);
+		warn(e as string);
 	}
 	const newConfigWorkingDirs = getCfg<string[]>(CfgKey.WorkingDirectories, newConfig);
 	if (newConfigWorkingDirs instanceof Array)
@@ -398,12 +398,12 @@ export function updateConfig(newConfig: AHKLSConfig): void {
 			try {
 				(/[\\/]$/.test(s) ? folder : file).push(glob2regexp(s));
 			} catch (e) {
-				console.log(`[Error] Invalid glob pattern: ${s}`);
+				warn(`[Error] Invalid glob pattern: ${s}`);
 			}
 		globalScanExclude.file = file;
 		globalScanExclude.folder = folder;
-		console.log(`Excluded files:\n\t${globalScanExclude.file.map(re => re.source).join('\n\t') || '(none)'}`);
-		console.log(`Excluded folders:\n\t${globalScanExclude.folder.map(re => re.source).join('\n\t') || '(none)'}`);
+		debug(`Excluded files:\n\t${globalScanExclude.file.map(re => re.source).join('\n\t') || '(none)'}`);
+		debug(`Excluded folders:\n\t${globalScanExclude.folder.map(re => re.source).join('\n\t') || '(none)'}`);
 		let maxScanDepth = getCfg<number | undefined>(CfgKey.MaxScanDepth, newConfig);
 		if (maxScanDepth === undefined) {
 			maxScanDepth = 2;

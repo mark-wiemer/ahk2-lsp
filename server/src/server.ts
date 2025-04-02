@@ -27,6 +27,7 @@ import { AHKLSConfig, CfgKey, configPrefix, getCfg, shouldIncludeUserStdLib, sho
 import { klona } from 'klona/json';
 import { clientExecuteCommand, clientUpdateStatusBar, extSetInterpreter, serverExportSymbols, serverGetAHKVersion, serverGetContent, serverGetVersionInfo, serverResetInterpreterPath } from '../../util/src/env';
 import { shouldExclude } from '../../util/src/exclude';
+import { debug, info } from '../../util/src/log';
 
 const languageServer = 'ahk2-language-server';
 const documents = new TextDocuments(TextDocument);
@@ -125,7 +126,7 @@ connection.onInitialize(async (params) => {
 	if (!getCfg(CfgKey.InterpreterPath)) setCfg(CfgKey.InterpreterPath, '');
 	// resolve the interpreter but fail silently, the user doesn't *need* to know at this point
 	if (!await setInterpreter(resolvePath(getCfg(CfgKey.InterpreterPath)))) {
-		console.log(setting.ahkpatherr());
+		info(setting.ahkpatherr());
 	}
 	set_WorkspaceFolders(workspaceFolders);
 	loadAHK2();
@@ -157,14 +158,14 @@ connection.onInitialized(() => {
 
 connection.onDidChangeConfiguration(async change => {
 	let newConfig: AHKLSConfig | undefined = change?.settings;
-	console.log('Configuration changed');
+	info('Configuration changed');
 	if (hasConfigurationCapability && !newConfig)
 		newConfig = await connection.workspace.getConfiguration(configPrefix);
 	if (!newConfig) {
 		connection.window.showWarningMessage('Failed to obtain the configuration');
 		return;
 	}
-	console.log('New configuration:', newConfig);
+	debug(`New configuration: ${newConfig}`);
 	// clone the old config to compare
 	const oldConfig = klona(getCfg<AHKLSConfig>());
 	updateConfig(newConfig); // this updates the object in-place, hence the clone above
@@ -180,7 +181,7 @@ connection.onDidChangeConfiguration(async change => {
 			parseuserlibs();
 		if (shouldIncludeLocalLib() && (excludeChanged || !shouldIncludeLocalLib(oldConfig)))
 		{
-			console.log('Parsing local libraries');
+			debug('Parsing local libraries');
 			documents.all().forEach(e => parseproject(e.uri.toLowerCase()));
 		}
 	}
@@ -210,12 +211,12 @@ documents.onDidOpen(e => {
 	const to_ahk2 = uri_switch_to_ahk2 === e.document.uri;
 	const uri = e.document.uri.toLowerCase();
 	let lexer = lexers[uri];
-	console.log(`Document opened: ${uri}`);
+	debug(`Document opened: ${uri}`);
 
 	// don't add excluded documents
 	if (shouldExclude(uri))
 	{
-		console.log(`Skipping: ${uri}`);
+		debug(`Skipping: ${uri}`);
 		return;
 	}
 
@@ -279,7 +280,7 @@ async function patherr(msg: string) {
 
 async function initpathenv(samefolder = false, retry = true): Promise<boolean> {
 	const funcName = 'initpathenv';
-	console.log(`Starting ${funcName}(${samefolder}, ${retry})`);
+	debug(`Starting ${funcName}(${samefolder}, ${retry})`);
 	const script = `
 	#NoTrayIcon
 	#Warn All, Off
@@ -293,10 +294,10 @@ async function initpathenv(samefolder = false, retry = true): Promise<boolean> {
 	}`;
 	let fail = 0,
 		data = runscript(script);
-	console.log(`data:`, data);
+	debug(`data: ${data}`);
 	if (data === undefined) {
 		if (retry) return initpathenv(samefolder, false);
-		console.log(setting.ahkpatherr());
+		info(setting.ahkpatherr());
 		return false;
 	}
 	if (!(data = data.trim())) {
@@ -321,14 +322,14 @@ async function initpathenv(samefolder = false, retry = true): Promise<boolean> {
 		} else fail = 1;
 		if (fail !== 2 && retry) return initpathenv(samefolder, false);
 		if (!a_vars.mydocuments)
-			console.log('a_vars',  a_vars);
+			debug(`a_vars ${a_vars}`);
 			connection.window.showWarningMessage(setting.getenverr());
 		return false;
 	}
 	const intermediateData = data.replace(/|[A-Z]:\\/g, m => m.toLowerCase()).split('\n').map(l => l.split('|'));
-	console.log('intermediateData', intermediateData);
+	debug(`intermediateData: ${intermediateData}`);
 	const finalData = Object.fromEntries(intermediateData);
-	console.log('finalData', finalData);
+	debug(`finalData: ${finalData}`);
 	Object.assign(a_vars, finalData);
 	a_vars.ahkpath ??= interpreterPath;
 	set_version(a_vars.ahkversion ??= '2.0.0');
@@ -403,8 +404,8 @@ async function parseuserlibs() {
 		uri: string,
 		d: Lexer,
 		t: TextDocument | undefined;
-	console.log('Parsing user libraries');
-	console.log('Libraries:\n\t', libdirs.join('\n\t'));
+	debug('Parsing user libraries');
+	debug(`Libraries:\n\t${libdirs.join('\n\t')}`);
 	for (dir of libdirs)
 		for await (path of enum_ahkfiles(dir)) {
 			if (!libfuncs[(uri = URI.file(path).toString().toLowerCase())]) {
@@ -457,7 +458,7 @@ async function setInterpreter(path: string) {
 }
 
 async function parseproject(uri: string) {
-	console.log(`Parsing project: ${uri}`);
+	debug(`Parsing project: ${uri}`);
 	let lex = lexers[uri];
 	if (!lex || !uri.startsWith('file:')) return;
 	if (!lex.d) {

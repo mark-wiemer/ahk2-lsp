@@ -41,6 +41,7 @@ export enum CfgKey {
 	SymbolWithSameCase = 'v2.formatter.symbolWithSameCase',
 	Syntaxes = 'v2.general.syntaxes',
 	VarUnset = 'v2.warn.varUnset',
+	LogLevel = 'general.logLevel', // unique to AHK++
 	WhiteSpaceBeforeInlineComment = 'v2.formatter.whitespaceBeforeInlineComment',
 	WorkingDirectories = 'v2.workingDirectories',
 	WrapLineLength = 'v2.formatter.wrapLineLength',
@@ -106,6 +107,16 @@ export interface CompletionCommitCharacters {
 export interface AHKLSConfig {
 	/** Glob pattern of files to ignore */
 	exclude: string[];
+	general: {
+		logLevel:
+			| 'trace'
+			| 'debug'
+			| 'info'
+			| 'warn'
+			| 'error'
+			| 'critical'
+			| 'none';
+	};
 	v2: {
 		general: {
 			actionWhenV1Detected: ActionType;
@@ -180,6 +191,9 @@ export const newFormatOptions = (
 /** Defaults according to package.json */
 export const newConfig = (config: Partial<AHKLSConfig> = {}): AHKLSConfig => ({
 	exclude: [],
+	general: {
+		logLevel: 'info',
+	},
 	v2: {
 		general: {
 			actionWhenV1Detected: 'SwitchToV1',

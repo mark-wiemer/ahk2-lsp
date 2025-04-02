@@ -2,6 +2,7 @@
 
 import * as vscode from 'vscode';
 import { CfgKey, configPrefix } from '../../util/src/config';
+import { debug } from '../../util/src/log';
 
 /** Get the root config object currently persisted in the IDE */
 export function getConfigRoot() {
@@ -23,10 +24,8 @@ export function updateConfig<T>(
 	value: T,
 	isProperty: boolean,
 	configTarget: vscode.ConfigurationTarget | undefined = undefined,
-	outputChannel: vscode.OutputChannel | undefined = undefined,
 ) {
-	const log = outputChannel?.appendLine;
-	log?.(
+	debug(
 		`updateConfig(${configKey}, ${JSON.stringify(value)}, ${isProperty}, ${configTarget}`,
 	);
 	/**
@@ -38,9 +37,9 @@ export function updateConfig<T>(
 		: configKey;
 	const lastKeyPart = configKey.substring(configKey.lastIndexOf('.') + 1);
 	const configRoot = getConfigRoot();
-	log?.(`Fetching ${configPrefix}.${configObjectKey}`);
+	debug(`Fetching ${configPrefix}.${configObjectKey}`);
 	const currentObjectValue = configRoot.get(configObjectKey, {});
-	log?.(`currentObjectValue: ${JSON.stringify(currentObjectValue)}`);
+	debug(`currentObjectValue: ${JSON.stringify(currentObjectValue)}`);
 	const newObjectValue = isProperty
 		? {
 				...currentObjectValue,
@@ -50,6 +49,6 @@ export function updateConfig<T>(
 				...currentObjectValue,
 				...value,
 			};
-	log?.(`newObjectValue: ${JSON.stringify(newObjectValue)}`);
+	debug(`newObjectValue: ${JSON.stringify(newObjectValue)}`);
 	configRoot.update(configObjectKey, newObjectValue, configTarget);
 }
