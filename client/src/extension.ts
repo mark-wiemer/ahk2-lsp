@@ -58,8 +58,9 @@ import {
 	ahkIsRunningContext,
 } from '../../util/src/env';
 import { getConfigIDE, getConfigRoot, updateConfig } from './config';
+import { debug as logDebug, info, warn, error } from '../../util/src/log';
 
-let client: LanguageClient, outputChannel: OutputChannel, ahkStatusBarItem: StatusBarItem;
+let client: LanguageClient, ahkStatusBarItem: StatusBarItem;
 const ahkprocesses = new Map<number, ChildProcess & { path?: string }>();
 let interpreterPath: string = getConfigIDE<string>(CfgKey.InterpreterPath, ''), server_is_ready = false;
 const textdecoders = [new TextDecoder('utf8', { fatal: true }), new TextDecoder('utf-16le', { fatal: true })];
@@ -84,15 +85,24 @@ const loadedCollection = {
 	'ahk2.unknownversion': 'Unknown version',
 };
 
+
+let outputChannel: OutputChannel;
+const getOutputChannel = () => {
+    if (!outputChannel) {
+        outputChannel = window.createOutputChannel(outputChannelName, '~ahk2-output');
+    }
+    return outputChannel;
+}
+const logFunc = getOutputChannel().appendLine;
+
 export function activate(context: ExtensionContext): Promise<LanguageClient> {
-	outputChannel = window.createOutputChannel(outputChannelName, '~ahk2-output');
-	outputChannel.appendLine('ahk2.extension#activate');
+	logDebug('ahk2.extension#activate', logFunc);
 
 	/** Absolute path to `server.js` */
 	const extId = context.extension.id;
 	const serverModule = context.asAbsolutePath(`${extId.startsWith('mark-wiemer') ? 'ahk2/' : ''}server/${process.env.DEBUG ? 'out' : 'dist'}/server.js`);
-	outputChannel.appendLine(`Running in ${process.env.DEBUG ? 'debug' : 'prod'} mode`);
-	outputChannel.appendLine(`Server module: ${serverModule}`);
+	logDebug(`Running in ${process.env.DEBUG ? 'debug' : 'prod'} mode`, logFunc);
+	logDebug(`Server module: ${serverModule}`, logFunc);
 
 	// If the extension is launched in debug mode then the debug server options are used
 	// Otherwise the run options are used
@@ -143,7 +153,7 @@ export function activate(context: ExtensionContext): Promise<LanguageClient> {
 	const clientOptions: LanguageClientOptions = {
 		documentSelector: [{ language: 'ahk2' }],
 		markdown: { isTrusted: true, supportHtml: true },
-		outputChannel: outputChannel,
+		outputChannel: getOutputChannel(),
 		outputChannelName: outputChannelName,
 		synchronize: { fileEvents: fsw },
 		initializationOptions: {
@@ -241,7 +251,7 @@ export function activate(context: ExtensionContext): Promise<LanguageClient> {
 	])
 		context.subscriptions.push(Object.assign(languages.createLanguageStatusItem(it.command.command, { language: 'ahk2' }), it));
 	context.subscriptions.push(
-		ahkStatusBarItem, outputChannel, fsw,
+		ahkStatusBarItem, getOutputChannel(), fsw,
 		extensions.onDidChange(update_extensions_info),
 		commands.registerTextEditorCommand(extRun, textEditor => runScript(textEditor)),
 		commands.registerTextEditorCommand(extRunSelection, textEditor => runScript(textEditor, true)),
@@ -367,9 +377,7 @@ async function runScript(textEditor: TextEditor, runSelection = false) {
 	let startTime: Date;
 	const showOutput = getConfigIDE<ShowOutput>(CfgKey.ShowOutput, 'always');
 	if (showOutput === 'always')
-		outputChannel.show(true);
-	if (!ahkprocesses.size)
-		outputChannel.clear();
+		getOutputChannel().show(true);
 
 	// Build the command
 	if (runSelection)
@@ -408,28 +416,28 @@ async function runScript(textEditor: TextEditor, runSelection = false) {
 		cp = spawn(command, { cwd: resolve(path, '..'), ...opt });
 	}
 	if (cp.pid) {
-		outputChannel.appendLine(`[Running] [pid:${cp.pid}] ${command}`);
+		info(`[Running] [pid:${cp.pid}] ${command}`, logFunc);
 		ahkprocesses.set(cp.pid, cp);
 		cp.path = path;
 		commands.executeCommand('setContext', ahkIsRunningContext, true);
 		cp.stderr?.on('data', (data) => {
-			outputChannel.appendLine(decode(data));
+			info(decode(data), logFunc);
 		});
 		cp.on('error', (error) => {
-			outputChannel.appendLine(JSON.stringify(error));
+			warn(JSON.stringify(error), logFunc);
 			ahkprocesses.delete(cp.pid!);
 		});
 		cp.stdout?.on('data', (data) => {
-			outputChannel.appendLine(decode(data));
+			info(decode(data), logFunc);
 		});
 		cp.on('exit', (code) => {
-			outputChannel.appendLine(`[Done] [pid:${cp.pid}] exited with code=${code} in ${((new Date()).getTime() - startTime.getTime()) / 1000} seconds`);
+			info(`[Done] [pid:${cp.pid}] exited with code=${code} in ${((new Date()).getTime() - startTime.getTime()) / 1000} seconds`, logFunc);
 			ahkprocesses.delete(cp.pid!);
 			if (!ahkprocesses.size)
 				commands.executeCommand('setContext', ahkIsRunningContext, false);
 		});
 	} else
-		outputChannel.appendLine(`[Fail] ${command}`);
+		error(`[Fail] ${command}`, logFunc);
 }
 
 async function stopRunningScript() {
@@ -577,7 +585,7 @@ async function setInterpreter() {
 		pick.dispose();
 		if (sel.detail) {
 			ahkStatusBarItem.tooltip = interpreterPath = sel.detail;
-			updateConfig(CfgKey.InterpreterPath, interpreterPath, true, from, outputChannel);
+			updateConfig(CfgKey.InterpreterPath, interpreterPath, true, from);
 			ahkStatusBarItem.text = sel.label ||= (await getAHKVersion([interpreterPath]))[0];
 			if (server_is_ready)
 				commands.executeCommand(serverResetInterpreterPath, interpreterPath);
@@ -622,7 +630,7 @@ async function selectSyntaxes() {
 	}
 	if (path === undefined || v.toLowerCase() === path.toLowerCase())
 		return;
-	updateConfig(CfgKey.Syntaxes, path || undefined, false, f, outputChannel);
+	updateConfig(CfgKey.Syntaxes, path || undefined, false, f);
 }
 
 function getAHKVersion(paths: string[]): Thenable<string[]> {

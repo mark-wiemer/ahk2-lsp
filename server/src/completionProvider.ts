@@ -15,6 +15,7 @@ import {
 import { BraceStyle, CfgKey, getCfg, shouldIncludeLocalLib, shouldIncludeUserStdLib } from '../../util/src/config';
 import { shouldExclude } from '../../util/src/exclude';
 import { klona } from 'klona';
+import { debug } from '../../util/src/log';
 
 //* comments including the pipe char | indicate where the cursor is
 export async function completionProvider(params: CompletionParams, _token: CancellationToken): Promise<Maybe<CompletionItem[]>> {
@@ -90,7 +91,7 @@ export async function completionProvider(params: CompletionParams, _token: Cance
 	// Exclude files according to current user settings (may have changed since extension was activated)
 	for (const uri in relevantUriMaps) {
 		if (shouldExclude(uri)) {
-			console.log('Excluding ' + uri + ' from completion suggestions');
+			debug('Excluding ' + uri + ' from completion suggestions');
 			delete relevantUriMaps[uri];
 		}
 	}
@@ -701,7 +702,7 @@ export async function completionProvider(params: CompletionParams, _token: Cance
 	// auto-include
 	const includeUserStdLib = shouldIncludeUserStdLib();
 	const includeLocalLib = shouldIncludeLocalLib();
-	console.log('includeUserStdLib:', includeUserStdLib, ', includeLocalLib:', includeLocalLib);
+	debug(`includeUserStdLib: ${includeUserStdLib}, includeLocalLib: ${includeLocalLib}`);
 	if (includeUserStdLib || includeLocalLib) {
 		const libdirs = doc.libdirs, caches: Record<string, TextEdit[]> = {};
 		let exportnum = 0, line = -1, first_is_comment: boolean | undefined, cm: Token;
@@ -710,7 +711,7 @@ export async function completionProvider(params: CompletionParams, _token: Cance
 		doc.includedir.forEach((v, k) => line = k);
 		for (const uri in libfuncs) {
 			if (shouldExclude(uri)) {
-				console.log('Excluding', uri);
+				debug(`Excluding ${uri}`);
 				continue;
 			}
 			if (!relevantUriMaps[uri] && (path = libfuncs[uri].fsPath) && ((includeUserStdLib && libfuncs[uri].islib) ||
@@ -720,7 +721,7 @@ export async function completionProvider(params: CompletionParams, _token: Cance
 						cpitem = convertNodeCompletion(it), exportnum++;
 						cpitem.additionalTextEdits = caches[path] ??= autoinclude(path);
 						cpitem.detail = `${completionitem.include(path)}\n\n${cpitem.detail ?? ''}`;
-						console.log(`Adding ${cpitem.label} to vars`);
+						debug(`Adding ${cpitem.label} to vars`);
 						vars[l.toUpperCase()] = cpitem;
 					};
 				}
@@ -781,7 +782,7 @@ export async function completionProvider(params: CompletionParams, _token: Cance
 				expg.test(it.label) && items.push(it);
 	}
 	const result = items.concat(Object.values(vars) as CompletionItem[]);
-	console.log('Vars:', (Object.values(vars) as CompletionItem[]).map(i => i.label).join('\n'));
+	debug(`Vars: ${(Object.values(vars) as CompletionItem[]).map(i => i.label).join('\n')}`);
 	return result;
 	//#endregion
 

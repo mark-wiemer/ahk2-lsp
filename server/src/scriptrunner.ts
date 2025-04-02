@@ -2,6 +2,7 @@ import { execSync, spawnSync } from 'child_process';
 import { interpreterPath } from './common';
 import { lstatSync, readlinkSync } from 'fs';
 import { resolve } from 'path';
+import { debug } from '../../util/src/log';
 
 /**
  * Simple runner for LSP server initializiaton via AHK.
@@ -10,12 +11,12 @@ import { resolve } from 'path';
 export function runscript(script: string): string | undefined {
 	const funcName = 'runscript';
 	const executePath = resolvePath(interpreterPath, true);
-	console.log(`${funcName} executePath`, executePath);
+	debug(`${funcName} executePath: ${executePath}`);
 	if (!executePath)
 		return;
 	const process = spawnSync(`"${executePath}" /CP65001 /ErrorStdOut=utf-8 *`, [], { cwd: executePath.replace(/[\\/].+?$/, ''), shell: true, input: script });
 	const result = (process?.stdout ?? '').toString();
-	console.log(`${funcName} result`, result)
+	debug(`${funcName} result: ${result}`);
 	if (process)
 		return result;
 }
