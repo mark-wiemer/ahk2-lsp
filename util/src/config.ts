@@ -108,8 +108,15 @@ export interface AHKLSConfig {
 	/** Glob pattern of files to ignore */
 	exclude: string[];
 	general: {
-		logLevel: 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'critical' | 'none';
-	}
+		logLevel:
+			| 'trace'
+			| 'debug'
+			| 'info'
+			| 'warn'
+			| 'error'
+			| 'critical'
+			| 'none';
+	};
 	v2: {
 		general: {
 			actionWhenV1Detected: ActionType;
