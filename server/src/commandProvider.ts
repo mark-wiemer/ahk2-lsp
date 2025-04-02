@@ -7,11 +7,12 @@ import {
 } from './common';
 import { CfgKey, getCfg } from '../../util/src/config';
 import { clientGetActiveEditorInfo, clientInsertSnippet, clientSetTextDocumentLanguage, ExtensionCommand, extDiagnoseAll, extGenerateComment, extSetScriptDir } from '../../util/src/env';
+import { error } from '../../util/src/log';
 
 function checkCommand(cmd: string) {
 	if (getCfg(CfgKey.Commands)?.includes(cmd))
 		return true;
-	connection?.console.warn(`Command '${cmd}' is not implemented!`);
+	error(`Command '${cmd}' is not implemented!`);
 	return false;
 }
 
