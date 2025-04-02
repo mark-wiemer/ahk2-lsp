@@ -27,7 +27,7 @@ import {
 } from './common';
 import { ActionType, BlockStyle, BraceStyle, CallWithoutParentheses, CfgKey, FormatOptions, getCfg } from '../../util/src/config';
 import { shouldExclude } from '../../util/src/exclude';
-import { warn as logWarn } from '../../util/src/log';
+import { debug } from '../../util/src/log';
 
 export interface ParamInfo {
 	offset: number
@@ -1298,7 +1298,7 @@ export class Lexer {
 				case 'SwitchToV1':
 					if (!_this.actived)
 						break;
-					logWarn([_this.document.uri, message, diagnostic.tryswitchtov1()].join(' '));
+					debug([_this.document.uri, message, diagnostic.tryswitchtov1()].join(' '));
 					message = '', setTextDocumentLanguage(_this.document.uri);
 					break;
 				case 'Continue':
