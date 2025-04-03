@@ -158,7 +158,7 @@ connection.onInitialized(() => {
 
 connection.onDidChangeConfiguration(async change => {
 	let newConfig: AHKLSConfig | undefined = change?.settings;
-	info('Configuration changed');
+	debug('Configuration changed');
 	if (hasConfigurationCapability && !newConfig)
 		newConfig = await connection.workspace.getConfiguration(configPrefix);
 	if (!newConfig) {
