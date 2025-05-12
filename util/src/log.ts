@@ -32,11 +32,10 @@ const log = (
 ) => {
 	const configLogLevelStr = getCfg<string>(CfgKey.LogLevel);
 	const configLogLevelValue = logLevelRecord[configLogLevelStr];
-	if (configLogLevelValue === undefined) {
-		logFunc(`Invalid setting AHK++.${CfgKey.LogLevel} "${configLogLevelStr}"`);
-		return;
-	}
-	if (configLogLevelValue === LogLevel.None) {
+	if (
+		configLogLevelValue === undefined ||
+		configLogLevelValue === LogLevel.None
+	) {
 		return;
 	}
 	if (thisLogLevel >= configLogLevelValue) {
