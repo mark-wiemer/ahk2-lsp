@@ -23,7 +23,6 @@ const logLevelRecord: Record<string, LogLevel | undefined> = {
 
 /**
  * Logs message if provided log level is valid for configured log level.
- * Logs warning if configured log level is invalid.
  */
 const log = (
 	value: Error | string,
