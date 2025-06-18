@@ -2182,7 +2182,7 @@ export class Lexer {
 						break;
 					case 'throw':
 						if (ahk_version >= alpha_3) {
-							tk.type = 'TK_WORD', next = false;
+							tk.type = 'TK_RESERVED', next = true;
 							break;
 						}
 					// fall through
