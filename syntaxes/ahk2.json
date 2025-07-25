@@ -267,7 +267,7 @@
 		},
 		{
 			"body": "OR",
-			"description": "One item OR the other must bet true.\nSame as: ||\nif (var1 OR var2)\nif (var1 OR !var2)"
+			"description": "One item OR the other must be true.\nSame as: ||\nif (var1 OR var2)\nif (var1 OR !var2)"
 		},
 		{
 			"body": "break",
