@@ -24501,6 +24501,25 @@ WinClose([WinTitle:='', WinText:='', SecToWait:=unset, NoWinTitle:='', NoWinText
 WinExist([WinTitle:='', WinText:='', NoWinTitle:='', NoWinText:='']) => Integer
 
 /**
+ * @description {@link https://www.autohotkey.com/docs/v2/lib/WinGetAlwaysOnTop.htm|`WinGetAlwaysOnTop()`}
+ * Returns true if the specified window is always-on-top, otherwise false.
+ * @param {(String, Integer or Object)} [WinTitle]
+ * @param {(String)} [WinText]
+ * @param {(String)} [ExcludeTitle]
+ * @param {(String)} [ExcludeText]
+ * @returns {(Integer)}
+ * This function returns true if the specified window is always-on-top, otherwise false.
+ * @throws TargetError - Window could not be found
+ * @see {@link https://www.autohotkey.com/docs/v2/lib/WinSetAlwaysOnTop.htm|WinSetAlwaysOnTop()} |
+ * {@link https://www.autohotkey.com/docs/v2/lib/WinMoveTop.htm|WinMoveTop()} |
+ * {@link https://www.autohotkey.com/docs/v2/lib/WinMoveBottom.htm|WinMoveBottom()} |
+ * {@link https://www.autohotkey.com/docs/v2/lib/Win.htm|Win functions} |
+ * {@link https://www.autohotkey.com/docs/v2/lib/Control.htm|Control functions}
+ * @example <caption></caption>
+ */
+WinGetAlwaysOnTop([WinTitle:='', WinText:='', NoWinTitle:='', NoWinText:='']) => Integer
+
+/**
  * @description {@link https://www.autohotkey.com/docs/v2/lib/WinGetClass.htm|`WinGetClass()`}
  * Retrieves the specified window's class name.
  * @param {'ahk_exe '|'ahk_class '|'ahk_id '|'ahk_pid '|'ahk_group '} [WinTitle]
