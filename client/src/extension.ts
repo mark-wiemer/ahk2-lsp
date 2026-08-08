@@ -659,7 +659,9 @@ function getInterpreterPath(): {
 async function onDidChangeInterpreter() {
 	const uri = window.activeTextEditor?.document.uri;
 	const ws = uri ? workspace.getWorkspaceFolder(uri)?.uri.fsPath : undefined;
-	let ahkPath = resolvePath(interpreterPath, ws, false);
+	let ahkPath =
+		resolvePath(interpreterPath, ws, false) ||
+		resolvePath('AutoHotkeyV2.exe', undefined, false);
 	if (ahkPath.toLowerCase().endsWith('.exe') && existsSync(ahkPath)) {
 		// ahkStatusBarItem.tooltip is the current saved interpreter path
 		if (ahkPath !== ahkStatusBarItem.tooltip) {

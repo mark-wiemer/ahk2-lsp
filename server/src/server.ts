@@ -22,7 +22,7 @@ import {
 	traverse_include, typeFormatting, updateConfig, utils, winapis, workspaceSymbolProvider,
 } from './common';
 import { PEFile, RESOURCE_TYPE, searchAndOpenPEFile } from './PEFile';
-import { resolvePath, runscript } from './scriptrunner';
+import { resolveInterpreterPath, resolvePath, runscript } from './scriptrunner';
 import { AHKLSConfig, CfgKey, configPrefix, getCfg, shouldIncludeUserStdLib, shouldIncludeLocalLib, setCfg } from '../../util/src/config';
 import { klona } from 'klona/json';
 import { clientExecuteCommand, clientUpdateStatusBar, extSetInterpreter, serverExportSymbols, serverGetAHKVersion, serverGetContent, serverGetVersionInfo, serverResetInterpreterPath } from '../../util/src/env';
@@ -125,7 +125,7 @@ connection.onInitialize(async (params) => {
 		updateConfig(initialConfig);
 	if (!getCfg(CfgKey.InterpreterPath)) setCfg(CfgKey.InterpreterPath, '');
 	// resolve the interpreter but fail silently, the user doesn't *need* to know at this point
-	if (!await setInterpreter(resolvePath(getCfg(CfgKey.InterpreterPath)))) {
+	if (!await setInterpreter(resolveInterpreterPath(getCfg(CfgKey.InterpreterPath)))) {
 		info(setting.ahkpatherr());
 	}
 	set_WorkspaceFolders(workspaceFolders);
@@ -173,7 +173,7 @@ connection.onDidChangeConfiguration(async change => {
 	set_WorkspaceFolders(workspaceFolders);
 	const newInterpreterPath = getCfg(CfgKey.InterpreterPath);
 	if (newInterpreterPath !== getCfg(CfgKey.InterpreterPath, oldConfig)) {
-		if (await setInterpreter(resolvePath(newInterpreterPath)))
+		if (await setInterpreter(resolveInterpreterPath(newInterpreterPath)))
 			connection.sendRequest(clientUpdateStatusBar, [newInterpreterPath]);
 	}
 	if (excludeChanged || getCfg(CfgKey.LibrarySuggestions) !== getCfg(CfgKey.LibrarySuggestions, oldConfig)) {
@@ -542,7 +542,7 @@ async function getDllExport(paths: string[] | Set<string>, onlyone = false) {
 
 let curPERCDATA: Record<string, Buffer> | undefined = undefined;
 function getRCDATA(name?: string) {
-	const exe = resolvePath(interpreterPath, true);
+	const exe = resolveInterpreterPath(interpreterPath);
 	if (!exe) return;
 	if (!name)
 		return { uri: '', path: '', paths: Object.keys(curPERCDATA ?? {}) };

@@ -40,6 +40,7 @@ import {
 	ExecuteCommandRequest,
 	ExecuteCommandParams,
 	DidChangeConfigurationNotification,
+	DidOpenTextDocumentNotification,
 } from 'vscode-languageclient/node';
 import { readdirSync } from 'fs';
 import { suite, before, after, test } from 'mocha';
@@ -93,16 +94,25 @@ suite('Language client request handlers', () => {});
 suite('Open AHK file', () => {
 	test('opens', async () => {
 		const path = resolve(__dirname, '../../../server/dist/ahkProvider.ahk');
+		const uri = vscode.Uri.file(path).toString();
 		let document = await vscode.workspace.openTextDocument(path);
-		const uri = document.uri.toString();
 		await vscode.window.showTextDocument(document);
 		if (document.languageId !== 'ahk2')
 			document = await vscode.languages.setTextDocumentLanguage(
 				document,
 				'ahk2',
 			);
-		const content = (await client.sendRequest(serverGetContent, uri)) as string;
-		assert.equal(document.getText() === content, true);
+		await client.sendNotification(DidOpenTextDocumentNotification.method, {
+			textDocument: {
+				uri,
+				languageId: document.languageId,
+				version: document.version,
+				text: document.getText(),
+			},
+		});
+		const content = await client.sendRequest(serverGetContent, uri);
+		assert.equal(!!content, true, 'content is falsy');
+		assert.equal(document.getText(), content);
 
 		suite('Send language server requests', () => {
 			const textDocument = { uri };
