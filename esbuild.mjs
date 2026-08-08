@@ -4,7 +4,7 @@ import { build, context } from 'esbuild';
 const server_opt = {
 	define: {
 		'process.env.BROWSER': 'false',
-		'process.env.DEBUG': 'false',
+		'process.env.AHKPP_DEBUG': 'false',
 	},
 	entryPoints: ['server/src/server.ts'],
 	format: 'cjs',
@@ -121,7 +121,7 @@ function build_watch(web = false) {
 	};
 	client_opt.entryPoints.push('client/src/**/*.ts');
 	client_opt.logLevel = server_opt.logLevel = util_opt.logLevel = 'silent';
-	server_opt.define['process.env.DEBUG'] = 'true';
+	server_opt.define['process.env.AHKPP_DEBUG'] = 'true';
 	if (web) opts = browser_opts(false);
 	else {
 		server_opt.entryPoints = ['server/src/*.ts'];
