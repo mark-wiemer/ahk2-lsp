@@ -5,6 +5,7 @@
 		"module": "NodeNext",
 		"moduleResolution": "NodeNext",
 		"noEmit": true,
+		"skipLibCheck": true,
 		"strict": true
 	},
 	"include": ["client/src", "server/src", "util/src"]
