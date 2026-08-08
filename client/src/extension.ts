@@ -537,11 +537,13 @@ async function beginDebug(type: 'f' | 'c' | 'p' | 'a') {
 /**
  * Sets the v2 interpreter path via quick pick.
  * Updates the most local configuration target that has a custom interpreter path.
- * If no target has a custom path, updates workspace folder config.
+ * If no target has a custom path, updates global config.
  */
 async function setInterpreter() {
-	// eslint-disable-next-line prefer-const
-	let index = -1, { path: ahkpath, from } = getInterpreterPath();
+	let index = -1;
+	const result = getInterpreterPath();
+	let ahkpath = result.path;
+	const from = result.from;
 	const list: QuickPickItem[] = [], _ = (ahkpath = resolvePath(interpreterPath || ahkpath, undefined, false)).toLowerCase();
 	const pick = window.createQuickPick();
 	let it: QuickPickItem, active: QuickPickItem | undefined, sel: QuickPickItem = { label: '' };
@@ -637,7 +639,10 @@ function getAHKVersion(paths: string[]): Thenable<string[]> {
 	return client.sendRequest(serverGetAHKVersion, paths.map(p => resolvePath(p, undefined, true) || p));
 }
 
-function getInterpreterPath() {
+function getInterpreterPath(): {
+	path: string;
+	from: ConfigurationTarget;
+} {
 	const t = getConfigRoot().inspect(CfgKey.InterpreterPath);
 	let path = '';
 	if (t)
@@ -648,7 +653,7 @@ function getInterpreterPath() {
 		else if ((path = t.globalValue as string))
 			return { path, from: ConfigurationTarget.Global };
 		else path = t.defaultValue as string ?? '';
-	return { path };
+	return { path, from: ConfigurationTarget.Global };
 }
 
 async function onDidChangeInterpreter() {

@@ -68,7 +68,10 @@ async function build_e2e() {
 	const opts = [
 		client_opt,
 		server_opt,
-		{ ...client_opt, entryPoints: [client_opt.entryPoints.pop()] },
+		{
+			...client_opt,
+			entryPoints: [client_opt.entryPoints.pop(), 'client/src/config.ts'],
+		},
 		util_opt,
 	];
 	client_opt.external = ['vscode'];

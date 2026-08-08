@@ -42,9 +42,10 @@ import {
 	DidChangeConfigurationNotification,
 } from 'vscode-languageclient/node';
 import { readdirSync } from 'fs';
-import { suite, before, test } from 'mocha';
+import { suite, before, after, test } from 'mocha';
 import { serverGetContent } from '../../../util/src/env';
-import { newConfig } from '../../../util/src/config';
+import { CfgKey, newConfig } from '../../../util/src/config';
+import { getConfigRoot, updateConfig } from '../config';
 import { getClient } from './utils';
 
 let client: LanguageClient;
@@ -55,6 +56,36 @@ before(async () => {
 
 test('should be running', async () => {
 	assert.equal(client?.isRunning(), true);
+});
+
+suite('Configuration updates', () => {
+	let originalGlobalValue: unknown;
+
+	before(() => {
+		originalGlobalValue = getConfigRoot().inspect('v2.file')?.globalValue;
+	});
+
+	after(async () => {
+		await getConfigRoot().update(
+			'v2.file',
+			originalGlobalValue,
+			vscode.ConfigurationTarget.Global,
+		);
+	});
+
+	test('persists the interpreter path to user settings', async () => {
+		const interpreterPath = 'C:\\example\\AutoHotkey.exe';
+		await updateConfig(
+			CfgKey.InterpreterPath,
+			interpreterPath,
+			true,
+			vscode.ConfigurationTarget.Global,
+		);
+		const savedValue = getConfigRoot().inspect('v2.file')?.globalValue as
+			| { interpreterPath?: string }
+			| undefined;
+		assert.strictEqual(savedValue?.interpreterPath, interpreterPath);
+	});
 });
 
 suite('Language client request handlers', () => {});

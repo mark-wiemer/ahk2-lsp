@@ -24,7 +24,7 @@ export function updateConfig<T>(
 	value: T,
 	isProperty: boolean,
 	configTarget: vscode.ConfigurationTarget | undefined = undefined,
-) {
+): Thenable<void> {
 	debug(
 		`updateConfig(${configKey}, ${JSON.stringify(value)}, ${isProperty}, ${configTarget}`,
 	);
@@ -50,5 +50,5 @@ export function updateConfig<T>(
 				...value,
 			};
 	debug(`newObjectValue: ${JSON.stringify(newObjectValue)}`);
-	configRoot.update(configObjectKey, newObjectValue, configTarget);
+	return configRoot.update(configObjectKey, newObjectValue, configTarget);
 }
