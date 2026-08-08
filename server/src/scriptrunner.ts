@@ -10,7 +10,7 @@ import { debug } from '../../util/src/log';
  */
 export function runscript(script: string): string | undefined {
 	const funcName = 'runscript';
-	const executePath = resolvePath(interpreterPath, true);
+	const executePath = resolveInterpreterPath(interpreterPath);
 	debug(`${funcName} executePath: ${executePath}`);
 	if (!executePath)
 		return;
@@ -30,6 +30,10 @@ export function existsSync(path: string): boolean {
 			return false;
 	}
 	return true;
+}
+
+export function resolveInterpreterPath(path: string | undefined): string {
+	return resolvePath(path, true) || resolvePath('AutoHotkeyV2.exe', true);
 }
 
 /**
