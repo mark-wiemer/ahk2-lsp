@@ -60,7 +60,7 @@ export function activate(context: ExtensionContext) {
 		documentSelector: [{ language: 'ahk2' }],
 		markdown: { isTrusted: true, supportHtml: true },
 		initializationOptions: {
-			extensionUri: !process.env.DEBUG ? context.extensionUri.toString() : unpkg_url(context),
+			extensionUri: !process.env.AHKPP_DEBUG ? context.extensionUri.toString() : unpkg_url(context),
 			commands: Object.keys(request_handlers),
 			...JSON.parse(JSON.stringify(workspace.getConfiguration(configPrefix)))
 		}
