@@ -1,18 +1,41 @@
 // https://github.com/microsoft/vscode-test-cli
 import { defineConfig } from '@vscode/test-cli';
-import { execSync } from 'child_process';
+import { execFileSync } from 'child_process';
+import { existsSync } from 'fs';
+import { join } from 'path';
 
-let timeout, vscode_path;
-if (process.execPath.toLowerCase().endsWith('code.exe')) timeout = 0;
-else {
+function findVSCodePath() {
+	const installPaths = [
+		process.env.VSCODE_EXEC_PATH,
+		process.env.LOCALAPPDATA &&
+			join(
+				process.env.LOCALAPPDATA,
+				'Programs',
+				'Microsoft VS Code',
+				'Code.exe',
+			),
+	];
+	const installPath = installPaths.find(
+		(path) => typeof path === 'string' && existsSync(path),
+	);
+	if (installPath) return installPath;
+
+	if (process.platform !== 'win32') return undefined;
+
 	try {
-		const m = execSync(
-			'chcp 65001 && reg query HKCR\\vscode\\shell\\open\\command',
+		const match = execFileSync(
+			'reg.exe',
+			['query', 'HKCR\\vscode\\shell\\open\\command'],
 			{ encoding: 'utf8' },
 		).match(/REG_SZ\s+("([^"]+)"|\S+)/);
-		vscode_path = m[2] || m[1];
-	} catch {}
+		const registryPath = match?.[2] || match?.[1];
+		return registryPath && existsSync(registryPath) ? registryPath : undefined;
+	} catch {
+		return undefined;
+	}
 }
+
+const vscodePath = findVSCodePath();
 
 export default defineConfig({
 	files: 'client/dist/test/**/*.e2e.js',
@@ -21,7 +44,7 @@ export default defineConfig({
 		failZero: true,
 		timeout: 60_000,
 	},
-	useInstallation: vscode_path && {
-		fromPath: vscode_path,
+	useInstallation: vscodePath && {
+		fromPath: vscodePath,
 	},
 });

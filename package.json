@@ -725,7 +725,6 @@
 		},
 		"configurationDefaults": {
 			"[ahk2]": {
-				"editor.defaultFormatter": "thqby.vscode-autohotkey2-lsp",
 				"editor.quickSuggestions": {
 					"other": true,
 					"comments": false,
