@@ -46,8 +46,13 @@ export function resolvePath(path: string | undefined, resolveSymbolicLink = fals
 	const paths: string[] = [];
 	if (!path.includes(':'))
 		paths.push(resolve(path));
-	if (!process.env.BROWSER && process.platform === 'win32' && !/[\\/]/.test(path))
-		paths.push(execSync(`where ${path}`, { encoding: 'utf-8' }).trim());
+	if (!process.env.BROWSER && process.platform === 'win32' && !/[\\/]/.test(path)) {
+		try {
+			paths.push(execSync(`where ${path}`, { encoding: 'utf-8' }).trim());
+		} catch {
+			// A missing executable is handled by the remaining path candidates below.
+		}
+	}
 	paths.push(path);
 	for (let path of paths) {
 		if (!path) continue;
