@@ -18,13 +18,13 @@ jobs:
         # AHK is built for Windows only, so we only build on Windows
         # As always, if community asks, community shall receive ;)
         os: [windows-latest]
-        node-version: [20.x]
+        node-version: [20.x, 26.x]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
       - name: Install Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
@@ -33,7 +33,7 @@ jobs:
         id: runPrettier
         # format is just `prettier --check .`
         run: npm run format
-      - name:
+      - name: Show failure details
         if: ${{ failure() }}
         # format:fix is just `prettier --write .`
         run: |
