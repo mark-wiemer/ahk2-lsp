@@ -19,6 +19,8 @@ jobs:
         # As always, if community asks, community shall receive ;)
         os: [windows-latest]
         node-version: [20.x]
+        # Stuck on 20 for now
+        # https://github.com/mark-wiemer/ahkpp/issues/742
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
